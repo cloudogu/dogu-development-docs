@@ -26,7 +26,7 @@ Dieser Abschnitt stellt unterschiedliche Phasen vor, die ein Dogu im Laufe der E
 Hierfür ist die Dogu-Orcherstrierungsanwendung `cesapp` zuständig.
 Genauere Hilfen sind in der [cesapp-Dokumentation](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/detail/) oder in der Kommandobeschreibung auf der Konsole mittels `cesapp --help` zu finden.
 
-```puml
+```uml
 !define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
 !includeurl CLOUDOGUURL/common.puml
 'skinparam linetype ortho
@@ -256,7 +256,7 @@ python3 -m http.server 8080
 - `sudo cesapp build .`
 - `sudo cesapp start newdogu`
 
-```puml
+```uml
 !define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
 
 !includeurl CLOUDOGUURL/common.puml

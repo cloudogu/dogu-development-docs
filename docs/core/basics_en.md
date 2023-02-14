@@ -25,7 +25,7 @@ This section presents different phases that a Dogu can go through during develop
 The Dogu orchestration application `cesapp` is responsible for this.
 More detailed help can be found in the [cesapp documentation](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/detail/) or in the command description on the console using `cesapp --help`.
 
-```puml
+```uml
 !define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
 !includeurl CLOUDOGUURL/common.puml
 'skinparam linetype ortho
@@ -256,7 +256,7 @@ python3 -m http.server 8080
 - `sudo cesapp build .`
 - `sudo cesapp start newdogu`
 
-```puml
+```uml
 !define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
 
 !includeurl CLOUDOGUURL/common.puml
