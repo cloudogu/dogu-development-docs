@@ -25,74 +25,7 @@ This section presents different phases that a Dogu can go through during develop
 The Dogu orchestration application `cesapp` is responsible for this.
 More detailed help can be found in the [cesapp documentation](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/detail/) or in the command description on the console using `cesapp --help`.
 
-```uml
-!define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
-!includeurl CLOUDOGUURL/common.puml
-'skinparam linetype ortho
-'skinparam linetype polyline
-
-state stateless as "1. Without state" {
-    [*] --> doguExistsLocal             : cesapp build
-
-    state doguExistsLocal as "Dogu exists on local host" #white
-    state doguExistsRemote as "Dogu exists in remote registry" #white
-}
-
-state stateful as "2. With state" {
-    state doguInstalled as "Dogu installed" #white {
-        doguInstalled : Container (stopped)
-        doguInstalled : Volumes (persisted data)
-        doguInstalled : Service Accounts
-    }
-    state doguRunning as "Dogu running" #white {
-        doguRunning : Container (running)
-        doguRunning : Volumes (persisted data)
-        doguRunning : Service Accounts
-        doguRunning : volatile data
-    }
-    state doguStopped as "Dogu stopped" #white {
-        doguStopped : Container (stopped)
-        doguStopped : Volumes (persisted data)
-        doguStopped : Service Accounts
-        doguStopped : volatile data
-    }
-
-    state doguUpgrades as "Dogu upgrading" #white {
-        state doguRunsPreUpgrade as "Dogu running Pre-Upgrade" #white
-        state doguRunsPostUpgrade as "Dogu running Post-Upgrade" #white
-    }
-}
-
-doguExistsRemote --> doguExistsLocal    : cesapp pull
-doguExistsLocal --> doguExistsRemote    : cesapp push
-'stateless --> stateful
-
-doguExistsLocal  --> doguInstalled      : -
-doguExistsRemote  --> doguInstalled     : cesapp install
-
-doguInstalled --> doguRunning           : cesapp start
-doguStopped --> doguRunning             : cesapp start
-doguRunning --> doguStopped             : cesapp stop
-doguRunning --> doguRunning             : Container reboot
-
-stateful --> stateless                  : cesapp purge 1)
-doguInstalled --> doguUpgrades          : cesapp upgrade
-doguRunning --> doguUpgrades            : cesapp upgrade starts
-doguUpgrades --> doguRunning            : cesapp upgrade ends
-
-legend right
-  1) depends on additional parameters
-  2) other commands like replacing containers or backup/restore
-     mostly leverage existing states and transitions
-endlegend
-
-'Styling
-stateless -[hidden]d-> stateful
-doguRunsPreUpgrade -[hidden]-> doguRunsPostUpgrade
-doguRunning -[hidden]r-> doguUpgrades
-
-caption Simplified Lifecycle of a dogu with corresponding cesapp commands 2)
-```
+<img src="./img/dogu-states.svg">
 
 ## Dogu Quick Start
 
@@ -256,26 +189,7 @@ python3 -m http.server 8080
 - `sudo cesapp build .`
 - `sudo cesapp start newdogu`
 
-```uml
-!define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
-
-!includeurl CLOUDOGUURL/common.puml
-!includeurl CLOUDOGUURL/dogus/cloudogu.puml
-!includeurl CLOUDOGUURL/tools/docker.puml
-
-Node "Cloudogu Ecosystem" as eco <<$cloudogu>> {
-    TOOL_DOCKER(docker, "Docker") #white {
-        TOOL_DOCKER(container, "registry.cloudogu/namespace/newdogu:1.0.0-1") #white {
-            file "/startup.sh" as startup #white
-            file "payload app" as app
-        }
-    }
-}
-
-startup --> app : configures and runs
-
-caption Container of the skeleton dogu after building the container image
-```
+<img src="./img/dogu-in-ces.svg">
 
 ### Test the Dogu
 

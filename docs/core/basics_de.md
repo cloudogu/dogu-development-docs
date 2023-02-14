@@ -189,26 +189,7 @@ python3 -m http.server 8080
 - `sudo cesapp build .`
 - `sudo cesapp start newdogu`
 
-```uml
-!define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
-
-!includeurl CLOUDOGUURL/common.puml
-!includeurl CLOUDOGUURL/dogus/cloudogu.puml
-!includeurl CLOUDOGUURL/tools/docker.puml
-
-Node "Cloudogu Ecosystem" as eco <<$cloudogu>> {
-    TOOL_DOCKER(docker, "Docker") #white {
-        TOOL_DOCKER(container, "registry.cloudogu/namespace/newdogu:1.0.0-1") #white {
-            file "/startup.sh" as startup #white
-            file "payload app" as app
-        }
-    }
-}
-
-startup --> app : configures and runs
-
-caption Container of the skeleton dogu after building the container image
-```
+<img src="./img/dogu-in-ces.svg">
 
 ### Das Dogu testen
 - Ausgaben im Log prüfen, ob Dogu korrekt gestartet wurde:
