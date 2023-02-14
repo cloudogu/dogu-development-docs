@@ -25,4 +25,4 @@ Want to talk to the Cloudogu team? Need help or support? There are several ways 
 * [Email hello@cloudogu.com](mailto:hello@cloudogu.com)
 
 ---
-&copy; 2022 Cloudogu GmbH - MADE WITH :heart:&nbsp;FOR DEV ADDICTS. [Legal notice / Impressum](https://cloudogu.com/imprint.html)
+&copy; 2023 Cloudogu GmbH - MADE WITH :heart:&nbsp;FOR DEV ADDICTS. [Legal notice / Impressum](https://cloudogu.com/imprint.html)
