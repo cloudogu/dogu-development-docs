@@ -1,0 +1,66 @@
+!define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
+!includeurl CLOUDOGUURL/common.puml
+'skinparam linetype ortho
+'skinparam linetype polyline
+
+state stateless as "1. Without state" {
+    [*] --> doguExistsLocal             : cesapp build
+
+    state doguExistsLocal as "Dogu exists on local host" #white
+    state doguExistsRemote as "Dogu exists in remote registry" #white
+}
+
+state stateful as "2. With state" {
+    state doguInstalled as "Dogu installed" #white {
+        doguInstalled : Container (stopped)
+        doguInstalled : Volumes (persisted data)
+        doguInstalled : Service Accounts
+    }
+    state doguRunning as "Dogu running" #white {
+        doguRunning : Container (running)
+        doguRunning : Volumes (persisted data)
+        doguRunning : Service Accounts
+        doguRunning : volatile data
+    }
+    state doguStopped as "Dogu stopped" #white {
+        doguStopped : Container (stopped)
+        doguStopped : Volumes (persisted data)
+        doguStopped : Service Accounts
+        doguStopped : volatile data
+    }
+
+    state doguUpgrades as "Dogu upgrading" #white {
+        state doguRunsPreUpgrade as "Dogu running Pre-Upgrade" #white
+        state doguRunsPostUpgrade as "Dogu running Post-Upgrade" #white
+    }
+}
+
+doguExistsRemote --> doguExistsLocal    : cesapp pull
+doguExistsLocal --> doguExistsRemote    : cesapp push
+'stateless --> stateful
+
+doguExistsLocal  --> doguInstalled      : -
+doguExistsRemote  --> doguInstalled     : cesapp install
+
+doguInstalled --> doguRunning           : cesapp start
+doguStopped --> doguRunning             : cesapp start
+doguRunning --> doguStopped             : cesapp stop
+doguRunning --> doguRunning             : Container reboot
+
+stateful --> stateless                  : cesapp purge 1)
+doguInstalled --> doguUpgrades          : cesapp upgrade
+doguRunning --> doguUpgrades            : cesapp upgrade starts
+doguUpgrades --> doguRunning            : cesapp upgrade ends
+
+legend right
+  1) depends on additional parameters
+  2) other commands like replacing containers or backup/restore
+     mostly leverage existing states and transitions
+endlegend
+
+'Styling
+stateless -[hidden]d-> stateful
+doguRunsPreUpgrade -[hidden]-> doguRunsPostUpgrade
+doguRunning -[hidden]r-> doguUpgrades
+
+caption Simplified Lifecycle of a dogu with corresponding cesapp commands 2)
