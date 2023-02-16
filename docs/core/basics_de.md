@@ -39,7 +39,7 @@ Hier werden nahezu alle Querschnitts-Aspekte ignoriert, die im Zusammenspiel im 
 - Dogu-Konfiguration über die Registry
 - etc.
 
-Solch ein Minimal-Dogu beantwortet lediglich Request, die über den zentralen Reverse-Proxy (das nginx-Dogu) eingehen.
+Solch ein Minimal-Dogu beantwortet lediglich Requests, die über den zentralen Reverse-Proxy (das nginx-Dogu) eingehen.
 Dazu werden die folgenden Bestandteile benötigt:
 
 1. Ein laufendes, fertig aufgesetztes CES.
