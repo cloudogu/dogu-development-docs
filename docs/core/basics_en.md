@@ -42,7 +42,7 @@ Such a minimal dogu only answers requests coming in through the central reverse 
 For this the following components are needed:
 
 1. A running CES.
-2. A new directory that bundles the dogu components, e.g. `newdogu`.
+2. A new directory that bundles the Dogu components, e.g. `newdogu`.
 3. Dockerfile: `newdogu/Dockerfile`
     - Creation of the Docker image for the new Dogu.
 4. Dogu descriptor: `newdogu/dogu.json`
