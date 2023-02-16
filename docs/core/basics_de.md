@@ -47,7 +47,7 @@ Dazu werden die folgenden Bestandteile benötigt:
 3. Dockerfile: `newdogu/Dockerfile`
    - Erstellung des Docker-Images für das neue Dogu.
 4. Dogu-Descriptor: `newdogu/dogu.json`
-   - Enthält Informationen, die bei Installation und auch bei jedem Start des Dogus von Bedeutung sind.
+   - Enthält Informationen, die bei der Installation und auch bei jedem Start des Dogus von Bedeutung sind.
 5. Eine Webanwendung
      - Die Fachanwendung, entweder als Quellcode oder in einer ausführbaren Form.
    
