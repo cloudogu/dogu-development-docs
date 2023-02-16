@@ -169,7 +169,7 @@ In unserem Fall ist es ein einfaches Bash-Skript, welches die globale Konfigurat
 
 Beispiel:
 
-`containers/newdogu/startup.sh`
+`containers/newdogu/resources/startup.sh`
 
 ```bash
 #!/bin/bash
