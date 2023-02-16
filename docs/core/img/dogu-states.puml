@@ -3,7 +3,7 @@
 'skinparam linetype ortho
 'skinparam linetype polyline
 
-state stateless as "1. Without state" {
+state stateless as "1. Without state (Dogu is not registered in etcd)" {
     [*] --> doguExistsLocal             : cesapp build
 
     state doguExistsLocal as "Dogu exists on local host" #white
