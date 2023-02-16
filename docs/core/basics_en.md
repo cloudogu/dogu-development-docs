@@ -62,7 +62,7 @@ A more detailed description of how to perform the setup can be found in the [Qui
 
 ### 2) Create directory
 
-A directory must be created to keep the dogu files.
+A directory must be created to keep the Dogu files.
 
 Example: `mkdir containers/newdogu`.
 
