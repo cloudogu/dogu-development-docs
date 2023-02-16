@@ -10,7 +10,7 @@ state stateless as "1. Without state (Dogu is not registered in etcd)" {
     state doguExistsRemote as "Dogu exists in remote registry" #white
 }
 
-state stateful as "2. With state" {
+state stateful as "2. With state (Dogu is registered in etcd)" {
     state doguInstalled as "Dogu installed" #white {
         doguInstalled : Container (stopped)
         doguInstalled : Volumes (persisted data)
