@@ -182,6 +182,7 @@ python3 -m http.server 8080
 ```
 ### Das Dogu erstellen
 
+- `chmod +x containers/newdogu/startup.sh`
 - `vagrant up` - Falls die Maschine nicht gestartet ist.
 - `vagrant ssh`
 - `cd /vagrant/containers/newdogu`
