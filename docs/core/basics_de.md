@@ -109,7 +109,7 @@ RUN set -x \
  # install runtime packages
  && apk --no-cache add python3
 
-COPY startup.sh /
+COPY resources/ /resources/
 
 USER newdogu:newdogu
 
@@ -119,7 +119,7 @@ HEALTHCHECK CMD doguctl healthy newdogu || exit 1
 
 EXPOSE 8080
 
-CMD ["/startup.sh"]
+CMD ["/resources/startup.sh"]
 ```
 
 ### 4) Dogu.json
@@ -180,8 +180,18 @@ set -o pipefail
 FQDN=$(doguctl config --global fqdn)
 echo "Your fqdn is: ${FQDN}"
 
-python3 -m http.server 8080
+python3 -m http.server 8080 --directory /resources/web
 ```
+
+`containers/newdogu/resources/web/index.html`
+
+```html
+<head></head>
+<body>
+<h1>Welcome, new dogu developer!</h1>
+</body>
+```
+
 ### Das Dogu erstellen
 
 - `chmod +x containers/newdogu/startup.sh`

@@ -109,7 +109,7 @@ RUN set -x \
  # install runtime packages
  && apk --no-cache add python3
 
-COPY startup.sh /
+COPY resources/ /resources/
 
 USER newdogu:newdogu
 
@@ -119,7 +119,7 @@ HEALTHCHECK CMD doguctl healthy newdogu || exit 1
 
 EXPOSE 8080
 
-CMD ["/startup.sh"]
+CMD ["/resources/startup.sh"]
 ```
 
 ### 4) Dogu.json
@@ -169,7 +169,7 @@ In our case, it is a simple bash script that reads the global configuration and 
 
 Example:
 
-`containers/newdogu/startup.sh`
+`containers/newdogu/resources/startup.sh`
 
 ```bash
 #!/bin/bash
@@ -180,11 +180,21 @@ set -o pipefail
 FQDN=$(doguctl config --global fqdn)
 echo "Your fqdn is: ${FQDN}"
 
-python3 -m http.server 8080
+python3 -m http.server 8080 --directory /resources/web
+```
+
+Add a `containers/newdogu/resources/web/index.html`
+
+```html
+<head></head>
+<body>
+<h1>Welcome, new dogu developer!</h1>
+</body>
 ```
 
 ### Create the dogu
 
+- `chmod +x containers/newdogu/startup.sh`
 - `vagrant up` - If the machine is not started.
 - `vagrant ssh`
 - `cd /vagrant/containers/newdogu`
