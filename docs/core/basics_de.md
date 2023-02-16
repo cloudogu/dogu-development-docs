@@ -8,7 +8,6 @@ der Projektverwaltungssoftware zu dem Datenbankmanagementsystem zu verwenden. Di
 Dieses Dokument beschreibt, wie so ein Dogu entwickelt werden kann.
 Es wird zunächst gezeigt welche Zustände ein Dogu selbst annehmen kann.
 Anschließend wird mit dem Quick-Start-Guide die Erstellung eines minimalen Dogus beschrieben.
-die Erstellung eines minimalen Dogus beschrieben.
 
 ## Voraussetzungen
 
