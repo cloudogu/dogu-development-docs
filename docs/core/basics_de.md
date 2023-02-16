@@ -83,7 +83,7 @@ Daher muss ein Container-Image erzeugt werden, das dann zu einem Container insta
     - Verschlüsselung eigener Konfigurationswerte
     - Go-Templating
     - Health-Checks
-- Wenn das Dogu eine Web-Anwendung ist, ist die Zeile `ENV SERVICE_TAGS webapp` notwendig.
+- Wenn das Dogu eine Web-Anwendung ist, ist die Zeile `ENV SERVICE_TAGS=webapp` notwendig.
   Dies führt dazu, dass das neue Dogu im Warp-Menü angezeigt wird.
 - Kopieren Sie Ihre Ressourcen in das dogu, falls erforderlich.
 - Das Label `MAINTAINER` dient zur schnelleren Kommunikation bei Supportfällen.
