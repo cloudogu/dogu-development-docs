@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="968px" preserveAspectRatio="none" style="width:1062px;height:968px;background:#FFFFFF;" version="1.1" viewBox="0 0 1062 968" width="1062px" zoomAndPan="magnify"><defs/><g><!--MD5=[e2136e4f1574b75689f633e83454bdac]
+cluster stateless--><g id="cluster_stateless"><rect fill="#23A3DD" height="395.5" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="288" x="7" y="7"/><rect fill="#23A3DD" height="367.2031" rx="12.5" ry="12.5" style="stroke:#23A3DD;stroke-width:1.0;" width="286" x="8" y="34.2969"/><line style="stroke:#16688D;stroke-width:0.5;" x1="7" x2="295" y1="33.2969" y2="33.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="109" x="96.5" y="23.9951">1. Without state</text></g><!--MD5=[91376b89119cf20f5f657bbce8b15ab1]
+cluster stateful--><g id="cluster_stateful"><rect fill="#23A3DD" height="591.5" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="673" x="335" y="268"/><rect fill="#23A3DD" height="563.2031" rx="12.5" ry="12.5" style="stroke:#23A3DD;stroke-width:1.0;" width="671" x="336" y="295.2969"/><line style="stroke:#16688D;stroke-width:0.5;" x1="335" x2="1008" y1="294.2969" y2="294.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="86" x="628.5" y="284.9951">2. With state</text></g><ellipse cx="166" cy="60" fill="#222222" rx="10" ry="10" style="stroke:none;stroke-width:1.0;"/><g id="stateless.doguExistsLocal"><rect fill="#FFFFFF" height="50" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="194" x="69" y="147"/><line style="stroke:#16688D;stroke-width:0.5;" x1="69" x2="263" y1="173.2969" y2="173.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="174" x="79" y="164.9951">Dogu exists on local host</text></g><g id="stateless.doguExistsRemote"><rect fill="#FFFFFF" height="50" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="227" x="35.5" y="328.5"/><line style="stroke:#16688D;stroke-width:0.5;" x1="35.5" x2="262.5" y1="354.7969" y2="354.7969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="207" x="45.5" y="346.4951">Dogu exists in remote registry</text></g><g id="stateful.doguInstalled"><rect fill="#FFFFFF" height="85.1875" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="193" x="407.5" y="311"/><line style="stroke:#16688D;stroke-width:0.5;" x1="407.5" x2="600.5" y1="337.2969" y2="337.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="99" x="454.5" y="328.9951">Dogu installed</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="139" x="412.5" y="355.292">Container (stopped)</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173" x="412.5" y="371.5889">Volumes (persisted data)</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="119" x="412.5" y="387.8857">Service Accounts</text></g><g id="stateful.doguRunning"><rect fill="#FFFFFF" height="101.4844" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="193" x="443.5" y="473.5"/><line style="stroke:#16688D;stroke-width:0.5;" x1="443.5" x2="636.5" y1="499.7969" y2="499.7969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="95" x="492.5" y="491.4951">Dogu running</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="134" x="448.5" y="517.792">Container (running)</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173" x="448.5" y="534.0889">Volumes (persisted data)</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="119" x="448.5" y="550.3857">Service Accounts</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81" x="448.5" y="566.6826">volatile data</text></g><g id="stateful.doguStopped"><rect fill="#FFFFFF" height="101.4844" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="193" x="388.5" y="693"/><line style="stroke:#16688D;stroke-width:0.5;" x1="388.5" x2="581.5" y1="719.2969" y2="719.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="435" y="710.9951">Dogu stopped</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="139" x="393.5" y="737.292">Container (stopped)</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173" x="393.5" y="753.5889">Volumes (persisted data)</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="119" x="393.5" y="769.8857">Service Accounts</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81" x="393.5" y="786.1826">volatile data</text></g><rect fill="#FFFFFF" height="184.2969" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="235" x="722.5" y="651.5"/><rect fill="#FFFFFF" height="156" rx="12.5" ry="12.5" style="stroke:#FFFFFF;stroke-width:1.0;" width="233" x="723.5" y="678.7969"/><line style="stroke:#16688D;stroke-width:0.5;" x1="722.5" x2="957.5" y1="677.7969" y2="677.7969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112" x="784" y="669.4951">Dogu upgrading</text><g id="stateful.doguUpgrades.doguRunsPreUpgrade"><rect fill="#FFFFFF" height="50" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="206" x="738.5" y="689.7969"/><line style="stroke:#16688D;stroke-width:0.5;" x1="738.5" x2="944.5" y1="716.0938" y2="716.0938"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="186" x="748.5" y="707.792">Dogu running Pre-Upgrade</text></g><g id="stateful.doguUpgrades.doguRunsPostUpgrade"><rect fill="#FFFFFF" height="50" rx="12.5" ry="12.5" style="stroke:#16688D;stroke-width:0.5;" width="214" x="734.5" y="775.7969"/><line style="stroke:#16688D;stroke-width:0.5;" x1="734.5" x2="948.5" y1="802.0938" y2="802.0938"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="194" x="744.5" y="793.792">Dogu running Post-Upgrade</text></g><!--MD5=[a7612aefe461816f4b25a141edf81e12]
+link doguRunsPreUpgrade to doguRunsPostUpgrade--><!--MD5=[4f73dba38aa0aa5866e19d319916a49a]
+link *start*stateless to doguExistsLocal--><g id="link_*start*stateless_doguExistsLocal"><path d="M166,70 C166,85.46 166,117.68 166,141.6 " fill="none" id="*start*stateless-to-doguExistsLocal" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="166,146.87,170,137.87,166,141.87,162,137.87,166,146.87" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="80" x="167" y="113.0669">cesapp build</text></g><!--MD5=[4f2469380cc15c47db5b271ba41a64c0]
+link doguExistsRemote to doguExistsLocal--><g id="link_doguExistsRemote_doguExistsLocal"><path d="M151.28,328.39 C154.38,295.7 159.9,237.36 163.23,202.22 " fill="none" id="doguExistsRemote-to-doguExistsLocal" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="163.71,197.21,158.8805,205.7935,163.2393,202.1878,166.845,206.5466,163.71,197.21" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="72" x="162" y="240.0669">cesapp pull</text></g><!--MD5=[642aa1a045e31ef93447e316e58a9b9b]
+link doguExistsLocal to doguExistsRemote--><g id="link_doguExistsLocal_doguExistsRemote"><path d="M100.08,197.12 C87.68,204.74 76.33,214.54 69,227 C48.83,261.32 81.92,299.79 111.46,324.98 " fill="none" id="doguExistsLocal-to-doguExistsRemote" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="115.42,328.3,111.0829,319.4575,111.5847,325.0921,105.9502,325.5939,115.42,328.3" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="81" x="70" y="240.0669">cesapp push</text></g><!--MD5=[3aa95127255a78d3b7c472708fa50029]
+link doguExistsLocal to doguInstalled--><g id="link_doguExistsLocal_doguInstalled"><path d="M211.23,197.02 C264.73,225.43 354.84,273.28 420.99,308.42 " fill="none" id="doguExistsLocal-to-doguInstalled" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="425.71,310.92,419.6355,303.1675,421.2935,308.576,415.8851,310.2339,425.71,310.92" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="5" x="296" y="240.0669">-</text></g><!--MD5=[919a3f2dd8296421429a5b9d0fdfd9dc]
+link doguExistsRemote to doguInstalled--><g id="link_doguExistsRemote_doguInstalled"><path d="M262.79,353.5 C307.61,353.5 358.67,353.5 402.24,353.5 " fill="none" id="doguExistsRemote-to-doguInstalled" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="407.24,353.5,398.24,349.5,402.24,353.5,398.24,357.5,407.24,353.5" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="87" x="291.5" y="346.5669">cesapp install</text></g><!--MD5=[4bdf11029ce8fbac87f0b946fd99c687]
+link doguInstalled to doguRunning--><g id="link_doguInstalled_doguRunning"><path d="M512.9,396.15 C517.56,417.99 523.34,445.01 528.35,468.49 " fill="none" id="doguInstalled-to-doguRunning" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="529.41,473.44,531.4431,463.8033,528.3663,468.5502,523.6194,465.4733,529.41,473.44" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="80" x="523" y="439.5669">cesapp start</text></g><!--MD5=[2190548476a5f51e491879ef30c16d36]
+link doguStopped to doguRunning--><g id="link_doguStopped_doguRunning"><path d="M492.33,692.87 C496.75,666.4 503.06,633.42 511,604.5 C513.22,596.4 515.9,587.96 518.71,579.73 " fill="none" id="doguStopped-to-doguRunning" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="520.48,574.64,513.7411,581.8224,518.8346,579.3615,521.2955,584.455,520.48,574.64" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="80" x="512" y="617.5669">cesapp start</text></g><!--MD5=[cc5535959df2a1bd5d4fe008ab6ad985]
+link doguRunning to doguStopped--><g id="link_doguRunning_doguStopped"><path d="M443.49,574.33 C433.72,583.08 425.15,593.11 419,604.5 C404.28,631.79 416.71,662.89 434.59,688.65 " fill="none" id="doguRunning-to-doguStopped" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="437.51,692.74,435.5466,683.0888,434.6092,688.6675,429.0306,687.7301,437.51,692.74" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="78" x="420" y="617.5669">cesapp stop</text></g><!--MD5=[f1305583ee085b9d61da894117c564dd]
+link doguRunning to doguRunning--><g id="link_doguRunning_doguRunning"><path d="M636.62,508.06 C656.89,509.7 671.5,515.02 671.5,524 C671.5,532.21 659.29,537.35 641.72,539.44 " fill="none" id="doguRunning-to-doguRunning" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="636.62,539.94,645.9751,543.0193,641.5949,539.4397,645.1745,535.0594,636.62,539.94" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="108" x="677.5" y="528.5669">Container reboot</text></g><!--MD5=[a9d9031394507e5efc0fe830ea2add8b]
+link stateful to stateless--><g id="link_stateful_stateless"><path d="M999.7023,267.7802 C999.5878,267.4527 999.4714,267.126 999.3529,266.8002 C997.4573,261.5873 995.0425,256.5988 992,252 C911.49,130.3 840.92,141.39 701,100 C657.04,86.995 554.8075,77.295 462.9388,70.8213 C417.0044,67.5844 373.6609,65.1541 341.488,63.5205 C325.4015,62.7037 312.1076,62.0861 302.6788,61.6664 C300.3216,61.5615 298.206,61.4689 296.3487,61.3887 C295.8843,61.3687 295.4361,61.3494 295.0044,61.3309 " fill="none" id="stateful-to-stateless" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="295.0044,61.3309,303.8248,65.7126,299.9998,61.545,304.1674,57.7199,295.0044,61.3309" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="104" x="947" y="176.5669">cesapp purge 1)</text></g><!--MD5=[67cc2cc16988d7eeb6284d90449bc4a6]
+link stateless to stateful--><!--MD5=[173ca7e77d77c33aefaf63a8e8b731a6]
+link doguInstalled to doguUpgrades--><g id="link_doguInstalled_doguUpgrades"><path d="M563.62,396.1 C576.86,404.25 591.1,412.2 605,418.5 C770.84,493.64 887.84,442.02 970,604.5 C980.84,625.94 974.93,646.37 960.95,664.62 " fill="none" id="doguInstalled-to-doguUpgrades" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="957.64,668.72,966.4099,664.2379,960.7843,664.8324,960.1898,659.2069,957.64,668.72" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="103" x="951" y="528.5669">cesapp upgrade</text></g><!--MD5=[b4c60e57ade3d796dc4ffdcffae10b3e]
+link doguRunning to doguUpgrades--><g id="link_doguRunning_doguUpgrades"><path d="M583,574.79 C597.98,590.67 615.44,607.69 633,621.5 C659.09,642.02 689.01,661.49 717.84,678.58 " fill="none" id="doguRunning-to-doguUpgrades" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="722.46,681.31,716.7493,673.2858,718.1562,678.7649,712.6771,680.1719,722.46,681.31" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="144" x="634" y="617.5669">cesapp upgrade starts</text></g><!--MD5=[518c2ddb30fc8a302bfe0bd3751a44d0]
+link doguUpgrades to doguRunning--><g id="link_doguUpgrades_doguRunning"><path d="M815.53,651.49 C807.47,634.12 796.88,617.37 783,604.5 C744.45,568.76 689.56,549.07 641.7,538.23 " fill="none" id="doguUpgrades-to-doguRunning" style="stroke:#000000;stroke-width:1.0;"/><polygon fill="#000000" points="636.8,537.15,644.718,543.0071,641.6809,538.2347,646.4534,535.1976,636.8,537.15" style="stroke:#000000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="138" x="797" y="617.5669">cesapp upgrade ends</text></g><!--MD5=[b4c60e57ade3d796dc4ffdcffae10b3e]
+link doguRunning to doguUpgrades--><rect fill="#DDDDDD" height="60.8906" rx="7.5" ry="7.5" style="stroke:#000000;stroke-width:1.0;" width="447" x="593" y="872.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="255" x="599" y="891.4951">1) depends on additional parameters</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="435" x="599" y="907.792">2) other commands like replacing containers or backup/restore</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="318" x="611" y="924.0889">mostly leverage existing states and transitions</text><rect height="16.2969" style="stroke:#00000000;stroke-width:1.0;fill:none;" width="487" x="280.5" y="943.3906"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="487" x="280.5" y="956.3857">Simplified Lifecycle of a dogu with corresponding cesapp commands 2)</text><!--MD5=[33d6db45765e8d72ed64ddf4552c3c77]
+@startuml
+!define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
+!includeurl CLOUDOGUURL/common.puml
+'skinparam linetype ortho
+'skinparam linetype polyline
+
+state stateless as "1. Without state" {
+    [*] - -> doguExistsLocal             : cesapp build
+
+    state doguExistsLocal as "Dogu exists on local host" #white
+    state doguExistsRemote as "Dogu exists in remote registry" #white
+}
+
+state stateful as "2. With state" {
+    state doguInstalled as "Dogu installed" #white {
+        doguInstalled : Container (stopped)
+        doguInstalled : Volumes (persisted data)
+        doguInstalled : Service Accounts
+    }
+    state doguRunning as "Dogu running" #white {
+        doguRunning : Container (running)
+        doguRunning : Volumes (persisted data)
+        doguRunning : Service Accounts
+        doguRunning : volatile data
+    }
+    state doguStopped as "Dogu stopped" #white {
+        doguStopped : Container (stopped)
+        doguStopped : Volumes (persisted data)
+        doguStopped : Service Accounts
+        doguStopped : volatile data
+    }
+
+    state doguUpgrades as "Dogu upgrading" #white {
+        state doguRunsPreUpgrade as "Dogu running Pre-Upgrade" #white
+        state doguRunsPostUpgrade as "Dogu running Post-Upgrade" #white
+    }
+}
+
+doguExistsRemote - -> doguExistsLocal    : cesapp pull
+doguExistsLocal - -> doguExistsRemote    : cesapp push
+'stateless - -> stateful
+
+doguExistsLocal  - -> doguInstalled      : -
+doguExistsRemote  - -> doguInstalled     : cesapp install
+
+doguInstalled - -> doguRunning           : cesapp start
+doguStopped - -> doguRunning             : cesapp start
+doguRunning - -> doguStopped             : cesapp stop
+doguRunning - -> doguRunning             : Container reboot
+
+stateful - -> stateless                  : cesapp purge 1)
+doguInstalled - -> doguUpgrades          : cesapp upgrade
+doguRunning - -> doguUpgrades            : cesapp upgrade starts
+doguUpgrades - -> doguRunning            : cesapp upgrade ends
+
+legend right
+  1) depends on additional parameters
+  2) other commands like replacing containers or backup/restore
+     mostly leverage existing states and transitions
+endlegend
+
+'Styling
+stateless -[hidden]d-> stateful
+doguRunsPreUpgrade -[hidden]-> doguRunsPostUpgrade
+doguRunning -[hidden]r-> doguUpgrades
+
+caption Simplified Lifecycle of a dogu with corresponding cesapp commands 2)
+@enduml
+
+@startuml
+
+
+hide stereotype
+
+
+skinparam Activity {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #ffffff
+  DiamondBackgroundColor #23a3dd
+  DiamondBorderColor #16688d
+  DiamondFontColor #ffffff
+}
+
+skinparam Actor {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Agent {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Arrow {
+  Color #000000
+}
+
+skinparam Artifact {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Class {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam ClassAttribute {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Cloud {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Component {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Control {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Database {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Domain {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Entity {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam File {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Folder {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Interface {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Machine {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Node {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #FFFFFF
+}
+
+skinparam Note {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Object {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam ObjectAttribute {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Package {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Participant {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Partition {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Queue {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Rectangle {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Requirement {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Sequence {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam SequenceGroup {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam SequenceReference {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Stack {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam State {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Storage {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #000000
+}
+
+skinparam Usecase {
+  BackgroundColor #23a3dd
+  BorderColor #16688d
+  FontColor #FFFFFF
+}
+
+state stateless as "1. Without state" {
+    [*] - -> doguExistsLocal             : cesapp build
+
+    state doguExistsLocal as "Dogu exists on local host" #white
+    state doguExistsRemote as "Dogu exists in remote registry" #white
+}
+
+state stateful as "2. With state" {
+    state doguInstalled as "Dogu installed" #white {
+        doguInstalled : Container (stopped)
+        doguInstalled : Volumes (persisted data)
+        doguInstalled : Service Accounts
+    }
+    state doguRunning as "Dogu running" #white {
+        doguRunning : Container (running)
+        doguRunning : Volumes (persisted data)
+        doguRunning : Service Accounts
+        doguRunning : volatile data
+    }
+    state doguStopped as "Dogu stopped" #white {
+        doguStopped : Container (stopped)
+        doguStopped : Volumes (persisted data)
+        doguStopped : Service Accounts
+        doguStopped : volatile data
+    }
+
+    state doguUpgrades as "Dogu upgrading" #white {
+        state doguRunsPreUpgrade as "Dogu running Pre-Upgrade" #white
+        state doguRunsPostUpgrade as "Dogu running Post-Upgrade" #white
+    }
+}
+
+doguExistsRemote - -> doguExistsLocal    : cesapp pull
+doguExistsLocal - -> doguExistsRemote    : cesapp push
+
+doguExistsLocal  - -> doguInstalled      : -
+doguExistsRemote  - -> doguInstalled     : cesapp install
+
+doguInstalled - -> doguRunning           : cesapp start
+doguStopped - -> doguRunning             : cesapp start
+doguRunning - -> doguStopped             : cesapp stop
+doguRunning - -> doguRunning             : Container reboot
+
+stateful - -> stateless                  : cesapp purge 1)
+doguInstalled - -> doguUpgrades          : cesapp upgrade
+doguRunning - -> doguUpgrades            : cesapp upgrade starts
+doguUpgrades - -> doguRunning            : cesapp upgrade ends
+
+legend right
+  1) depends on additional parameters
+  2) other commands like replacing containers or backup/restore
+     mostly leverage existing states and transitions
+endlegend
+
+stateless -[hidden]d-> stateful
+doguRunsPreUpgrade -[hidden]-> doguRunsPostUpgrade
+doguRunning -[hidden]r-> doguUpgrades
+
+caption Simplified Lifecycle of a dogu with corresponding cesapp commands 2)
+@enduml
+
+PlantUML version 1.2022.4(Sat Apr 09 15:29:17 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
