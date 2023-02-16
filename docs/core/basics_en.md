@@ -57,7 +57,7 @@ For this the following components are needed:
 - `vagrant up`
 
 Afterwards, the setup of the CES must be performed at `http://192.168.56.2:8080`.
-Thereby you have to create a free account at the platform `mycloudogu` and select the Dogu `nginx` in the Dogu step.
+In the process you have to create a free account at the platform `myCloudogu` and select the Dogu `nginx` in the Dogu step.
 A more detailed description of how to perform the setup can be found in the [Quick-Start-Guide of the CES](https://docs.cloudogu.com/de/quickstart/).
 
 ### 2) Create directory
