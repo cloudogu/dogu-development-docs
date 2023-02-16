@@ -30,7 +30,7 @@ More detailed help can be found in the [cesapp documentation](https://docs.cloud
 ## Dogu Quick Start
 
 This section describes a minimal skeleton of a Dogu that produces a web page.
-Here we ignore almost all cross-sectional aspects that can take place in the interaction in the CES, that means without:
+Here we ignore almost all cross-sectional aspects that can take place in the interaction in the CES, which are:
 - Single sign-on/single log-out
 - Dogu dependencies
 - Backup/restore
