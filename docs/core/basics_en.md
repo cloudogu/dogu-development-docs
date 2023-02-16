@@ -38,7 +38,7 @@ Here we ignore almost all cross-sectional aspects that can take place in the int
 - Dogu configuration via registry
 - etc.
 
-Such a minimal dogu only answers requests coming in through the central reverse proxy (the nginx dogu).
+Such a minimal dogu only answers requests coming in through the central reverse proxy (the nginx Dogu).
 For this the following components are needed:
 
 1. A running CES.
