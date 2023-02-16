@@ -82,7 +82,7 @@ Therefore, a container image must be created, which is then instantiated into a 
       - Encryption of own configuration values
       - Go-templating
       - Health checks
-- If the Dogu is a web application, the line `ENV SERVICE_TAGS webapp` is necessary.
+- If the Dogu is a web application, the line `ENV SERVICE_TAGS=webapp` is necessary.
   This will cause the new dogu to appear in the warp menu.
 - Copy your resources into the dogu if necessary.
 - The label `MAINTAINER` is used for faster communication in support cases.
