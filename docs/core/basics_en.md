@@ -99,6 +99,8 @@ LABEL NAME="official/newdogu" \
    MAINTAINER="your.maintainer.or.catchall@company.com"
 
 ENV SERVICE_TAGS=webapp \
+    # This is a special environment variable to tell the nginx to rewrite the regular path for the dev python server.
+    # It is necessary because all Dogus are available a https://<fqdn>/<dogu_name>.
     SERVICE_REWRITE='{"pattern": "newdogu", "rewrite": ""}'
     
 RUN set -x \
