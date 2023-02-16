@@ -13,7 +13,7 @@ die Erstellung eines minimalen Dogus beschrieben.
 ## Voraussetzungen
 
 Für die Dogu-Entwicklung sollten gewisse Vorkenntnisse vorhanden sein. 
-Dies umfasst einen vertrauten Umgang mit der Container-Virtualisierungssoftware Docker, Bash und einem Verständnis der, für die Dogu Erstellung ausgewählten, Zielsoftware.
+Dies umfasst einen vertrauten Umgang mit der Container-Virtualisierungssoftware Docker, Bash und einem Verständnis der für die Dogu-Erstellung ausgewählten Zielsoftware.
 
 Benötigte Entwicklungssoftware:
 - [git](https://git-scm.com)
