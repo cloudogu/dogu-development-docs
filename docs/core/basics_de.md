@@ -123,7 +123,7 @@ CMD ["/startup.sh"]
 
 ### 4) Dogu.json
 
-Die Dogu.json definiert grundlegende Informationen des Dogus und bietet die Möglichkeit komplexere Eigenschaften,
+Die `dogu.json` definiert grundlegende Informationen des Dogus und bietet die Möglichkeit komplexere Eigenschaften,
 wie z.B. Service-Accounts oder Volumes mit speziellen Rechten zu definieren.
 Zusammen mit dem Docker-Image bilden die beiden Artefakte später das Release. 
 
