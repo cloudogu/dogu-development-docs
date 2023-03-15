@@ -305,7 +305,7 @@ Die Syntax des einfachen Namens muss ein DNS-kompatibler Bezeichner sein und sol
 - Ziffern 0-9
 - eine Gesamtlänge von weniger als 20 Zeichen
 
-Es wird empfohlen, denselben voll qualifizierten Namen innerhalb der Dockerdatei des Dogus als Umgebungsvariable `NAME`
+Es wird empfohlen, denselben voll qualifizierten Namen innerhalb der Dockerfiles des Dogus als Umgebungsvariable `NAME`
 zu verwenden.
 
 Beispiele:
@@ -330,7 +330,7 @@ Version 1.7.8-2 sein. Wenn sich die Anwendung selbst ändert (z.B. ein nginx-Upg
 sein. Beachten Sie, dass in diesem Fall die Version des Dogus wieder auf 1 gesetzt werden sollte.
 
 Während die `dogu.json` der zentrale Ort für die Version ist und von der cesapp in verschiedenen Prozessen wie
-Installation und Release verwendet wird, sollte die Version auch als Label in der Dockerdatei des Dogus platziert
+Installation und Release verwendet wird, sollte die Version auch als Label in dem Dockerfile des Dogus platziert
 werden.
 
 Beispielversionen in der dogu.json:
@@ -379,7 +379,7 @@ Beispiele:
 Die Beschreibung enthält eine kurze Erklärung, was das Dogu macht. Dieses Feld ist ein Pflichtfeld.
 
 Es wird bei der Einrichtung des Ökosystems in der Auswahl des Dogus verwendet. Daher sollte die Beschreibung einem
-uninformierten Benutzer einen kurzen Hinweis darauf geben, was das Dogu ist welche Funktionen es bietet.
+uninformierten Benutzer einen kurzen Hinweis darauf geben, was das Dogu ist und welche Funktionen es bietet.
 
 Die Beschreibung kann bestehen aus:
 
@@ -416,7 +416,7 @@ Beispiel-Dogus für jede Kategorie:
 
 ### Tags
 
-Tags enthält eine Liste von Ein-Wort-Tags, die im Zusammenhang mit dem Dogus stehen. Dieses Feld ist optional.
+Tags enthält eine Liste von Ein-Wort-Tags, die im Zusammenhang mit dem Dogu stehen. Dieses Feld ist optional.
 
 Wenn das Dogus im Warp-Menü angezeigt werden soll, ist das Tag "warp" notwendig. Andere Tags werden nicht automatisch
 verarbeitet.
