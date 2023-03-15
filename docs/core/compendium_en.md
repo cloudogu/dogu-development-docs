@@ -657,7 +657,8 @@ Examples:
 
 ### Properties
 
-Properties contains [Properties](#type-properties). This field is optional. It describes generic properties of the dogu which are evaluated by a client like cesapp or k8s-dogu-operator.
+Properties is a `map[string]string` of Properties. This field is optional. It describes generic properties of the dogu 
+which are evaluated by a client like cesapp or k8s-dogu-operator.
 
 Example:
 
