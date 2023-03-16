@@ -907,7 +907,7 @@ Beispiele:
 
 ### Host
 
-Host enthält den gemappten Port auf der Seite des Hosts. Dieses Feld ist obligatorisch. Es gelten die üblichen
+Host enthält den zugeordneten Port auf der Seite des Hosts. Dieses Feld ist obligatorisch. Es gelten die üblichen
 Einschränkungen des Portbereichs.
 
 Beispiele:
