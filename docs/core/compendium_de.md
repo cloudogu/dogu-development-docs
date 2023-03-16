@@ -490,7 +490,7 @@ Die folgenden Befehlsbezeichner beziehen sich auf Befehle, die von einem Dogu-Cl
 
 pre-upgrade: Dieser Befehl wird in einer frühen Phase eines Upgrade-Prozesses von einem Dogu ausgeführt. Ein
 Dogu-Client mountet das Pre-Upgrade-Skript der neuen Dogu-Version in den Container des alten, noch laufenden Dogus und
-führt es aus. Es wird hauptsächlich zur Vorbereitung von Datenmigrationen (z.B. Export einer Datenbank) verwendet. Kern
+führt es aus. Es wird hauptsächlich zur Vorbereitung von Datenmigrationen (z. B. Export einer Datenbank) verwendet. Kern
 des Skriptes sollte der Vergleich zwischen den Versionen sein, um festzustellen, ob eine Migration notwendig ist. Dazu
 wird der Dogu-Client das Skript mit der alten Version als erstem und der neuen Version als zweitem Parameter aufrufen.
 Außerdem ist es empfehlenswert, im Skript Zustände wie "upgrade" oder "pre-upgrade done" zu setzen. Dies kann sehr
