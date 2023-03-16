@@ -494,7 +494,7 @@ führt es aus. Es wird hauptsächlich zur Vorbereitung von Datenmigrationen (z. 
 des Skriptes sollte der Vergleich zwischen den Versionen sein, um festzustellen, ob eine Migration notwendig ist. Dazu
 wird der Dogu-Client das Skript mit der alten Version als erstem und der neuen Version als zweitem Parameter aufrufen.
 Außerdem ist es empfehlenswert, im Skript Zustände wie "upgrade" oder "pre-upgrade done" zu setzen. Dies kann sehr
-nützlich sein, da Sie es im Post-Upgrade oder beim regulären Start für eine Wartefunktion verwendet werden können.
+nützlich sein, da Sie es im Post-Upgrade oder beim regulären Start für eine Wartefunktion verwenden können.
 
 post-upgrade: Dieser Befehl wird nach einem regulären Dogu-Upgrade ausgeführt. Wie beim Pre-Upgrade wird als erster
 Parameter die alte Dogu-Version und als zweiter Parameter die neue Dogu-Version übergeben. Sie sollten verwendet
