@@ -712,7 +712,7 @@ Beispiele:
 
 ### Properties
 
-Properties is eine `map[string]string` von Properties. Dieses Feld ist optional. Es beschreibt generische
+Properties ist eine `map[string]string` von Properties. Dieses Feld ist optional. Es beschreibt generische
 Eigenschaften des Dogus, die von einem Client wie cesapp oder k8s-dogu-operator ausgewertet werden.
 
 Beispiel:
