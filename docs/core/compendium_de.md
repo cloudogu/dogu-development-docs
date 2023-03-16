@@ -556,7 +556,7 @@ Beispiel ExposedCommands für Service-Accounts:
 ```
 
 Benutzerdefinierte Befehle: Darüber hinaus kann ein Dogu Befehle angeben, die nicht automatisch im Lebenszyklus des
-Dogus ausgeführt werden (z.B. Upgrade). Zum Beispiel kann ein Dogu wie Redmine einen Befehl zum Löschen oder
+Dogus ausgeführt werden (z. B. Upgrade). Zum Beispiel kann ein Dogu wie Redmine einen Befehl zum Löschen oder
 Installieren eines Plugins angeben. Zur Laufzeit kann ein Administrator diesen Befehl mit der cesapp wie folgt aufrufen:
 
 ```
