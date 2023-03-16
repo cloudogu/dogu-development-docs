@@ -773,7 +773,7 @@ OptionalDependencies enthält eine Liste von [Dependency](#type-dependency). Die
 Im Gegensatz zu Dependencies können mit OptionalDependencies Abhängigkeiten definiert werden, die
 erfüllt
 werden können, wenn sie vorhanden sind. Wenn eine optionale Abhängigkeit nicht vorhanden ist, hat dies keine negativen
-Auswirkungen bei der Prüfung der Abhängigkeit. Ist die optionale Abhängigkeit jedoch vorhanden und kann sie während der
+Auswirkungen bei der Prüfung der Abhängigkeit. Ist die optionale Abhängigkeit jedoch vorhanden und kann diese während der
 Abhängigkeitsprüfung nicht erfüllt werden, so wird ein Fehler ausgelöst und die Verarbeitung wird abgebrochen.
 
 Beispiele:
