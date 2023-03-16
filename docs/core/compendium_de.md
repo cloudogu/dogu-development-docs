@@ -634,7 +634,7 @@ Ein Service-Account schützt sensible Daten, die für ein anderes Dogus verwende
 werden von Service-Account-Produzenten unterschieden. Um ein Servicekonto zu erzeugen, muss ein Dogu die Skripte
 service-account-create und service-account-delete in [core.ExposedCommands](#exposedcommands) implementieren.
 Um ein
-Service-Account zu konsumieren, sollte ein Dogus eine Anfrage in ServiceAccounts definieren.
+Service-Account zu konsumieren, sollte ein Dogu eine Anfrage in ServiceAccounts definieren.
 
 Bei der Installation erkennt ein Dogu-Client eine Service-Account-Anfrage und führt das Skript "service-account-create"
 mit den Informationen des Service-Account-Produzenten aus. Die Anmeldedaten werden dann in der Cloudogu
