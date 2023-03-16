@@ -896,7 +896,7 @@ Beispiel:
 
 ### Container
 
-Container enthält den gemappten Port auf der Seite des Containers. Dieses Feld ist obligatorisch. Es gelten die üblichen
+Container enthält den zugeordneten Port auf der Seite des Containers. Dieses Feld ist obligatorisch. Es gelten die üblichen
 Einschränkungen des Portbereichs.
 
 Beispiele:
