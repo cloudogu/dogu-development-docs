@@ -326,7 +326,7 @@ B. die nginx-Version in dem nginx-Dogu). Der zweite Teil steht für die Version 
 Erstveröffentlichung mit 1 beginnen (z. B. 1.7.8-1).
 
 Wenn sich die Anwendung nicht ändert, aber z.B. Änderungen im Startskript des Dogus vorgenommen werden, sollte die neue
-Version 1.7.8-2 sein. Wenn sich die Anwendung selbst ändert (z.B. ein nginx-Upgrade), sollte die neue Version 1.7.9-1
+Version 1.7.8-2 sein. Wenn sich die Anwendung selbst ändert (z. B. ein nginx-Upgrade), sollte die neue Version 1.7.9-1
 sein. Beachten Sie, dass in diesem Fall die Version des Dogus wieder auf 1 gesetzt werden sollte.
 
 Während die `dogu.json` der zentrale Ort für die Version ist und von der cesapp in verschiedenen Prozessen wie
