@@ -671,8 +671,7 @@ Beispiele:
 Privileged gibt an, ob der Docker-Socket in das Container-Dateisystem eingehängt werden soll. Dieses Feld ist optional.
 Der Standardwert ist `false`.
 
-Aus Sicherheitsgründen ist es sehr empfehlenswert, Privileged auf false zu setzen, da fast kein Dogu rückwirkend
-Einblick in den Container erhalten sollte.
+Aus Sicherheitsgründen wird sehr empfohlen, Privileged auf false zu setzen, da regulär kein Dogu Zugriffe auf das Container-System erhalten sollte.
 
 Beispiel:
 
