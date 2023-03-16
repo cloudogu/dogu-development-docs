@@ -513,7 +513,7 @@ Service-Account im Cloudogu EcoSystem ist ein Berechtigungsnachweis zur Autorisi
 Datenbank oder eines Authentifizierungsservers. Der Befehl "service-account-create" muss in dem Dogu implementiert
 werden, der den Service-Account herstellt und die Anmeldeinformationen erzeugt. Wenn ein
 Service-Account-Verbraucher-Dogu
-installiert wird und einen Service-Account benötigt (z.B. für postgresql), ruft der Dogu-Client das
+installiert wird und einen Service-Account benötigt (z. B. für postgresql), ruft der Dogu-Client das
 service-account-create Skript in dem postgresql-Dogu mit dem Servicenamen als ersten Parameter und benutzerdefinierten
 Parametern als zusätzliche Parameter auf. Siehe [core.ServiceAccount](#type-serviceaccount) für die Definition von
 benutzerdefinierten Parametern. Mit diesen Informationen sollte das Skript ein Service-Account erstellen und speichern (
