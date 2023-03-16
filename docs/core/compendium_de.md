@@ -614,7 +614,7 @@ Es gibt verschiedene Arten von HealthChecks:
 - tcp, um auf einen offenen Port zu prüfen
 - http, um einen Statuscode einer http-Antwort zu prüfen
 
-Sie müssen ohne Authentifizierung ausführbar sein.
+HealthChecks müssen ohne Authentifizierung ausführbar sein.
 
 Beispiel:
 
