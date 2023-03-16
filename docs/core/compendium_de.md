@@ -400,7 +400,7 @@ Beispiele:
 
 Die Kategorie organisiert die Dogus in drei Kategorien. Dieses Feld ist obligatorisch.
 
-Diese Kategorien sind fest und müssen entweder sein:
+Die Liste der Kategorien ist fix, es muss eines hiervon  gewählt werden:
 
 - `Development Apps` - Für reguläre Dogus, die von einem regulären Benutzer des Ökosystems verwendet werden sollen,
 - `Administration Apps` - Für Dogus, die von einem Benutzer mit Administrationsrechten verwendet werden sollen
