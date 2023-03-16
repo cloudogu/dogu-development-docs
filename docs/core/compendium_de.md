@@ -486,9 +486,7 @@ ExposedCommands definieren Aktionen des Typen [ExposedCommand](#type-exposedcomm
 Dogus-Client wie der cesapp oder dem k8s-dogu-operator oder manuell von einem administrativen Benutzer ausgelöst werden
 können. Dieses Feld ist optional.
 
-In der Regel handelt es sich bei den Befehlen, die automatisch von einem Dogu-Client ausgelöst werden, um solche in
-Upgrade- oder Service-Account-Prozessen. Diese Befehle sind: pre-upgrade, post-upgrade, upgrade-notification,
-service-account-create, service-account-remove
+Die folgenden Befehlsbezeichner beziehen sich auf Befehle, die von einem Dogu-Client automatisch im Rahmen von Upgrade- oder Service-Account-Prozessen ausgelöst werden. Diese Befehle sind: pre-upgrade, post-upgrade, upgrade-notification, service-account-create, service-account-remove
 
 pre-upgrade: Dieser Befehl wird in einer frühen Phase eines Upgrade-Prozesses von einem Dogu ausgeführt. Ein
 Dogu-Client mountet das Pre-Upgrade-Skript der neuen Dogu-Version in den Container des alten, noch laufenden Dogus und
