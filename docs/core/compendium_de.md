@@ -458,7 +458,7 @@ Dieses Feld ist obligatorisch.
 Das Image darf keine Image-Tags wie die Image-Version oder "latest" enthalten (verwenden Sie stattdessen das Feld
 Version für diese Informationen). Der Image-Registry-Teil dieses Feldes muss auf "registry.cloudogu.com" verweisen.
 
-Es ist eine gute Praxis, den gleichen Namen für das Bild-Repository zu verwenden wie im Feld Name, um Zugriffsstrategien
+Es ist eine gute Praxis, den gleichen Namen für das Build-Repository zu verwenden wie im Feld Name, um Zugriffsstrategien
 zu ermöglichen und Speicherkonflikte zu vermeiden.
 
 Beispiele für official/redmine:
