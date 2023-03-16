@@ -1001,7 +1001,7 @@ dieses Feldes hängt vom gewünschten Service-Account-Produzenten-Dogu ab. Bitte
 
 ### Kind
 
-Kind definiert die Art des Dienstes, auf dem das Konto erstellt werden soll, z.B. `dogu` oder `k8s`. Dieses Feld ist
+Kind definiert die Art des Dienstes, auf dem das Konto erstellt werden soll, z. B. `dogu` oder `k8s`. Dieses Feld ist
 optional. Wenn es leer ist, sollte der Standardwert `dogu` angenommen werden.
 
 Das Auslesen dieser Eigenschaft und die Erstellung eines entsprechenden Service-Accounts obliegt dem Client.
