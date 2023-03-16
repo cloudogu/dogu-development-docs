@@ -421,7 +421,7 @@ Tags enthält eine Liste von Ein-Wort-Tags, die im Zusammenhang mit dem Dogu ste
 Wenn das Dogus im Warp-Menü angezeigt werden soll, ist das Tag "warp" notwendig. Andere Tags werden nicht automatisch
 verarbeitet.
 
-Beispiele für z.B. Jenkins:
+Beispiele für z. B. Jenkins:
 
 ```
 {"warp", "build", "ci", "cd"}
