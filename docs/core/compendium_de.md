@@ -376,7 +376,7 @@ Beispiele:
 
 ### Description
 
-Die Beschreibung enthält eine kurze Erklärung, was das Dogu macht. Dieses Feld ist ein Pflichtfeld.
+Die Beschreibung enthält eine kurze Erklärung, was das Dogu leistet. Dieses Feld ist ein Pflichtfeld.
 
 Es wird bei der Einrichtung des Ökosystems in der Auswahl des Dogus verwendet. Daher sollte die Beschreibung einem
 uninformierten Benutzer einen kurzen Hinweis darauf geben, was das Dogu ist und welche Funktionen es bietet.
