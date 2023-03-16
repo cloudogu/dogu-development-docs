@@ -958,7 +958,7 @@ Typ "tcp" und "http".
 
 ### Parameters
 
-Parameter können Schlüssel-Werte-Paare für prüfungsspezifische Parameter enthalten.
+Parameter können Schlüssel-Wert-Paare für prüfungsspezifische Parameter enthalten.
 
 Deprecated: wird nicht verwendet.
 
