@@ -338,9 +338,62 @@ Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit
 
 ## Aufbau und Best Practices von `startup.sh` 
 
-### asdf
+Ein einfaches Dogu benötigt eigentlich nur eine `dogu.json` und ein Container-Image. Doch was geschieht, wenn sich die Wirklichkeit im Dauerbetrieb von den Annahmen während der Dogu-Entwicklung unterscheiden? Bei Cloudogu haben wir schnell festgestellt, dass es im Betrieb geschickter ist, auf solche Änderungen eingehen zu können. Das Spektrum ist hierbei breit. Dabei kann es sich um Wartezeiten gegenüber anderen Dogus handeln, oder um die Änderung von ursprünglich fixen Bezeichnern bis hin zu Störungen in der Container-Engine.
 
-### qwer
+Daher hat sich bei Cloudogu eingebürgert, nicht den Hauptprozess direkt zu starten. Stattdessen werden erst Fehlerfälle in einem Startskript abgeprüft, ggf. neue Konfigurationswerte einarbeitet, um dann erst den Hauptprozess zu starten:
+
+1. Container startet `startup.sh`
+2. `startup.sh`
+   1. setzt eigene Optionen
+   2. ruft eigene Kommandos auf, um bestimmte Funktionalitäten umzusetzen, um z. B.
+      - auf Dogu-Abhängigkeiten zu warten
+      - einmalige Installationsprozesse durchzuführen 
+      - ein temporäres Admin-Konto zu generieren
+      - das aktuelle Log-Level umsetzen
+   3. den Dogu-State auf `ready` setzen (geeigneter [HealthCheck](../core/compendium_de.md#healthchecks) vorausgesetzt)
+   4. startet den Hauptprozess
+
+Dieser Abschnitt geht daher auf Erkenntnisse und _Best Practices_ ein, die sich auf solche Startskripte beziehen: Die `startup.sh`. 
+
+Übrigens: Fleißige Entwickler:innen können Inspiration in den Cloudogu-eigenen Startskripten [z. B. im Redmine-Dogu](https://github.com/cloudogu/redmine/blob/develop/resources/startup.sh) sammeln.
+
+### Skriptinterpreter
+
+Um ein Skript in einem Dogu ausführen zu können, muss ein Skriptinterpreter im Container-Image existieren. Das kann ein offizielles Paket sein (wie `bash`), es spricht aber nichts dagegen seinen eigenen Skriptinterpreter zu verwenden. Da Bash-Skripte weit verbreitet sind, wird hier Bash-Syntax verwendet.
+
+### Fehlerbehandlung
+
+Je nach Dogu können Fehler an unterschiedlichen Stellen entstehen und (dummerweise) auch wieder verschluckt werden. Es ist eine gute Praxis, Fehler hart aufschlagen zu lassen, um die Fehlerursache schneller zu identifizieren.
+
+Hierzu werden als allererstes die folgenden Optionen gesetzt
+
+```bash
+#!/bin/bash
+set -o errexit # beende das gesamte Skript (und damit auch den Container) bei einem nicht abgefangenem Fehler 
+set -o nounset # finde nicht initialisierte Variablen
+set -o pipefail # verschlucke keine Fehler bei Pipe-Verwendung
+```
+
+Wie ein Fehler abgefangen wird, ist ein Implementierungsdetail. Manchmal ist es günstig, einen Fehlerfall zu testen und eine eigene Meldung abzusetzen, manchmal reicht der Fehler selbst aus.
+
+Wenn man bereits Fehler erwartet, dann kann dieses Konstrukt hilfreich sein:
+
+```bash
+yourCommandExitCode=0
+your-command || yourCommandExitCode=$?
+if [[ ${yourCommandExitCode} -ne 0 ]]; then
+  echo "ERROR: Oh no. I found something critical during QuirkyFunction.";
+  doguctl state "ErrorQuirkyFunction"
+  sleep 300
+  exit 1
+fi
+```
+
+Der Fehler des Kommandos `your-command` wird abgefangen. Ein eigener Fehlertext wird ausgegeben. Der Dogu-State wird auf einen Nicht-`ready`-Wert gesetzt, der beim Debugging hilfreich sein könnte. Schließlich wird fünf Minuten (= 300 Sekunden) gewartet bis mit `exit 1` das Dogu als fehlerhaft neu gestartet wird.
+
+### Bash `function` - Teile und herrsche
+
+
 
 ### Die Nutzung von `doguctl`
 
