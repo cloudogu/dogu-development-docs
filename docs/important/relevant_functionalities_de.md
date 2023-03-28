@@ -433,6 +433,41 @@ Mit steigender Komplexität ist es evtl. eine Idee wert, relevante Schritte mit 
 
 ### Die Nutzung von `doguctl`
 
+Der Abschnitt [über Registry-Zugriff](#registry-zugriff-vom-dogu-heraus) hat das Thema `doguctl` bereits angeschnitten. `doguctl` ist ein Kommandozeilenwerkzeug, das wiederkehrende Interaktionen mit dem Cloudogu EcoSystem bündelt und vereinfacht. Dieser Abschnitt beschreibt mögliche Aufrufe. 
+
+#### doguctl config
+
+Liest und schreibt Konfigurationswerte aus der Registry
+
+#### doguctl validate
+
+Validiert Konfigurationswerte der Registry
+
+#### doguctl healthy
+
+Prüft, ob ein gegebenes Dogu betriebsbereit (healthy) ist
+
+#### doguctl state
+
+Liest und schreibt Dogu-Zustandswerte.
+
+#### doguctl random
+
+Erzeugt Zufallsstrings, geeignet um Passwörter oder sonstige Zugangsdaten zu erzeugen.
+
+#### doguctl template
+
+Erzeugt eine Datei aus einem [Golang-Template](https://pkg.go.dev/text/template). Registrywerte und Umgebungsvariablen können hierin direkt verwendet werden.
+
+#### doguctl wait-for-tcp
+
+Wartet bis ein gegebener TCP-Port offen ist.
+
+#### doguctl wait-for-http
+
+Wartet bis eine gegebene HTTP-URL bereit ist.
+
+
 ## Service Accounts
 Lorem ipsum Einführungstext
 
