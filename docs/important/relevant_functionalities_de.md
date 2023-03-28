@@ -338,9 +338,16 @@ Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit
 
 ## Aufbau und Best Practices von `startup.sh` 
 
-Ein einfaches Dogu benötigt eigentlich nur eine `dogu.json` und ein Container-Image. Doch was geschieht, wenn sich die Wirklichkeit im Dauerbetrieb von den Annahmen während der Dogu-Entwicklung unterscheiden? Bei Cloudogu haben wir schnell festgestellt, dass es im Betrieb geschickter ist, auf solche Änderungen eingehen zu können. Das Spektrum ist hierbei breit. Dabei kann es sich um Wartezeiten gegenüber anderen Dogus handeln, oder um die Änderung von ursprünglich fixen Bezeichnern bis hin zu Störungen in der Container-Engine.
+Ein einfaches Dogu benötigt eigentlich nur eine `dogu.json` und ein Container-Image. Doch was geschieht, wenn sich die Wirklichkeit im Dauerbetrieb von den Annahmen während der Dogu-Entwicklung unterscheiden? 
 
-Daher hat sich bei Cloudogu eingebürgert, nicht den Hauptprozess direkt zu starten. Stattdessen werden erst Fehlerfälle in einem Startskript abgeprüft, ggf. neue Konfigurationswerte einarbeitet, um dann erst den Hauptprozess zu starten:
+Bei Cloudogu haben wir schnell festgestellt, dass es im Betrieb geschickter ist, auf solche Änderungen eingehen zu können. Das Spektrum ist hierbei breit. Dabei kann es sich um Wartezeiten gegenüber anderen Dogus handeln, oder um die Änderung von ursprünglich fixen Bezeichnern bis hin zu Störungen in der Container-Engine. 
+
+Wiederkehrende Aufgaben beim Container-Start befinden sich im Abschnitt "Typische Dogu-Features" in den Abschnitten:
+- [Änderbarkeit der Admingruppe](#änderbarkeit-der-admin-gruppe)
+- [Änderbarkeit der FQDN](#änderbarkeit-der-fqdn)
+- [Loglevel mappen und ändern](#loglevel-mappen-und-ändern)
+
+Um dynamisch auf diese Gegebenheiten zu reagieren hat es sich bei Cloudogu eingebürgert, nicht den Hauptprozess im Container direkt zu starten. Stattdessen werden erst Fehlerfälle in einem Startskript abgeprüft, ggf. neue Konfigurationswerte einarbeitet, um dann erst den Hauptprozess zu starten, z. B. so:
 
 1. Container startet `startup.sh`
 2. `startup.sh`
@@ -393,7 +400,36 @@ Der Fehler des Kommandos `your-command` wird abgefangen. Ein eigener Fehlertext 
 
 ### Bash `function` - Teile und herrsche
 
+Je länger man eine Anwendung entwickelt, desto mehr Funktionalitäten gelangen in die Anwendung. Genauso kann es sich auch mit der `startup.sh` verhalten. Von einer leichteren Testbarkeit (z. B. mit [BATS](https://github.com/bats-core/bats-core)) abgesehen, sind kleine Ausführungsbestandteile leichter verständlich.
 
+Es ist daher eine gute Idee, Dogu-Funktionalitäten in der `startup.sh` genauso unter Gesichtspunkten der Testbarkeit, Lesbarkeit oder Refaktorisierbarkeit zu gestalten.
+
+Hierbei helfen Bash-Funktionen:
+
+```bash
+function setDoguLogLevel() {
+  echo "Mapping dogu specific log level..."
+  currentLogLevel=$(doguctl config --default "WARN" "logging/root")
+  
+  # bilde hier das Loglevel auf die Logkonfiguration des Dogus ab 
+}
+```
+
+Wiederkehrende Funktionen können abstrahiert und parametrisiert werden:
+
+```bash
+function deleteSetupArtefact() {
+  local artefactFile="${1}"
+  rm -f "${artefactFile}"
+}
+
+function cleanUpSetup() {
+  deleteSetupArtefact "/tmp/tracker-extract-3-files.127"
+  deleteSetupArtefact "/usr/share/lib/intermediateFile.bin"
+}
+```
+
+Mit steigender Komplexität ist es evtl. eine Idee wert, relevante Schritte mit einem `echo` zu versehen, um im Fehlerfall eine Suche nach dem Fehler zu beschleunigen.
 
 ### Die Nutzung von `doguctl`
 
