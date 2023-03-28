@@ -1,0 +1,32 @@
+@startuml
+
+!define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
+
+actor "User" as user #6CE5F5
+participant "Browser" as browser #6CE5F5
+participant "CAS" as cas #C2C8FA
+participant "Dogu" as dogu #62FAB7
+
+user -> browser  : goto dogu
+browser ->x dogu : user is unauthenticated\nGET https://fqdn/dogu
+note right: return the dogu name as\nquery parameter "service"
+browser <- dogu  : redirect to CAS login\nHTTP 302 Location: https:////fqdn/cas/login?service=https:////fqdn/dogu
+browser -> cas   : GET CAS login page
+browser <- cas   : return CAS login page
+user <- browser  : show CAS login
+user -> browser  : submit credentials
+browser -> cas   : POST credentials
+cas -> cas       : authenticate user
+note left: returned cookie contains Ticket Granting Ticket\n(TGT) that acts as SSO session key
+browser <- cas   : Set-Cookie: CASTGC=TGT-4321\nHTTP 302 Location: https://fqdn/dogu/?ticket=ST-1234
+browser -> dogu  : GET https://fqdn/dogu?ticket=ST-1234
+note right: dogu validates Service Ticket\nagainst CAS
+cas <- dogu      : GET https://fqdn/cas/p3/serviceValidate?\n   service=https://fqdn/dogu&ticket=ST-1234
+cas -> dogu      : returns XML document of success, authentication\nsubject, user attributes
+browser <- dogu  : Set-Cookie: JSESSIONID=ABCDE\n302 Location: https://fqdn/dogu/
+browser -> dogu  : Cookie: JSESSIONID=ABCDE\nGET https://fqdn/dogu/
+browser <- dogu  : Return authenticated content of dogu
+user <- browser  : display content
+
+caption Client authentication workflow with CAS 3.0
+@enduml

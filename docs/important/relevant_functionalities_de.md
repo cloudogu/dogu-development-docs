@@ -4,31 +4,45 @@ Dieses Kapitel beschreibt die Features und mögliche Implementierungsideen/-Lös
 Die folgenden Abschnitte beschäftigen sich daher mit wiederkehrenden Funktionen, wie ein Dogu sich in die Landschaft des Cloudogu EcoSystem einbetten kann.
 
 ## Authentifizierung
-Lorem ipsum Einführungstext
+
+Sofern Dogus dies bereitstellen, können Benutzer:innen die Vorteile von Single Sign-on (SSO) und Single Logout (SLO) auf Enterprise-Niveau genießen. Die Authentifizierung wird hierbei durch den Central Authentication Service (CAS) ermöglicht. Dogu-Entwickler:innen stehen hierbei mehrere Authentifizierungsmöglichkeiten zur Verfügung. Die folgenden drei Abschnitte beschäftigen sich mit Methoden, die bereits erfolgreich eingesetzt wurden, nämlich:
+
+- Authentifizierung mittels CAS-Protokoll 
+- Authentifizierung mittels OAuth 
+- Authentifizierung mittels OpenID
+
+Grundlage für CAS ist hier immer eine korrekte Konfiguration eines Benutzer-/Gruppenverzeichnisses, sei es das [LDAP](https://github.com/cloudogu/ldap)-Dogu oder ein externer LDAP-kompatibler Dienst.
 
 ### CAS-Protokoll
-Authentifizierung innerhalb des Cloudogu EcoSystem geschieht über das [CAS-Protokoll](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html), das Single Sign-on (SSO) und Single Logout (SLO) ermöglicht.
-Folgendes Diagramm zeigt die Beteiligten an der Authentifizierung.
-Bevor ein Dogu (hier am Beispiel von Redmine) an diesem Prozess teilnehmen kann, muss das Dogu intern einen Satz von CAS-URLs (rote Pfeile) konfigurieren:
-CAS log-in URL (zur Weiterleitung von Benutzenden an das Webformular)
-CAS validation URL (zur Validierung von Service Tickets)
-CAS log-out URL (zur Invalidierung einer SSO-Session)
-Die Service-Erkennung in CAS gegenüber des Dogus (blauer Pfeil) geschieht automatisch während der Dogu-Installation und findet im Folgenden keine weitere Betrachtung.
+
+Authentifizierung innerhalb des Cloudogu EcoSystem geschieht über das [CAS-Protokoll](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html), das Single Sign-on und Single Log-out ermöglicht. Es werden unterschiedliche CAS-Protokoll-Versionen unterstützt (2.0 und 3.0). Bei einer Umsetzung mittels CAS-Protokoll wird empfohlen, die Version 3.0 zu verwenden, da (verglichen mit Version 2.0) die Service-Ticket-Validierung wichtige Benutzerattribute zurückliefern kann.
+
+Folgendes Diagramm zeigt die Beteiligten an der Authentifizierungskonfiguration. Bevor ein Dogu (hier am Beispiel von Redmine) an diesem Prozess teilnehmen kann, muss das Dogu intern einen Satz von CAS-URLs konfigurieren:
+
+- CAS log-in URL (zur Weiterleitung von Benutzenden an das Webformular)
+- CAS validation URL (zur Validierung von Service Tickets)
+- CAS log-out URL (zur Invalidierung einer SSO-Session)
+- Die Service-Erkennung in CAS gegenüber des Dogus geschieht automatisch während der Dogu-Installation und findet im Folgenden keine weitere Betrachtung.
+
+![Beteiligten an der Authentifizierungskonfiguration](../images/important/chapter3_auth_cas_config.png)
 
 Die tatsächliche Authentifizierung geschieht über eine Abfolge von HTTP-Redirects und den Austausch von Session-Cookies im Hintergrund, von denen Benutzende nichts wahrnehmen. Die Anzeige des CAS-Login-Formulars als aktiver Anmeldeschritt sticht dabei stark heraus.
+
 Eine grobe Übersicht über den Anmeldeprozess mit den Beteiligten bietet die folgende Abbildung.
+
+![Workflow der CAS-Authentifizierung](../images/important/chapter3_auth_cas_sequencediag.png)
+
 Das SSO des CAS reduziert diesen Prozess bei der Anmeldung bei weiteren Dogus deutlich.
 
-Weitere Informationen und eine genauere Abbildung vor, während und nach einer Authentifizierung bietet die CAS-Dokumentation.
+Weitere Informationen und eine genauere Abbildung vor, während und nach einer Authentifizierung bietet die [CAS-Dokumentation](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html).
 
 ### OAuth-Protokoll
 
-CAS bietet OAuth/OIDC als Protokoll zur Authentifizierung samt SSO/SSL an.
-Im Folgenden werden die Spezifikation des OAuth Protokolls in CAS beschrieben.
+CAS bietet OAuth/OIDC als Protokoll zur Authentifizierung samt SSO/SSL an. Im Folgenden wird die Spezifikation des OAuth Protokolls in CAS beschrieben.
 
 #### OAuth Service Account für Dogu erstellen
 
-Damit ein Dogu die OAuth/OIDC-Endpunkte des CAS benutzen kann, muss sich dieser beim CAS als Client anmelden.
+Damit ein Dogu die OAuth-Endpunkte des CAS benutzen kann, muss sich dieser beim CAS als Client anmelden.
 Dafür kann die Aufforderung eines CAS-Service Account in der `dogu.json` des betreffenden Dogus hinterlegt werden.
 
 **Eintrag für einen OAuth Client:**
@@ -47,7 +61,7 @@ Die Credentials des Service Accounts werden zufällig generiert (siehe [create-s
 
 Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusammen. Für den CAS wird das `CLIENT_SECRET` als Hash in der Cloudogu EcoSystem Registry unter dem Pfad `/config/cas/service_accounts/oauth/<CLIENT_ID>` abgelegt.
 
-### OAuth Endpunkte und Ablauf
+### OAuth-Endpunkte und Ablauf der Authentifizierung
 
 Die folgenden Schritte beschreiben einen erfolgreichen Ablauf der OAuth-Authentifizierung.
 
@@ -55,6 +69,8 @@ Die folgenden Schritte beschreiben einen erfolgreichen Ablauf der OAuth-Authenti
 2. Kurzzeittoken gegen ein Langzeittoken tauschen: Siehe Abschnitt unten "AccessToken-Endpunkt"
 3. Langzeittoken kann nun zu Authentifizierung gegen Ressourcen benutzen werden.
    Derzeit bietet CAS nur das Profil der User als Resource an: Siehe Abschnitt unten "OAuth-Userprofil"
+
+![Ablauf der Authentifizierung](../images/important/chapter3_auth_oauth_sequencediag.png)
 
 #### OAuth-Authorize-Endpunkt
 
@@ -216,7 +232,7 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
 }
 ```
 
-### OIDC-Protokoll
+### OpenID Connect-Protokoll
 
 
 ## Auf die Registry zugreifen

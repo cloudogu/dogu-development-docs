@@ -1,0 +1,29 @@
+@startuml
+!define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
+
+!includeurl CLOUDOGUURL/common.puml
+!includeurl CLOUDOGUURL/dogus/cloudogu.puml
+!includeurl CLOUDOGUURL/tools/docker.puml
+!includeurl CLOUDOGUURL/dogus/cas.puml
+!includeurl CLOUDOGUURL/dogus/redmine.puml
+!define SECONDARY_COLOR #55EE55
+
+actor user
+
+Node "Cloudogu EcoSystem" as ces <<$cloudogu>> {
+    DOGU_REDMINE(redmine, Redmine) #white
+    DOGU_CAS(cas, "CAS") #white
+    'use whitespace to modify the arrow display sequence
+    redmine =[#black]l=> cas  : "      configures CAS log-in URL"
+    redmine =[#black]l=> cas  : "      configures CAS validation URL"
+    redmine =[#black]l=> cas  : "      configures CAS log-out URL"
+    cas =[#black]r=> redmine         : configures Redmine as service
+}
+
+user .d-> redmine : wants to work with Redmine
+user <-.-> cas : know log-in credentials
+user -[hidden]d-> cas
+
+
+caption Participants and their configuration relationships in the context of authentication with CAS
+@enduml
