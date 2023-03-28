@@ -263,9 +263,83 @@ Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusamme
 
 ## Auf die Registry zugreifen
 
+Die Cloudogu EcoSystem Registry ist eine Key-Value-Datenbank, die auch für Dogus ein Kernelement darstellt. Die Konfiguration eines Dogus wird über die Registry durchgeführt. Darüber hinaus werden in der Registry werden Werte abgelegt, die auch von globaler Natur sind.
+
+### Registry-Zugriff vom Dogu heraus
+
+Das folgende Bild fokussiert Teile, die in der Kommunikation zwischen Dogu (exemplarisch hier: Redmine) und der Registry eine Rolle spielen:
+
+![Beteiligte Komponenten, die im Zusammenspiel zwischen Dogu und Registry eine Rolle spielen](../images/important/chapter3_ces_registry_components.png)
+
+- Registry: Sie läuft jenseits des Dogu-Containers und ist über eine IP-Adresse aus dem Container-Netzwerk erreichbar
+  - Nach der Installation enthält die Registry neben anderen Keys den Public Key jedes Dogus.
+- Datei `/etc/ces/node_master` 
+  - Diese wird während der Dogu-Installation automatisch in das Dogu gemountet. Sie enthält die IP-Adresse der Registry, damit das Dogu auf die Registry zugreifen kann.
+- Datei `/private/private.pem`
+  - Diese Datei enthält den Private Key des Dogus. Dieser wird u. a. zum Entschlüsseln von verschlüsselten Werten der Registry verwendet.
+  - Häufig handelt es sich hierbei um [Service-Accounts](../core/compendium_de.md#serviceaccounts) zu anderen Dogus
+
+Die Dogu-spezifische Konfiguration liegt im Registry-Pfad `/config/<dogu>/`.
+
+Eine wertvolle Hilfe ist das Kommandozeilenwerkzeug `doguctl` unter anderem auch in der Startphase des Dogu-Containers. Dieses Werkzeug vereinfacht den Zugriff auf die Registry, indem automatisch die `node_master`-Datei ausgelesen wird oder wie Dogu-eigene Registry-Schlüssel adressiert werden.
+
+Die `dogu.json` erlaubt es, eigene Konfigurationswerte zu definieren, die sogar validiert werden können.  
+
+```bash
+# liest Konfigurationwert aus dem Schlüssel /config/<dogu>/my_key
+doguctl config my_key
+my old value
+
+# liest globalen Konfigurationwert aus /config/_global/fqdn
+doguctl config -g fqdn
+your-ecosystem.example.com
+
+# liest Konfigurationwert aus /config/<dogu>/my_key, gibt einen Defaultwert zurück, wenn dieser nicht gesetzt wurde
+doguctl config --default NOVALUE my_key2
+NOVALUE
+
+# liest verschlüsselten DB-Namen /config/<dogu>/sa-postgresql/db_name
+doguctl config -e sa-postgresql/db_name
+your-dogu-database-1234
+
+# schreibt Konfigurationswert in /config/<dogu>/my_key hinein
+doguctl config my_key 'my new value'
+
+# schreibt verschlüsselten Geheimnis /config/<dogu>/geheim/credential
+doguctl config -e geheim/credential '$up3r$3cre7'
+```
+
+### Interessante Registryzweige
+
+Es existieren jenseits der Dogu-eigenen Registrywerte noch weitere Bereiche, die im Dogu-Betrieb von Interesse sind.
+
+Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit `doguctl` (wie oben gezeigt) verwaltet werden.
+
+- Globale Werte `/config/_global`
+  - `/config/_global/fqdn`
+    - die FQDN dieser Cloudogu EcoSystem-Instanz
+    - z. B. eco.example.com
+  - `/config/_global/domain`
+    - der Mail-Domänen-Anteil dieser Cloudogu EcoSystem-Instanz
+    - z. B. example.com
+  - `/config/_global/mail_address`
+    - die Emailadresse des Instanzadministrators
+  - `/config/_global/admin_group`
+    - der aktuelle Name der LDAP-Gruppe, deren Mitglieder die Clodogu EcoSystem-Instanz in der UI administrieren
+- Doguzustände `/state/<dogu>`
+  - wenn das Dogu einen [HealthCheck](../core/compendium_de.md#healthchecks) vom Typen `state` definiert, dann ermöglicht es dem Administrator und anderen Dogus Health-Hinweise auf das Dogu zu erhalten
+  - Im eigenen Dogu z. B. `doguctl state installing` setzen, wenn eine längere Installationsroutine gestartet wird. Kurz bevor der Hauptprozess gestartet wird dann mit `doguctl state ready` einen ordnungsgemäßen Betriebszustand anzeigen.
+  - Im EcoSystem-Host lässt sich dies mit `cesapp healthy <dogu>` überprüfen
+  - In anderen Dogus lässt sich dies mit `doguctl healthy <dogu>` überprüfen
+    - Mit dem Schalter `--timeout <Sekunden>` kann man so auf Dogus warten, von denen das eigene Dogu abhängt.
 
 ## Aufbau und Best Practices von `startup.sh` 
 
+### asdf
+
+### qwer
+
+### Die Nutzung von `doguctl`
 
 ## Service Accounts
 Lorem ipsum Einführungstext
