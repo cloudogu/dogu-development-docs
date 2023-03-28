@@ -38,7 +38,7 @@ Weitere Informationen und eine genauere Abbildung vor, während und nach einer A
 
 ### OAuth-Protokoll
 
-CAS bietet OAuth/OIDC als Protokoll zur Authentifizierung samt SSO/SSL an. Im Folgenden wird die Spezifikation des OAuth Protokolls in CAS beschrieben.
+CAS bietet OAuth/OIDC als Protokoll zur Authentifizierung samt SSO/SSL an. Im Folgenden wird die Spezifikation des OAuth 2.0 Protokolls in CAS beschrieben.
 
 #### OAuth Service Account für Dogu erstellen
 
@@ -70,14 +70,14 @@ Die folgenden Schritte beschreiben einen erfolgreichen Ablauf der OAuth-Authenti
 3. Langzeittoken kann nun zu Authentifizierung gegen Ressourcen benutzen werden.
    Derzeit bietet CAS nur das Profil der User als Resource an: Siehe Abschnitt unten "OAuth-Userprofil"
 
-![Ablauf der Authentifizierung](../images/important/chapter3_auth_oauth_sequencediag.png)
+![Ablauf der Authentifizierung mit OAuth 2.0](../images/important/chapter3_auth_oauth_sequencediag.png)
 
 #### OAuth-Authorize-Endpunkt
 
 Dieser Endpunkt dient als initialer Start der OAuth-Authorisation.
 Der Authorisation-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzufordern.
 
-**URL** : `<fqdn>/api/authorize`
+**URL** : `<fqdn>/oauth2.0/authorize`
 
 **Method** : `GET`
 
@@ -116,7 +116,7 @@ Beispiel für `code`: `ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local`
 
 Dieser Endpunkt dient zum Austausch eines Kurzzeittokens (`code`) gegen ein Langzeittoken (`access_token`).
 
-**URL** : `<fqdn>/api/accessToken`
+**URL** : `<fqdn>/oauth2.0/accessToken`
 
 **Method** : `GET`
 
@@ -176,9 +176,9 @@ https://local.cloudogu.com/cas/oauth2.0/accessToken?grant_type=authorization_cod
 
 #### OAuth-Userprofil
 
-Dieser Endpunkt dient zur Abfrage des Userprofil vom eingeloggten User mithilfe eines Langzeittokens (`access_token`).
+Dieser Endpunkt dient zur Abfrage des Userprofils vom eingeloggten User mithilfe eines Langzeittokens (`access_token`).
 
-**URL** : `<fqdn>/api/profile`
+**URL** : `<fqdn>/oauth2.0/profile`
 
 **Method** : `GET`
 
@@ -234,6 +234,32 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
 
 ### OpenID Connect-Protokoll
 
+CAS bietet OAuth/OpenID Connect (OIDC) als Protokoll zur Authentifizierung samt SSO/SSL an. Im Folgenden wird die Spezifikation des OpenID Connect-Protokolls in CAS beschrieben. 
+
+**Vorsicht!**
+
+Dieser Abschnitt ist noch unzureichend geklärt, insbesondere hinsichtlich der Ähnlichkeit zur Authentifizierung durch OAuth 2.0. Pull-Requests durch die Community sind hier gern gesehen. :blue_heart:
+
+#### OIDC Service Account für Dogu erstellen
+
+Damit ein Dogu die OIDC-Endpunkte des CAS benutzen kann, muss sich dieser beim CAS als Client anmelden.
+Dafür kann die Aufforderung eines CAS-Service Account in der `dogu.json` des betreffenden Dogus hinterlegt werden.
+
+**Eintrag für einen OIDC Client:**
+``` json
+"ServiceAccounts": [
+    {
+        "Type": "cas",
+        "Params": [
+            "oidc"
+        ]
+    }
+]
+```
+
+Die Credentials des Service Accounts werden zufällig generiert (siehe [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) und verschlüsselt in der Registry unter dem Pfad `/config/<dogu>/sa-cas/oidc` und `/config/<dogu>/sa-cas/oidc_client_secret` hinterlegt.
+
+Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusammen. Für den CAS wird das `CLIENT_SECRET` als Hash in der Cloudogu EcoSystem Registry unter dem Pfad `/config/cas/service_accounts/oidc/<CLIENT_ID>` abgelegt.
 
 ## Auf die Registry zugreifen
 
