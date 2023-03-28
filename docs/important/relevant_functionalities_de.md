@@ -9,7 +9,7 @@ Sofern Dogus dies bereitstellen, können Benutzer:innen die Vorteile von Single 
 
 - Authentifizierung mittels CAS-Protokoll 
 - Authentifizierung mittels OAuth 
-- Authentifizierung mittels OpenID
+- Authentifizierung mittels OpenID Connect
 
 Grundlage für CAS ist hier immer eine korrekte Konfiguration eines Benutzer-/Gruppenverzeichnisses, sei es das [LDAP](https://github.com/cloudogu/ldap)-Dogu oder ein externer LDAP-kompatibler Dienst.
 
