@@ -244,6 +244,9 @@ Dieses Kapitel beschreibt Funktionen, die Dogus tiefer in das Cloudogu EcoSystem
 
 Mit Memory- und Swap-Limits kann man den Speicherverbrauch (Arbeitsspeicher und Swap) von Dogus einschränken.
 
+Falls ein Dogu seine Speicherlimitierung überschreitet, wird der größte Prozess im Container beendet.
+Dies ist normalerweise der Hauptprozess des Dogus und führt dazu, dass der Container neu gestartet wird.
+
 Wird kein Wert bei der Memory-Limitierung gesetzt, findet diese auch nicht statt.
 Bei der Swap-Limitierung is `0b` der Standardwert und stellt somit keinen Swap zur Verfügung.
 
@@ -268,7 +271,7 @@ Um eine Limitierung vornehmen zu können, muss die dogu.json des Dogus folgende 
 }
 ```
 
-Hiermit lassen sich die etcd-Einträge `container_config/memory_limit` und `container_config/swap_limit´ in der jeweiligen Dogu-Konfiguration erstellen.
+Hiermit lassen sich die etcd-Einträge `container_config/memory_limit` und `container_config/swap_limit` in der jeweiligen Dogu-Konfiguration erstellen.
 
 Die konfigurierbaren Werte für die Schlüssel sind jeweils eine Zeichenkette der Form `<Zahlenwert><Einheit>` und beschreiben die maximal vom Dogu nutzbare Menge an Speicher.
 Zu beachten ist hier, dass zwischen dem numerischen Wert und der Einheit kein Leerzeichen stehen darf.
@@ -276,13 +279,10 @@ Verfügbare Einheiten sind `b`, `k`, `m` und `g` (für byte, kibibyte, mebibyte 
 
 Das Setzen der Werte kann über folgende Wege erfolgen:
 - `doguctl config container_config/memory_limit 1g`
-- `cesapp edit-config <doguname>` (nur von Host aus)
-- `etcdctl set /config/<doguname>/container_config/memory_limit "1g"` (nur von Host aus)
+- `cesapp edit-config <doguname>` (nur vom Host aus)
+- `etcdctl set /config/<doguname>/container_config/memory_limit "1g"` (nur vom Host aus)
 
 Um die Limitierungen zu übernehmen, muss das Dogu neu erstellt (`cesapp recreate <doguname>`) und anschließend neu gestartet (`cesapp start <doguname>`) werden.
-
-Falls ein Dogu seine Speicherlimitierung überschreitet, wird der größte Prozess im Container beendet.
-Dies ist normalerweise der Hauptprozess des Dogus und führt dazu, dass der Container neu gestartet wird.
 
 Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dogu einen Java-Prozess, können folgende zusätzliche Einträge in die dogu.json eingebaut werden:
 
@@ -307,12 +307,11 @@ Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dog
 }
 ```
 
-Die damit konfigurierbaren Werte müssen in den Start-Skripten des Dogus dem entsprechenden Java-Prozess als Parameter mitgegeben werden. Eine Referenzimplementierung findet sich im Nexus-Dogu: https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52
+Die damit konfigurierbaren Werte müssen in den Start-Skripten des Dogus dem entsprechenden Java-Prozess als Parameter mitgegeben werden. Eine Referenzimplementierung findet sich im [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
 
 
 
 ### Backup & Restore-Fähigkeit
-
 
 ### Änderbarkeit der Admin-Gruppe
 
