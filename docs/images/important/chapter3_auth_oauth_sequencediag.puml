@@ -1,9 +1,9 @@
 @startuml
 !define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
 
-participant "client" as ClientDogu #6CE5F5
+participant "ClientDogu" as ClientDogu #6CE5F5
 participant "CAS" as CAS #C2C8FA
-participant "dogu" as resource #62FAB7
+participant "resource" as resource #62FAB7
 
 ClientDogu ->x resource : start unauthenticated access
 resource -> ClientDogu : redirect to OAuth login
