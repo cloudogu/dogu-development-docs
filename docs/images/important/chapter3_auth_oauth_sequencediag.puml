@@ -1,0 +1,16 @@
+@startuml
+participant "user" as ClientDogu #6CE5F5
+participant "CAS" as CAS #C2C8FA
+participant "dogu" as resource #62FAB7
+
+ClientDogu ->x resource
+resource -> ClientDogu : redirect to OAuth Login
+ClientDogu -> CAS : request to endpoint oauth20/authorize
+CAS -> ClientDogu : answer with ?code=... parameter and redirect url
+note left: the code is valid \nfor 5 seconds
+ClientDogu -> CAS : request to endpoint oauth20/accesstoken with code from previous request
+CAS -> ClientDogu : answer with accessToken
+ClientDogu -> resource : access resource with token
+
+caption Client authentication workflow with OAuth
+@enduml
