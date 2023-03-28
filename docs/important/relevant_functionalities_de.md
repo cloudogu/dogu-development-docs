@@ -279,11 +279,11 @@ Das folgende Bild fokussiert Teile, die in der Kommunikation zwischen Dogu (exem
   - Diese Datei enthält den Private Key des Dogus. Dieser wird u. a. zum Entschlüsseln von verschlüsselten Werten der Registry verwendet.
   - Häufig handelt es sich hierbei um [Service-Accounts](../core/compendium_de.md#serviceaccounts) zu anderen Dogus
 
-Die Dogu-spezifische Konfiguration liegt im Registry-Pfad `/config/<dogu>/`.
+Die Dogu-spezifische Konfiguration liegt im Registry-Pfad `/config/<dogu>/`. [Registry-Schlüssel](../core/compendium_de.md#configuration) sollten im `snake_case` geschrieben werden, also Lowercase mit Unterstrichen.
 
 Eine wertvolle Hilfe ist das Kommandozeilenwerkzeug `doguctl` unter anderem auch in der Startphase des Dogu-Containers. Dieses Werkzeug vereinfacht den Zugriff auf die Registry, indem automatisch die `node_master`-Datei ausgelesen wird oder wie Dogu-eigene Registry-Schlüssel adressiert werden.
 
-Die `dogu.json` erlaubt es, eigene Konfigurationswerte zu definieren, die sogar validiert werden können.  
+Die `dogu.json` erlaubt es, eigene Konfigurationswerte zu definieren, die sogar validiert werden können.
 
 ```bash
 # liest Konfigurationwert aus dem Schlüssel /config/<dogu>/my_key
@@ -293,20 +293,6 @@ my old value
 # liest globalen Konfigurationwert aus /config/_global/fqdn
 doguctl config -g fqdn
 your-ecosystem.example.com
-
-# liest Konfigurationwert aus /config/<dogu>/my_key, gibt einen Defaultwert zurück, wenn dieser nicht gesetzt wurde
-doguctl config --default NOVALUE my_key2
-NOVALUE
-
-# liest verschlüsselten DB-Namen /config/<dogu>/sa-postgresql/db_name
-doguctl config -e sa-postgresql/db_name
-your-dogu-database-1234
-
-# schreibt Konfigurationswert in /config/<dogu>/my_key hinein
-doguctl config my_key 'my new value'
-
-# schreibt verschlüsselten Geheimnis /config/<dogu>/geheim/credential
-doguctl config -e geheim/credential '$up3r$3cre7'
 ```
 
 ### Interessante Registryzweige
@@ -433,31 +419,144 @@ Mit steigender Komplexität ist es evtl. eine Idee wert, relevante Schritte mit 
 
 ### Die Nutzung von `doguctl`
 
-Der Abschnitt [über Registry-Zugriff](#registry-zugriff-vom-dogu-heraus) hat das Thema `doguctl` bereits angeschnitten. `doguctl` ist ein Kommandozeilenwerkzeug, das wiederkehrende Interaktionen mit dem Cloudogu EcoSystem bündelt und vereinfacht. Dieser Abschnitt beschreibt mögliche Aufrufe. 
+Der Abschnitt [über Registry-Zugriff](#registry-zugriff-vom-dogu-heraus) hat das Thema `doguctl` bereits angeschnitten. `doguctl` ist ein Kommandozeilenwerkzeug, das wiederkehrende Interaktionen mit dem Cloudogu EcoSystem bündelt und vereinfacht. Dieser Abschnitt beschreibt mögliche Aufrufe.
+
+Mit `--help` gibt jedes Unterkommando von `doguctl` gibt eine Hilfeseite aus.  
 
 #### doguctl config
 
-Liest und schreibt Konfigurationswerte aus der Registry
+Dieser Aufruf liest und schreibt Konfigurationswerte.
+
+```bash
+# liest Konfigurationwert aus dem Schlüssel /config/<dogu>/my_key
+doguctl config my_key
+my old value
+
+# liest globalen Konfigurationwert aus /config/_global/fqdn
+doguctl config -g fqdn
+your-ecosystem.example.com
+
+# liest Konfigurationwert aus /config/<dogu>/my_key, gibt einen Defaultwert zurück, wenn dieser nicht gesetzt wurde
+doguctl config --default NOVALUE my_key2
+NOVALUE
+
+# liest verschlüsselten DB-Namen /config/<dogu>/sa-postgresql/db_name
+doguctl config -e sa-postgresql/db_name
+your-dogu-database-1234
+
+# schreibt Konfigurationswert in /config/<dogu>/my_key hinein
+doguctl config my_key 'my new value'
+
+# schreibt verschlüsselten Geheimnis /config/<dogu>/geheim/credential
+doguctl config -e geheim/credential '$up3r$3cre7'
+
+# löscht den Schlüssel /config/<dogu>/delete_me
+doguctl config --rm delete_me
+```
 
 #### doguctl validate
 
-Validiert Konfigurationswerte der Registry
+Dieser Aufruf validiert Konfigurationswerte der Registry.
+
+```bash
+doguctl validate logging/root # validiert einzelnen Wert, Gutfall: Wert=WARN aus ERROR,WARN,INFO,DEBUG
+Key logging/root: OK
+echo $?
+0
+
+doguctl validate logging/root #  validiert einzelnen Wert, Fehlerfall: Wert=foo aus ERROR,WARN,INFO,DEBUG
+Key logging/root: INVALID
+at least one key was invalid
+echo $?
+1
+
+doguctl validate --all # validiert alle Werte mit Ausgabe
+...
+Key container_config/memory_limit: OK
+Key container_config/swap_limit: OK
+Key container_config/java_max_ram_percentage: OK
+Key container_config/java_min_ram_percentage: OK
+Key logging/root: INVALID
+Key caching/workdir/size: OK (No Validator)
+at least one key was invalid
+echo $?
+1
+
+doguctl validate --silent # validiert Werte ohne Ausgabe (kombinierbar mit --all), Gutfall
+echo $?
+0
+
+doguctl validate --silent # validiert Werte ohne Ausgabe (kombinierbar mit --all), Fehlerfall
+at least one key was invalid
+echo $?
+1
+```
 
 #### doguctl healthy
 
-Prüft, ob ein gegebenes Dogu betriebsbereit (healthy) ist
+Dieser Aufruf prüft, ob ein gegebenes Dogu betriebsbereit (healthy) ist.
+
+```bash
+doguctl healthy postgresql --timeout 300 # prüft PostgreSQL-Dogu, Gutfall
+echo $?
+0
+doguctl healthy postgresql --timeout 300 # prüft PostgreSQL-Dogu, Fehlerfall
+echo $?
+1
+```
 
 #### doguctl state
 
 Liest und schreibt Dogu-Zustandswerte.
 
+```bash
+doguctl state "installing" # schreibt den Wert in den State
+doguctl state # Liest den Wert aus dem State
+installing
+doguctl state "ready" # Setzt den State auf den Standard-Healthy-Wert
+```
+
 #### doguctl random
 
-Erzeugt Zufallsstrings, geeignet um Passwörter oder sonstige Zugangsdaten zu erzeugen.
+Dieser Aufruf erzeugt Zufallsstrings, geeignet um Passwörter oder sonstige Zugangsdaten zu erzeugen.
+
+```bash
+doguctl random # erzeugt Zufallsstring mit der Länge 16
+9HoF4nYmlLYtf6Ju
+doguctl random  -5 # erzeugt Zufallsstring mit gegebener Länge
+W6Wmj
+```
 
 #### doguctl template
 
-Erzeugt eine Datei aus einem [Golang-Template](https://pkg.go.dev/text/template). Registrywerte und Umgebungsvariablen können hierin direkt verwendet werden.
+Dieser Aufruf erzeugt eine Datei aus einem [Golang-Template](https://pkg.go.dev/text/template). Registrywerte und Umgebungsvariablen können hierin direkt verwendet werden.
+
+Beispiel einer Template-Datei:
+
+```gotemplate
+# my-pseudo-config.conf
+[Global]
+admin.username = {{ .Env.Get "ADMIN_USERNAME" }} # verwendet vorher exportierte Umgebungsvariable "ADMIN_USERNAME"
+funny.name = {{ .Config.Get "something_funny" }} # verwendet unverschlüsselten Dogu-Konfigurationswert
+log.level = {{ .Config.GetOrDefault "log_level" "WARN" }} # verwendet unverschlüsselten Dogu-Konfigurationswert oder nimmt den Fehlwert "WARN" 
+
+url.jdbc = jdbc:postgresql://postgresql:5432/{{ .Config.GetAndDecrypt "sa-postgresql/database" }} # verwendet verschlüsselten Dogu-Konfigurationswert /config/my-dogu/sa-postgresql/database
+
+url.fqdn = https://{{ .GlobalConfig.Get "fqdn" }}/my-dogu # verwendet globalen Konfigurationswert /config/_global/fqdn 
+
+{{ if .Config.Exists "notification" }} # Konditionale Konfiguration ist auch möglich
+notification = mail
+{{ end }}
+
+{{ if .Dogus.IsEnabled "redmine" }} # Prüft, ob ein Dogu installiert ist
+ticketsystem.url = https://{{ .GlobalConfig.Get "fqdn" }}/redmine
+{{ end }}
+...
+```
+
+```bash
+doguctl template <Template-Datei> <Ausgabedatei>
+```
 
 #### doguctl wait-for-tcp
 
