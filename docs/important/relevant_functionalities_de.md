@@ -319,6 +319,7 @@ Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit
   - `/config/_global/fqdn`
     - die FQDN dieser Cloudogu EcoSystem-Instanz
     - z. B. eco.example.com
+    - Dieser Wert kann sich im laufenden Betrieb ändern. Siehe hierzu auch den Abschnitt zur [Änderbarkeit der FQDN](#änderbarkeit-der-fqdn)
   - `/config/_global/domain`
     - der Mail-Domänen-Anteil dieser Cloudogu EcoSystem-Instanz
     - z. B. example.com
@@ -326,12 +327,14 @@ Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit
     - die Emailadresse des Instanzadministrators
   - `/config/_global/admin_group`
     - der aktuelle Name der LDAP-Gruppe, deren Mitglieder die Clodogu EcoSystem-Instanz in der UI administrieren
+    - Dieser Wert kann sich im laufenden Betrieb ändern. Siehe hierzu auch den Abschnitt zur [Änderbarkeit der Admingruppe](#änderbarkeit-der-admin-gruppe)
 - Doguzustände `/state/<dogu>`
   - wenn das Dogu einen [HealthCheck](../core/compendium_de.md#healthchecks) vom Typen `state` definiert, dann ermöglicht es dem Administrator und anderen Dogus Health-Hinweise auf das Dogu zu erhalten
   - Im eigenen Dogu z. B. `doguctl state installing` setzen, wenn eine längere Installationsroutine gestartet wird. Kurz bevor der Hauptprozess gestartet wird dann mit `doguctl state ready` einen ordnungsgemäßen Betriebszustand anzeigen.
   - Im EcoSystem-Host lässt sich dies mit `cesapp healthy <dogu>` überprüfen
   - In anderen Dogus lässt sich dies mit `doguctl healthy <dogu>` überprüfen
     - Mit dem Schalter `--timeout <Sekunden>` kann man so auf Dogus warten, von denen das eigene Dogu abhängt.
+    - Ein Exit-Code ungleich null (0) deutet darauf hin, dass entweder das Dogu nicht rechtzeitig seinen Startvorgang beendet hat oder die Registry-Kommunikation fehlschlug.
 
 ## Aufbau und Best Practices von `startup.sh` 
 
