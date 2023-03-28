@@ -329,9 +329,9 @@ Die damit konfigurierbaren Werte müssen in den Start-Skripten des Dogus dem ent
 
 ### Backup & Restore-Fähigkeit
 
-Ein Feature des Cloudogu EcoSystems ist, dass alle Dogus so ausgelegt sind, dass sie sich über ein zentrales Backupsystem sichern und wiederherstellen lassen. Damit das funktioniert, müssen alle Dogus ihre veränderlichen Daten in Volumes auslagern. Dieses Vorgehen wird bereits im [Compendium](docs/core/compendium_de.md#volumes) beschrieben.
+Ein Feature des Cloudogu EcoSystems ist, dass alle Dogus so ausgelegt sind, dass sie sich über ein zentrales Backupsystem sichern und wiederherstellen lassen. Damit das funktioniert, müssen alle Dogus ihre veränderlichen Daten in Volumes auslagern. Dieses Vorgehen wird bereits im [Compendium](../core/compendium_de.md#volumes) beschrieben.
 
-Bei der Entwicklung eines Dogus ist darauf zu achten, dass das Dogu nach einem erfolgreichen Backup- und Restore-Vorgang weiterhin normal funktioniert und alle Daten und Funktionen vorhanden sind. Dazu müssen zuerst alle Volumes in der dogu.json, die Produktivdaten enthalten, mit dem [NeedsBackup](docs/core/compendium_de.md#needsbackup)-Flag gekennzeichnet werden. Danach sollte das Dogu gebaut und mit Testdaten gefüllt werden.
+Bei der Entwicklung eines Dogus ist darauf zu achten, dass das Dogu nach einem erfolgreichen Backup- und Restore-Vorgang weiterhin normal funktioniert und alle Daten und Funktionen vorhanden sind. Dazu müssen zuerst alle Volumes in der dogu.json, die Produktivdaten enthalten, mit dem [NeedsBackup](../core/compendium_de.md#needsbackup)-Flag gekennzeichnet werden. Danach sollte das Dogu gebaut und mit Testdaten gefüllt werden.
 Anschließend führt man ein Backup des Systems und danach einen Restore durch. Dazu können die Befehle [cesapp backup](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/backup/) und [cesapp restore](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/restore/) genutzt werden.
 
 Sind alle Dogus wieder hochgefahren, testet man, ob das eigene Dogu normal läuft und alle Testdaten weiterhin vorhanden sind.
