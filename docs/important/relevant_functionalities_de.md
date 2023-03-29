@@ -343,6 +343,11 @@ Um dynamisch auf diese Gegebenheiten zu reagieren hat es sich bei Cloudogu einge
       - einmalige Installationsprozesse durchzuführen 
       - ein temporäres Admin-Konto zu generieren
       - das aktuelle Log-Level umsetzen
+      - Registrieren der CES-SSL-Zertifikate in der Software/Zielsystem
+      - Vorarbeiten mit API-Zugriffen, um die Software vorzubereiten
+        - Replikation von LDAP-Gruppen / Rechten
+      - Einstellen der Software (Log-Level, sonstige Konfiguration, z. B. durch `doguctl template`)
+      - Auf Systemänderungen der Registry reagieren: z. B. [Admin-Gruppe](#änderbarkeit-der-admin-gruppe) hat sich geändert, das im Dogu weitere Maßnahmen benötigt
    3. den Dogu-State auf `ready` setzen (geeigneter [HealthCheck](../core/compendium_de.md#healthchecks) vorausgesetzt)
    4. startet den Hauptprozess
 
@@ -417,7 +422,15 @@ function cleanUpSetup() {
 }
 ```
 
-Mit steigender Komplexität ist es eine Idee wert, relevante Schritte mit einem `echo` zu versehen, um im Fehlerfall eine Suche nach dem Fehler zu beschleunigen.
+#### Nachvollziehbarkeit während der Startphase
+
+Mit steigender Komplexität ist es eine Idee wert, relevante Schritte mit einem `echo` zu versehen, um im Fehlerfall eine Suche nach dem Fehler in den Logausgaben zu beschleunigen.
+
+
+Zeitgleich gibt es mit dem [Dogu-State-HealthCheck](../core/compendium_de.md#healthchecks) die Möglichkeit, während des Dogu-Starts eigene Ausführungsphasen zu markieren. Zum Beispiel `doguctl state 'aSpecialInstallPhase'` am Anfang oder `doguctl state 'ready'` am Ende des Skripts.
+
+Der Zustand `ready` ist für die Interpretation des Health-Checks zwingend notwendig.
+
 
 #### Auslagerung von Code
 
