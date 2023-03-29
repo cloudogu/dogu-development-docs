@@ -637,12 +637,166 @@ fi
 ```
 
 ## Service Accounts
-Lorem ipsum Einführungstext
+
+Service Accounts bilden einen Mechanismus für Zugangskonten ab, die Dogus zur Absicherung oder Speicherung ihrer Daten benötigen, diese Funktionalität aber nicht selbst bereitstellen möchten. Dogus können sich als Produzent und/oder als Konsument von Service Accounts darstellen. Bei beiden handelt es sich um ein jeweils optionales Feature eines Dogus. 
+
+In der Regel diktiert die Natur der Applikation im Dogu selbst, ob bzw. welches von beidem am sinnvollsten ist. So wäre ein Datenbankmanagement-Dogu wie PostgreSQL nicht hilfreich, das anderen Dogus keine Zugänge zu seiner Datenbasis anbietet. Andererseits wäre es für ein Dogu wie Redmine fatal, kein Dogu zu haben, in das es per SQL seine Daten ablegen kann.
+
+Dogus, die anderen Dogus gegenüber Zugangskonten bereitstellen können, nennt man auch Service-Account-Produzent. Dogus, die ein Zugangskonto bei einem anderen Dogu benötigen, nennt man Service-Account-Konsument.
 
 ### Service Accounts produzieren 
 
+Service Accounts werden nicht von einem Konsumer-Dogu selbst angefragt, weil ein Dogu sich nicht um diese Form der Orchestrierung kümmern sollte. Dies ist stattdessen die Aufgabe von einem Client wie `cesapp` oder `k8s-dogu-operator` während der Installation des Service-Account-Konsument-Dogus. Das `ExposedCommand` hierfür lautet `service-account-create`. 
+
+Ähnlich hierzu sieht die Löschung von Service Accounts aus, denn ebenfalls kümmert sich ein Client wie `cesapp` oder `k8s-dogu-operator` während der Deinstallation eines Dogus darum, dass dessen angeforderte Service Accounts wieder gelöscht werden. Das `ExposedCommand` hierfür lautet `service-account-remove`.
+
+Damit ein Dogu als Service-Account-Produzent auftreten kann, muss es in seiner `dogu.json` zwei ausführbare Dateien exponieren:
+
+```json
+{
+  ...,
+  "ExposedCommands": [
+    {
+      "Name": "service-account-create",
+      "Description": "Creates a new service account",
+      "Command": "/create-sa.sh"
+    },
+    {
+      "Name": "service-account-remove",
+      "Description": "Removes a service account",
+      "Command": "/remove-sa.sh"
+    }
+  ],
+  ...,
+}
+```
+
+Die Begriffe `service-account-create` und `service-account-remove` sind geschützte Eigenschaften und werden von Clients, die die `dogu.json` interpretieren als Befehle zum Erstellen und Löschen von Service Accounts benutzt.
+
+In den beiden folgenden Abschnitten wird auf die Erzeugung und Löschung von Service Accounts eingegangen. Weitere Information über ExposedCommands befinden sich im [ExposedCommands](../core/compendium_de.md#exposedcommands)-Abschnitt des Kompendiums.
+
+#### Service Account anlegen
+
+Das `service-account-create`-Skript verwaltet das Erstellen eines neuen Service Accounts. Es wird immer ausgeführt, wenn ein neuer Konsument installiert wird. Während des Aufrufs erhält das `service-account-create`-Skript jedenfalls den Namen des Konsumenten-Dogus als erstes Argument. Ein zweites Argument zur Feineinstellung des Service Accounts ist optional und hängt von der Unterstützung des Produzenten-Dogus ab.
+
+Ein `service-account-create`-Skript besteht aus drei Schritten:
+
+1. Erstellen der Account Informationen
+2. Anlegen eines Accounts für unsere Software mit den Informationen
+3. Schreibe die Accountinformationen verschlüsselt in den Dogu-spezifischen Konfigurationsbereich des Verbrauchers.
+
+Ein Beispiel für das `service-account-create`-Skript könnte folgendermaßen aussehen:
+
+`create-sa.sh`
+
+```bash
+#!/bin/bash
+set -o errexit
+set -o nounset
+set -o pipefail
+doguName="${1}"
+{
+  #1) Erstellen der Zugangsdaten
+  USER="${doguName}-$(doguctl random)"
+  PASSWORD=$(doguctl random)
+
+  #2) Legt einen Account für unsere Software mit den Informationen an
+  # ... Implementiere die Dogu-spezifische Logik hier
+} >/dev/null 2>&1 # unterdrücke sonstige Ausgaben auf stdout, da nur Zugangsdaten oder Fehler erwartet werden
+
+  #3) Gib Zugangsdaten zurück. Der Client schreibt die Zugangsdaten verschlüsselt in den Dogu-spezifischen Konfigurationsbereich des Verbrauchers.
+echo "username: ${USER}"
+echo "password: ${PASSWORD}"
+```
+
+In Schritt 1 werden Zugangsdaten zufällig generiert. Der Name des Konsumenten-Dogus kann in die Zugangsdaten eingearbeitet werden, allerdings ist dies keine Pflicht.
+
+In Schritt 2 muss ein Account mit den generierten Informationen in der Dogu-Software erstellt werden. 
+
+In Schritt 3 werden die Zugangsdaten mit dem Format `echo "<registrykey>: <registryvalue>"` ausgegeben. `registrykey` und `registryvalue` müssen durch einen Doppelpunkt und einem Leerzeichen getrennt sein. Die gesamte Zeile muss durch ein Newline beendet werden.
+
+Diese Zugangsdaten werden vom verarbeitenden Client automatisch eingelesen und in den Dogu-spezifischen Konfigurationsbereich des Verbrauchers verschlüsselt abgelegt.
+Nach dem obigen Beispiel würde dem Konsumenten-Dogu zwei Registry-Einträge einrichten, die das jeweilige Zugangsdatum als Wert enthalten:  
+
+- `/config/<konsument>/sa-<produzent>/username`
+- `/config/<konsument>/sa-<produzent>/passwort` 
+
+Das Verbaucher-Dogu kann diese nun z. B. durch `doguctl config -e sa-<produzentdogu>/username` auslesen und entschlüsseln.
+
+#### Service Account löschen
+
+Das `service-account-remove`-Skript löscht einen bestehenden Service Account eines Konsumenten-Dogus.
+
+Es wird immer ausgeführt, wenn das Konsumenten-Dogu deinstalliert wird. Während des Aufrufs erhält das `service-account-remove`-Skript jedenfalls den Namen des Konsumenten-Dogus als erstes Argument. Da hier keine Ausgaben des Skriptes verarbeitet werden, können auch Fehlermeldungen auf `stdout` ausgegeben werden.
+
+Ein `service-account-remove`-Skript besteht aus zwei Schritten:
+
+1. Identifier von dem Konsumenten identifizieren 
+2. Löschen der Daten und des Service Accounts des Konsumenten
+
+Ein Beispiel für das `service-account-remove`-Skript könnte folgendermaßen aussehen:
+
+`remove-sa.sh`
+
+```bash
+#!/bin/bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+#1) Identifier von dem Konsumenten identifizieren
+SERVICE="${1}"
+if [ X"${SERVICE}" = X"" ]; then
+  echo "usage remove-sa.sh servicename"
+  exit 1
+fi
+
+#2) Löschen des Service Accounts des Verbrauchers
+# ... Implementiere die Dogu-spezifische Logik hier
+```
+
+In Schritt 1 wird der Name des Konsumenten-Dogus ausgelesen (z. B. "redmine"), i. d. R. um den Service Account des Dogus zu identifizieren.
+
+In Schritt 2 wird der Account aus der Datenbasis des Produzenten inkl. Zugangsdaten gelöscht.
 
 ### Service Accounts konsumieren
+
+Es ist sehr einfach, bei einem Produzenten-Dogu einen Service Account anzufragen, da die Hauptarbeit beim Client und beim Produzenten liegt. Ein Konsumenten-Dogu muss lediglich in seiner `dogu.json` das gewünschte Produzenten-Dogu als [ServiceAccount]() nennen:
+
+```json
+{
+  ...,
+  "ServiceAccounts": [
+    {
+      "Type": "produzentendogu",
+      "Kind": "dogu"
+    }
+  ],
+  ...
+}
+```
+
+Bei einem Service Account handelt es sich um eine besondere Form der Abhängigkeit. Trotzdem ist es sinnvoll, das Produzenten-Dogu in seiner [Dependency-Liste]() zu führen. So wird in den unterschiedlichen Phasen einer Dogu-Installation sichergestellt, dass das Produzenten-Dogu wirklich zur Benutzung bereitsteht:
+
+
+```json
+{
+  ...,
+  "Dependencies": [
+    {
+      "name": "produzentendogu",
+      "type": "dogu"
+    }
+  ],
+  "ServiceAccounts": [
+    {
+      "Type": "produzentendogu",
+      "Kind": "dogu"
+    }
+  ],
+  ...
+}
+```
 
 ## Dogu-Upgrades
 
