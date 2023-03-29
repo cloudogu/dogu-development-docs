@@ -743,5 +743,126 @@ Zusätzlich kann die Admin-Gruppe im Nachhinein geändert werden. Das Dogu muss 
 
 Die FQDN des CES-Systems ist global im etcd gespeichert und kann von den Dogus ausgelesen (`doguctl config --global fqdn`) und in die Dogu-Konfiguration integriert werden, falls nötig (siehe auch [Erstellung einer exemplarischen Anwendung](../core/basics_de.md#5-erstellung-einer-exemplarischen-anwendung). Zusätzlich muss bei der Dogu-Entwicklung darauf geachtet werden, dass die FQDN änderbar ist. Das Dogu sollte also in der Lage sein (ggf. nach einem Neustart), eine neue FQDN auszulesen und seine Konfiguration an diese neue FQDN anzupassen.
 
-### Loglevel mappen und ändern
+### Logging-Verhalten steuern
+
+Dieser Abschnitt zeigt, wie eine einheitliche, abstrahierte Einstellmöglichkeit geschaffen wird, mit der man das Log-Verhalten in allen Dogus auf die gleiche Art und Weise einstellen kann. Dazu werden vier verschiedene über die etcd-Registry setzbare Log-Level genutzt: `ERROR`, `WARN`, `INFO` und `DEBUG`.
+
+Mit diesen abstrakten Log-Leveln soll der Administrator unterstützt werden. Er oder sie muss nicht wissen, wie ein Dogu-spezifisches Log-Level heißt, sondern kann stattdessen auf vier Grundwerte zurückgreifen und diese gefahrlos in allen Dogus wiederverwenden.
+
+Als Entwickler eines Dogus müssen wir darauf achten, dass diese vier Log-Level sinnvoll auf die Log-Level der Software im Dogu gemappt werden, welche ggf. andere Namen haben können (bspw. `TRACE` oder `CRIT`).
+
+#### Log-Level und deren Spielräume
+
+Die Log-Level sind nach Detailgrad von grob nach fein sortiert und enthalten den jeweils darüber liegenden. Bspw. enthalten Log-Ausgaben des Levels `WARN` also auch Log-Ausgaben der Levels `ERROR`.
+
+Der Entwickler hat damit starke Freiheiten, welche Logs bei welchem Log-Level ausgegeben werden.
+
+##### `ERROR`
+
+Log-Level analog zu `ERROR` finden sich sehr häufig auf Produktionssystemen. Der Betrieb oder Support möchte keine überflüssigen Zusatzinformationen durchgehen, sondern effizient zum Kern von Problemen stoßen.
+
+Logausgaben dieses Levels sollten nur Ausgaben enthalten, die auf akute Fehler, Betriebsverhinderung oder Sicherheitsverstöße usw. hinweisen.
+
+Beispiele:
+- Reparatur korrupter Daten in einer Datenbank
+- Applikationsfehler
+- ungeplanter Stopp oder Restart von Diensten oder Applikationen
+- akute Konnektivitätsfehler
+    - z. B. Postgresql-Dogu ist auch nach mehreren Minuten nicht erreichbar
+- _wiederholte_, fehlgeschlagene Login-Versuche
+- akut drohender oder akut bestehender Mangel an Ressourcen
+
+##### `WARN`
+
+Log-Level analog zu `WARN` finden sich auch häufig auf Produktionssystemen.
+
+Logausgaben dieses Levels sind sehr ähnlich zu denen von `ERROR`. Im Unterschied zu diesen enthalten sie jedoch Ausgaben, die auf bevorstehende Fehler hinweisen.
+
+Beispiele:
+- fehlerhafte oder optimierbare Konfiguration wurde erkannt
+- Aktualisierung von Applikation oder Bibliotheken werden vorgeschlagen
+- mittelfristig drohender Mangel an Ressourcen
+- singuläre Konnektivitätsfehler, die zeitlich begrenzt sind
+    - z. B. Postgresql-Dogu ist beim ersten Versuch nicht erreichbar, doch nach wenigen Minuten schon
+- _einzelne_, fehlgeschlagene Login-Versuche
+- geplanter Start und Stopp von Diensten oder Applikationen
+
+##### `INFO`
+
+Ausgaben, die in besonderen, aber unkritischen Situationen von Interesse sein könnten. Ein _Catch-All_ für all die Ausgaben, die nicht wichtig genug für `WARN` sind, aber noch nicht tief in die Details der Anwendung einsteigen.
+
+Beispiele:
+- ein Subsystem wurde vollständig geladen
+- Fehlerloses Ergebnis von Hintergrundjobs
+- Erfolgreicher Start/Stop einer Komponente
+
+##### `DEBUG`
+
+Ausgaben, die in kritischen Situationen von Interesse sein könnten und/oder zur Fehlerfindung dienen.
+
+Beispiele:
+- eine relevante Entscheidung für eine Konfiguration wurde gefällt
+
+#### Mapping je Dogu
+
+Diese vier abstrakten Log-Levels haben in der Regel keine direkte Beziehung zu konkreten Log-Levels in den Tools oder Plugins im Dogu und müssen in der Dogu-Entwicklung manuell abgebildet werden. Der Grund dafür liegt darin, dass sich sowohl von den Tools als auch damit einhergehenden Plugins und Frameworks die Log-Levels zu stark in Quantität und Qualität unterscheiden.
+
+Die Abbildung eines abstrakten Log-Levels liegt damit in der Hand der Dogu-Entwicklung.
+
+Diese Abbildung von abstrakten zu konkreten Log-Levels birgt den Vorteil der Flexibilität, z. B. wenn mehrere unterschiedliche Konfigurationsdateien mit unterschiedlichen Log-Leveln gefüllt werden müssen.
+
+#### Wertebereich und Default
+
+Zum Einstellen des Log-Levels wird je Dogu ein optionaler Key `/config/${dogu}/logging/root` eingeführt, der einen der folgenden abstrakten Log-Level-Werte annehmen kann.
+
+- `ERROR`
+- `WARN` (Defaultwert)
+- `INFO`
+- `DEBUG`
+
+Wenn kein Key `/config/${dogu}/logging/root` existiert, dann wird automatisch `WARN` verwendet.
+
+
+#### Validierung und Default-Werte
+
+`doguctl` unterstützt Dogu-Entwickelnde darin, robust einen Log-Level für ein Dogu zu definieren. So bleibt lediglich die Abbildung eines gefundenen Log-Levels auf das jeweilige Logging-Framework im Dogu übrig.
+
+In der `dogu.json` lässt sich ein validierbarer Log-Level einstellen, der bereits Dogu-seitig einen Standardwert mitbringt.
+
+```json
+{
+  "Configuration": [
+    {
+      "Name": "logging/root",
+      "Description": "Set the root log level to one of ERROR, WARN, INFO, DEBUG.",
+      "Optional": true,
+      "Default": "WARN",
+      "Validation": {
+        "Type": "ONE_OF",
+        "Values": [
+          "WARN",
+          "DEBUG",
+          "INFO",
+          "ERROR"
+        ]
+      }
+    }
+  ]
+}
+```
+
+Dieser Wert lässt sich mit `doguctl validate` überprüfen:
+
+```
+if [[ ! doguctl validate logging/root --silent ]]; then
+    echo "WARNING: Found invalid value in logging/root. Resetting it to WARN"
+    doguctl config logging/root WARN
+fi
+```
+
+Der eingestellte bzw. Default-Wert aus der `dogu.json` lässt sich wie gewohnt abrufen. `doguctl` kümmert sich um die Gewinnung eines Default-Werts, wenn kein Wert gesetzt wurde:
+
+```
+rootLogLevel=$(doguctl config logging/root)
+```
 
