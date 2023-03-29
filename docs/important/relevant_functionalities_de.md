@@ -281,7 +281,7 @@ Das folgende Bild fokussiert Teile, die in der Kommunikation zwischen Dogu (exem
 
 Die Dogu-spezifische Konfiguration liegt im Registry-Pfad `/config/<dogu>/`. [Registry-Schlüssel](../core/compendium_de.md#configuration) sollten im `snake_case` geschrieben werden, also Lowercase mit Unterstrichen.
 
-Eine wertvolle Hilfe ist das Kommandozeilenwerkzeug `doguctl` unter anderem auch in der Startphase des Dogu-Containers. Dieses Werkzeug vereinfacht den Zugriff auf die Registry, indem automatisch die `node_master`-Datei ausgelesen wird oder wie Dogu-eigene Registry-Schlüssel adressiert werden.
+Eine wertvolle Hilfe ist das Kommandozeilenwerkzeug `doguctl` unter anderem auch in der Startphase des Dogu-Containers. Dieses Werkzeug vereinfacht den Zugriff auf die Registry, indem automatisch die `node_master`-Datei ausgelesen wird oder wie Dogu-eigene Registry-Schlüssel adressiert werden. Weitere Aufrufmöglichkeiten befinden sich im Abschnitt (Die Nutzung von `doguctl`)[#die-nutzung-von-doguctl].
 
 Die `dogu.json` erlaubt es, eigene Konfigurationswerte zu definieren, die sogar validiert werden können.
 
@@ -297,9 +297,9 @@ your-ecosystem.example.com
 
 ### Interessante Registryzweige
 
-Es existieren jenseits der Dogu-eigenen Registrywerte noch weitere Bereiche, die im Dogu-Betrieb von Interesse sind.
+Es existieren jenseits der Dogu-eigenen Registrywerte noch weitere Bereiche, die in der Dogu-Startphase von Interesse sind.
 
-Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit `doguctl` (wie oben gezeigt) verwaltet werden.
+Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit [`doguctl`](#die-nutzung-von-doguctl) verwaltet werden..
 
 - Globale Werte `/config/_global`
   - `/config/_global/fqdn`
@@ -384,11 +384,13 @@ fi
 
 Der Fehler des Kommandos `your-command` wird abgefangen. Ein eigener Fehlertext wird ausgegeben. Der Dogu-State wird auf einen Nicht-`ready`-Wert gesetzt, der beim Debugging hilfreich sein könnte. Schließlich wird fünf Minuten (= 300 Sekunden) gewartet bis mit `exit 1` das Dogu als fehlerhaft neu gestartet wird.
 
-### Bash `function` - Teile und herrsche
+### Teile und herrsche mit Bash
 
 Je länger man eine Anwendung entwickelt, desto mehr Funktionalitäten gelangen in die Anwendung. Genauso kann es sich auch mit der `startup.sh` verhalten. Von einer leichteren Testbarkeit (z. B. mit [BATS](https://github.com/bats-core/bats-core)) abgesehen, sind kleine Ausführungsbestandteile leichter verständlich.
 
 Es ist daher eine gute Idee, Dogu-Funktionalitäten in der `startup.sh` genauso unter Gesichtspunkten der Testbarkeit, Lesbarkeit oder Refaktorisierbarkeit zu gestalten.
+
+#### Shell functions
 
 Hierbei helfen Bash-Funktionen:
 
@@ -415,7 +417,28 @@ function cleanUpSetup() {
 }
 ```
 
-Mit steigender Komplexität ist es evtl. eine Idee wert, relevante Schritte mit einem `echo` zu versehen, um im Fehlerfall eine Suche nach dem Fehler zu beschleunigen.
+Mit steigender Komplexität ist es eine Idee wert, relevante Schritte mit einem `echo` zu versehen, um im Fehlerfall eine Suche nach dem Fehler zu beschleunigen.
+
+#### Auslagerung von Code
+
+Eine weitere Möglichkeit ist die Auslagerung von Funktionen in andere Skriptdateien, die dann mittels `source` in das eigentliche Startskript inkludiert werden. Es sollte allerdings beachtet werden, dass auch ein solches `source`n Fehlschlagen kann und behandelt werden sollte.
+
+```bash
+sourcingExitCode=0
+source /resources/util.sh || sourcingExitCode=$?
+if [[ ${sourcingExitCode} -ne 0 ]]; then
+  echo "ERROR: An error occurred while sourcing /resources/util.sh: Exit code ${sourcingExitCode}"
+  doguctl state "ErrorSourcingUtilSh"
+  sleep 300
+  exit 1
+fi
+```
+
+### Qualitätssicherung von Startskripten
+
+Bei komplexeren Aufgaben kann es sein, dass ein Startskript wie die `startup.sh` an Komplexität gewinnt. Wie jedes andere Programm sollte es getestet und auf Robustheit analysiert werden. Hierbei gibt es mehrere Möglichkeiten. [BATS](https://github.com/bats-core/bats-core) kann im Unit-Test von Shell-Funktionen unterstützen.
+
+Analysewerkzeuge wie [Shellcheck](https://www.shellcheck.net/) können Fehler in der Benutzung von Shell-Aufrufen aufdecken.
 
 ### Die Nutzung von `doguctl`
 
@@ -456,7 +479,7 @@ doguctl config --rm delete_me
 
 #### doguctl validate
 
-Dieser Aufruf validiert Konfigurationswerte der Registry.
+Dieser Aufruf validiert Konfigurationswerte der Registry. Das Kommando `validate` liefert einen Exit Code == 0, wenn keines der überprüften Dogu-Konfigurationswerte einen Validierungsfehler aufweist. Ansonsten liefert es einen Exit Code == 1.
 
 ```bash
 doguctl validate logging/root # validiert einzelnen Wert, Gutfall: Wert=WARN aus ERROR,WARN,INFO,DEBUG
@@ -494,26 +517,28 @@ echo $?
 
 #### doguctl healthy
 
-Dieser Aufruf prüft, ob ein gegebenes Dogu betriebsbereit (healthy) ist.
+Dieser Aufruf prüft, ob ein gegebenes Dogu betriebsbereit (healthy) ist. Das Kommando `healthy` liefert einen Exit Code == 0, wenn das betrachtete Dogu healthy ist. Ansonsten liefert es einen Exit Code == 1.
 
 ```bash
-doguctl healthy postgresql --timeout 300 # prüft PostgreSQL-Dogu, Gutfall
-echo $?
-0
-doguctl healthy postgresql --timeout 300 # prüft PostgreSQL-Dogu, Fehlerfall
-echo $?
-1
+if ! doguctl healthy --wait --timeout 120 postgresql; then
+  echo "timeout reached by waiting of ldap to get healthy"
+  exit 1
+fi
 ```
 
 #### doguctl state
 
-Liest und schreibt Dogu-Zustandswerte.
+Dieser Aufruft liest und schreibt Dogu-Zustandswerte. Er wird in Kombination mit einem [HealthCheck](../core/compendium_de.md#healthchecks) verwendet.
 
 ```bash
 doguctl state "installing" # schreibt den Wert in den State
+# Erledige Installation
+
 doguctl state # Liest den Wert aus dem State
 installing
+
 doguctl state "ready" # Setzt den State auf den Standard-Healthy-Wert
+# Starte nun die Anwendung
 ```
 
 #### doguctl random
@@ -523,49 +548,80 @@ Dieser Aufruf erzeugt Zufallsstrings, geeignet um Passwörter oder sonstige Zuga
 ```bash
 doguctl random # erzeugt Zufallsstring mit der Länge 16
 9HoF4nYmlLYtf6Ju
-doguctl random  -5 # erzeugt Zufallsstring mit gegebener Länge
+doguctl random  -l 5 # erzeugt Zufallsstring mit gegebener Länge
 W6Wmj
 ```
 
 #### doguctl template
 
-Dieser Aufruf erzeugt eine Datei aus einem [Golang-Template](https://pkg.go.dev/text/template). Registrywerte und Umgebungsvariablen können hierin direkt verwendet werden.
+Dieser Aufruf erzeugt eine Datei aus einem [Golang-Template](https://pkg.go.dev/text/template). Unterschiedliche Registrywerte und Umgebungsvariablen können hierin direkt verarbeitet werden.
+
+Der Aufruf nimmt ein bis zwei Parameter entgegen:
+```bash
+doguctl template <Template-Datei> [Ausgabedatei]
+```
+
+Wird das Kommando `template` ohne Ausgabedatei verwendet, dann wird die gerenderte Ausgabe auf `stdout` ausgegeben.
+
+Unterstützte Template-Parameter:
+- Umgebungsvariablen
+  - `.Env.Get <Umgebungsvariable>` - verwendet vorher exportierte Umgebungsvariable "ADMIN_USERNAME"
+- Dogu-Konfiguration
+  - `.Config.Get <Dogu-Konfigurationsschlüssel>` - verwendet unverschlüsselten Dogu-Konfigurationswert unter `/config/<dogu>/<schlüssel>` 
+  - `.Config.GetOrDefault <Dogu-Konfigurationsschlüssel> <Fehlwert>` - verwendet unverschlüsselten Dogu-Konfigurationswert oder den bereitgestellten Fehlwert
+  - `.Config.GetAndDecrypt <verschlüsselter Dogu-Konfigurationsschlüssel>` - entschlüsselt den Dogu-Konfigurationswert und verwendet ihn
+  - `.Config.Exists <Dogu-Konfigurationsschlüssel>` - gibt einen `bool`-Wert zurück, ob ein Dogu-Konfigurationswert unter `/config/<dogu>/<schlüssel>` existiert
+- Globale Konfiguration
+  - `.GlobalConfig.Get <globaler Konfigurationsschlüssel>` - verwendet globalen Konfigurationswert `/config/_global/<schlüssel>`
+  - `.GlobalConfig.GetOrDefault <globaler Konfigurationsschlüssel> <Fehlwert>` - verwendet unverschlüsselten globalen Konfigurationswert oder den bereitgestellten Fehlwert
+  - `.GlobalConfig.Exists <Dogu-Konfigurationsschlüssel>` - gibt einen `bool`-Wert zurück, ob ein globaler Konfigurationswert unter `/config/_global/<schlüssel>` existiert
+- Dogu-Abfragen
+  - `.Dogus.IsEnabled <Dogu-Name>` - gibt einen `bool`-Wert zurück, ob ein Dogu installiert ist
+  - `.Dogus.Get <Dogu-Name>` - gibt ein [Dogu](../core/compendium_de.md#type-dogu)-Struct zurück
+  - `.Dogus.GetAll` - gibt ein Slice aller [Dogus](../core/compendium_de.md#type-dogu) zurück
 
 Beispiel einer Template-Datei:
 
 ```gotemplate
 # my-pseudo-config.conf
 [Global]
-admin.username = {{ .Env.Get "ADMIN_USERNAME" }} # verwendet vorher exportierte Umgebungsvariable "ADMIN_USERNAME"
-funny.name = {{ .Config.Get "something_funny" }} # verwendet unverschlüsselten Dogu-Konfigurationswert
-log.level = {{ .Config.GetOrDefault "log_level" "WARN" }} # verwendet unverschlüsselten Dogu-Konfigurationswert oder nimmt den Fehlwert "WARN" 
+admin.username = {{ .Env.Get "ADMIN_USERNAME" }}
+funny.name = {{ .Config.Get "something_funny" }}
+log.level = {{ .Config.GetOrDefault "log_level" "WARN" }}
+url.jdbc = jdbc:postgresql://postgresql:5432/{{ .Config.GetAndDecrypt "sa-postgresql/database" }}
+url.fqdn = https://{{ .GlobalConfig.Get "fqdn" }}/my-dogu 
 
-url.jdbc = jdbc:postgresql://postgresql:5432/{{ .Config.GetAndDecrypt "sa-postgresql/database" }} # verwendet verschlüsselten Dogu-Konfigurationswert /config/my-dogu/sa-postgresql/database
-
-url.fqdn = https://{{ .GlobalConfig.Get "fqdn" }}/my-dogu # verwendet globalen Konfigurationswert /config/_global/fqdn 
-
-{{ if .Config.Exists "notification" }} # Konditionale Konfiguration ist auch möglich
+{{ if .Config.Exists "notification" }}
 notification = mail
 {{ end }}
 
-{{ if .Dogus.IsEnabled "redmine" }} # Prüft, ob ein Dogu installiert ist
+{{ if .Dogus.IsEnabled "redmine" }}
 ticketsystem.url = https://{{ .GlobalConfig.Get "fqdn" }}/redmine
 {{ end }}
 ...
 ```
 
-```bash
-doguctl template <Template-Datei> <Ausgabedatei>
-```
-
 #### doguctl wait-for-tcp
 
-Wartet bis ein gegebener TCP-Port offen ist.
+Mit diesem Aufruf wartet `doguctl` bis ein gegebener TCP-Port offen ist oder ein Timeout (in Sekunden) eintritt. Ein Exit Code != 0 signalisiert einen Fehler.
+
+```bash
+if ! doguctl wait-for-tcp --timeout 120 8080; then
+  echo "Received timeout during wait for port 8080. Exiting."
+  exit 1
+fi
+```
 
 #### doguctl wait-for-http
 
-Wartet bis eine gegebene HTTP-URL bereit ist.
+Mit diesem Aufruf wartet `doguctl` bis eine gegebene HTTP-URL bereit ist oder ein Timeout (in Sekunden) eintritt. Ein Exit Code != 0 signalisiert einen Fehler.
 
+```bash
+if ! doguctl wait-for-tcp --host postgresql --timeout 120 5432; then
+  echo "Received timeout during wait for port 5432 of host postgresql. Exiting."
+  exit 1
+fi
+```
 
 ## Service Accounts
 Lorem ipsum Einführungstext
