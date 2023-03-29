@@ -263,8 +263,308 @@ Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusamme
 
 ## Auf die Registry zugreifen
 
+Die Cloudogu EcoSystem Registry ist eine Key-Value-Datenbank, die auch für Dogus ein Kernelement darstellt. Die Konfiguration eines Dogus wird über die Registry durchgeführt. Darüber hinaus werden in der Registry werden Werte abgelegt, die auch von globaler Natur sind.
+
+### Registry-Zugriff vom Dogu heraus
+
+Das folgende Bild fokussiert Teile, die in der Kommunikation zwischen Dogu (exemplarisch hier: Redmine) und der Registry eine Rolle spielen:
+
+![Beteiligte Komponenten, die im Zusammenspiel zwischen Dogu und Registry eine Rolle spielen](../images/important/chapter3_ces_registry_components.png)
+
+- Registry: Sie läuft jenseits des Dogu-Containers und ist über eine IP-Adresse aus dem Container-Netzwerk erreichbar
+  - Nach der Installation enthält die Registry neben anderen Keys den Public Key jedes Dogus.
+- Datei `/etc/ces/node_master` 
+  - Diese wird während der Dogu-Installation automatisch in das Dogu gemountet. Sie enthält die IP-Adresse der Registry, damit das Dogu auf die Registry zugreifen kann.
+- Datei `/private/private.pem`
+  - Diese Datei enthält den Private Key des Dogus. Dieser wird u. a. zum Entschlüsseln von verschlüsselten Werten der Registry verwendet.
+  - Häufig handelt es sich hierbei um [Service-Accounts](../core/compendium_de.md#serviceaccounts) zu anderen Dogus
+
+Die Dogu-spezifische Konfiguration liegt im Registry-Pfad `/config/<dogu>/`. [Registry-Schlüssel](../core/compendium_de.md#configuration) sollten im `snake_case` geschrieben werden, also Lowercase mit Unterstrichen.
+
+Eine wertvolle Hilfe ist das Kommandozeilenwerkzeug `doguctl` unter anderem auch in der Startphase des Dogu-Containers. Dieses Werkzeug vereinfacht den Zugriff auf die Registry, indem automatisch die `node_master`-Datei ausgelesen wird oder wie Dogu-eigene Registry-Schlüssel adressiert werden.
+
+Die `dogu.json` erlaubt es, eigene Konfigurationswerte zu definieren, die sogar validiert werden können.
+
+```bash
+# liest Konfigurationwert aus dem Schlüssel /config/<dogu>/my_key
+doguctl config my_key
+my old value
+
+# liest globalen Konfigurationwert aus /config/_global/fqdn
+doguctl config -g fqdn
+your-ecosystem.example.com
+```
+
+### Interessante Registryzweige
+
+Es existieren jenseits der Dogu-eigenen Registrywerte noch weitere Bereiche, die im Dogu-Betrieb von Interesse sind.
+
+Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit `doguctl` (wie oben gezeigt) verwaltet werden.
+
+- Globale Werte `/config/_global`
+  - `/config/_global/fqdn`
+    - die FQDN dieser Cloudogu EcoSystem-Instanz
+    - z. B. eco.example.com
+    - Dieser Wert kann sich im laufenden Betrieb ändern. Siehe hierzu auch den Abschnitt zur [Änderbarkeit der FQDN](#änderbarkeit-der-fqdn)
+  - `/config/_global/domain`
+    - der Mail-Domänen-Anteil dieser Cloudogu EcoSystem-Instanz
+    - z. B. example.com
+  - `/config/_global/mail_address`
+    - die Emailadresse des Instanzadministrators
+  - `/config/_global/admin_group`
+    - der aktuelle Name der LDAP-Gruppe, deren Mitglieder die Clodogu EcoSystem-Instanz in der UI administrieren
+    - Dieser Wert kann sich im laufenden Betrieb ändern. Siehe hierzu auch den Abschnitt zur [Änderbarkeit der Admingruppe](#änderbarkeit-der-admin-gruppe)
+- Doguzustände `/state/<dogu>`
+  - wenn das Dogu einen [HealthCheck](../core/compendium_de.md#healthchecks) vom Typen `state` definiert, dann ermöglicht es dem Administrator und anderen Dogus Health-Hinweise auf das Dogu zu erhalten
+  - Im eigenen Dogu z. B. `doguctl state installing` setzen, wenn eine längere Installationsroutine gestartet wird. Kurz bevor der Hauptprozess gestartet wird dann mit `doguctl state ready` einen ordnungsgemäßen Betriebszustand anzeigen.
+  - Im EcoSystem-Host lässt sich dies mit `cesapp healthy <dogu>` überprüfen
+  - In anderen Dogus lässt sich dies mit `doguctl healthy <dogu>` überprüfen
+    - Mit dem Schalter `--timeout <Sekunden>` kann man so auf Dogus warten, von denen das eigene Dogu abhängt.
+    - Ein Exit-Code ungleich null (0) deutet darauf hin, dass entweder das Dogu nicht rechtzeitig seinen Startvorgang beendet hat oder die Registry-Kommunikation fehlschlug.
 
 ## Aufbau und Best Practices von `startup.sh` 
+
+Ein einfaches Dogu benötigt eigentlich nur eine `dogu.json` und ein Container-Image. Doch was geschieht, wenn sich die Wirklichkeit im Dauerbetrieb von den Annahmen während der Dogu-Entwicklung unterscheiden? 
+
+Bei Cloudogu haben wir schnell festgestellt, dass es im Betrieb geschickter ist, auf solche Änderungen eingehen zu können. Das Spektrum ist hierbei breit. Dabei kann es sich um Wartezeiten gegenüber anderen Dogus handeln, oder um die Änderung von ursprünglich fixen Bezeichnern bis hin zu Störungen in der Container-Engine. 
+
+Wiederkehrende Aufgaben beim Container-Start befinden sich im Abschnitt "Typische Dogu-Features" in den Abschnitten:
+- [Änderbarkeit der Admingruppe](#änderbarkeit-der-admin-gruppe)
+- [Änderbarkeit der FQDN](#änderbarkeit-der-fqdn)
+- [Loglevel mappen und ändern](#loglevel-mappen-und-ändern)
+
+Um dynamisch auf diese Gegebenheiten zu reagieren hat es sich bei Cloudogu eingebürgert, nicht den Hauptprozess im Container direkt zu starten. Stattdessen werden erst Fehlerfälle in einem Startskript abgeprüft, ggf. neue Konfigurationswerte einarbeitet, um dann erst den Hauptprozess zu starten, z. B. so:
+
+1. Container startet `startup.sh`
+2. `startup.sh`
+   1. setzt eigene Optionen
+   2. ruft eigene Kommandos auf, um bestimmte Funktionalitäten umzusetzen, um z. B.
+      - auf Dogu-Abhängigkeiten zu warten
+      - einmalige Installationsprozesse durchzuführen 
+      - ein temporäres Admin-Konto zu generieren
+      - das aktuelle Log-Level umsetzen
+   3. den Dogu-State auf `ready` setzen (geeigneter [HealthCheck](../core/compendium_de.md#healthchecks) vorausgesetzt)
+   4. startet den Hauptprozess
+
+Dieser Abschnitt geht daher auf Erkenntnisse und _Best Practices_ ein, die sich auf solche Startskripte beziehen: Die `startup.sh`. 
+
+Übrigens: Fleißige Entwickler:innen können Inspiration in den Cloudogu-eigenen Startskripten [z. B. im Redmine-Dogu](https://github.com/cloudogu/redmine/blob/develop/resources/startup.sh) sammeln.
+
+### Skriptinterpreter
+
+Um ein Skript in einem Dogu ausführen zu können, muss ein Skriptinterpreter im Container-Image existieren. Das kann ein offizielles Paket sein (wie `bash`), es spricht aber nichts dagegen seinen eigenen Skriptinterpreter zu verwenden. Da Bash-Skripte weit verbreitet sind, wird hier Bash-Syntax verwendet.
+
+### Fehlerbehandlung
+
+Je nach Dogu können Fehler an unterschiedlichen Stellen entstehen und (dummerweise) auch wieder verschluckt werden. Es ist eine gute Praxis, Fehler hart aufschlagen zu lassen, um die Fehlerursache schneller zu identifizieren.
+
+Hierzu werden als allererstes die folgenden Optionen gesetzt
+
+```bash
+#!/bin/bash
+set -o errexit # beende das gesamte Skript (und damit auch den Container) bei einem nicht abgefangenem Fehler 
+set -o nounset # finde nicht initialisierte Variablen
+set -o pipefail # verschlucke keine Fehler bei Pipe-Verwendung
+```
+
+Wie ein Fehler abgefangen wird, ist ein Implementierungsdetail. Manchmal ist es günstig, einen Fehlerfall zu testen und eine eigene Meldung abzusetzen, manchmal reicht der Fehler selbst aus.
+
+Wenn man bereits Fehler erwartet, dann kann dieses Konstrukt hilfreich sein:
+
+```bash
+yourCommandExitCode=0
+your-command || yourCommandExitCode=$?
+if [[ ${yourCommandExitCode} -ne 0 ]]; then
+  echo "ERROR: Oh no. I found something critical during QuirkyFunction.";
+  doguctl state "ErrorQuirkyFunction"
+  sleep 300
+  exit 1
+fi
+```
+
+Der Fehler des Kommandos `your-command` wird abgefangen. Ein eigener Fehlertext wird ausgegeben. Der Dogu-State wird auf einen Nicht-`ready`-Wert gesetzt, der beim Debugging hilfreich sein könnte. Schließlich wird fünf Minuten (= 300 Sekunden) gewartet bis mit `exit 1` das Dogu als fehlerhaft neu gestartet wird.
+
+### Bash `function` - Teile und herrsche
+
+Je länger man eine Anwendung entwickelt, desto mehr Funktionalitäten gelangen in die Anwendung. Genauso kann es sich auch mit der `startup.sh` verhalten. Von einer leichteren Testbarkeit (z. B. mit [BATS](https://github.com/bats-core/bats-core)) abgesehen, sind kleine Ausführungsbestandteile leichter verständlich.
+
+Es ist daher eine gute Idee, Dogu-Funktionalitäten in der `startup.sh` genauso unter Gesichtspunkten der Testbarkeit, Lesbarkeit oder Refaktorisierbarkeit zu gestalten.
+
+Hierbei helfen Bash-Funktionen:
+
+```bash
+function setDoguLogLevel() {
+  echo "Mapping dogu specific log level..."
+  currentLogLevel=$(doguctl config --default "WARN" "logging/root")
+  
+  # bilde hier das Loglevel auf die Logkonfiguration des Dogus ab 
+}
+```
+
+Wiederkehrende Funktionen können abstrahiert und parametrisiert werden:
+
+```bash
+function deleteSetupArtefact() {
+  local artefactFile="${1}"
+  rm -f "${artefactFile}"
+}
+
+function cleanUpSetup() {
+  deleteSetupArtefact "/tmp/tracker-extract-3-files.127"
+  deleteSetupArtefact "/usr/share/lib/intermediateFile.bin"
+}
+```
+
+Mit steigender Komplexität ist es evtl. eine Idee wert, relevante Schritte mit einem `echo` zu versehen, um im Fehlerfall eine Suche nach dem Fehler zu beschleunigen.
+
+### Die Nutzung von `doguctl`
+
+Der Abschnitt [über Registry-Zugriff](#registry-zugriff-vom-dogu-heraus) hat das Thema `doguctl` bereits angeschnitten. `doguctl` ist ein Kommandozeilenwerkzeug, das wiederkehrende Interaktionen mit dem Cloudogu EcoSystem bündelt und vereinfacht. Dieser Abschnitt beschreibt mögliche Aufrufe.
+
+Mit `--help` gibt jedes Unterkommando von `doguctl` gibt eine Hilfeseite aus.  
+
+#### doguctl config
+
+Dieser Aufruf liest und schreibt Konfigurationswerte.
+
+```bash
+# liest Konfigurationwert aus dem Schlüssel /config/<dogu>/my_key
+doguctl config my_key
+my old value
+
+# liest globalen Konfigurationwert aus /config/_global/fqdn
+doguctl config -g fqdn
+your-ecosystem.example.com
+
+# liest Konfigurationwert aus /config/<dogu>/my_key, gibt einen Defaultwert zurück, wenn dieser nicht gesetzt wurde
+doguctl config --default NOVALUE my_key2
+NOVALUE
+
+# liest verschlüsselten DB-Namen /config/<dogu>/sa-postgresql/db_name
+doguctl config -e sa-postgresql/db_name
+your-dogu-database-1234
+
+# schreibt Konfigurationswert in /config/<dogu>/my_key hinein
+doguctl config my_key 'my new value'
+
+# schreibt verschlüsselten Geheimnis /config/<dogu>/geheim/credential
+doguctl config -e geheim/credential '$up3r$3cre7'
+
+# löscht den Schlüssel /config/<dogu>/delete_me
+doguctl config --rm delete_me
+```
+
+#### doguctl validate
+
+Dieser Aufruf validiert Konfigurationswerte der Registry.
+
+```bash
+doguctl validate logging/root # validiert einzelnen Wert, Gutfall: Wert=WARN aus ERROR,WARN,INFO,DEBUG
+Key logging/root: OK
+echo $?
+0
+
+doguctl validate logging/root #  validiert einzelnen Wert, Fehlerfall: Wert=foo aus ERROR,WARN,INFO,DEBUG
+Key logging/root: INVALID
+at least one key was invalid
+echo $?
+1
+
+doguctl validate --all # validiert alle Werte mit Ausgabe
+...
+Key container_config/memory_limit: OK
+Key container_config/swap_limit: OK
+Key container_config/java_max_ram_percentage: OK
+Key container_config/java_min_ram_percentage: OK
+Key logging/root: INVALID
+Key caching/workdir/size: OK (No Validator)
+at least one key was invalid
+echo $?
+1
+
+doguctl validate --silent # validiert Werte ohne Ausgabe (kombinierbar mit --all), Gutfall
+echo $?
+0
+
+doguctl validate --silent # validiert Werte ohne Ausgabe (kombinierbar mit --all), Fehlerfall
+at least one key was invalid
+echo $?
+1
+```
+
+#### doguctl healthy
+
+Dieser Aufruf prüft, ob ein gegebenes Dogu betriebsbereit (healthy) ist.
+
+```bash
+doguctl healthy postgresql --timeout 300 # prüft PostgreSQL-Dogu, Gutfall
+echo $?
+0
+doguctl healthy postgresql --timeout 300 # prüft PostgreSQL-Dogu, Fehlerfall
+echo $?
+1
+```
+
+#### doguctl state
+
+Liest und schreibt Dogu-Zustandswerte.
+
+```bash
+doguctl state "installing" # schreibt den Wert in den State
+doguctl state # Liest den Wert aus dem State
+installing
+doguctl state "ready" # Setzt den State auf den Standard-Healthy-Wert
+```
+
+#### doguctl random
+
+Dieser Aufruf erzeugt Zufallsstrings, geeignet um Passwörter oder sonstige Zugangsdaten zu erzeugen.
+
+```bash
+doguctl random # erzeugt Zufallsstring mit der Länge 16
+9HoF4nYmlLYtf6Ju
+doguctl random  -5 # erzeugt Zufallsstring mit gegebener Länge
+W6Wmj
+```
+
+#### doguctl template
+
+Dieser Aufruf erzeugt eine Datei aus einem [Golang-Template](https://pkg.go.dev/text/template). Registrywerte und Umgebungsvariablen können hierin direkt verwendet werden.
+
+Beispiel einer Template-Datei:
+
+```gotemplate
+# my-pseudo-config.conf
+[Global]
+admin.username = {{ .Env.Get "ADMIN_USERNAME" }} # verwendet vorher exportierte Umgebungsvariable "ADMIN_USERNAME"
+funny.name = {{ .Config.Get "something_funny" }} # verwendet unverschlüsselten Dogu-Konfigurationswert
+log.level = {{ .Config.GetOrDefault "log_level" "WARN" }} # verwendet unverschlüsselten Dogu-Konfigurationswert oder nimmt den Fehlwert "WARN" 
+
+url.jdbc = jdbc:postgresql://postgresql:5432/{{ .Config.GetAndDecrypt "sa-postgresql/database" }} # verwendet verschlüsselten Dogu-Konfigurationswert /config/my-dogu/sa-postgresql/database
+
+url.fqdn = https://{{ .GlobalConfig.Get "fqdn" }}/my-dogu # verwendet globalen Konfigurationswert /config/_global/fqdn 
+
+{{ if .Config.Exists "notification" }} # Konditionale Konfiguration ist auch möglich
+notification = mail
+{{ end }}
+
+{{ if .Dogus.IsEnabled "redmine" }} # Prüft, ob ein Dogu installiert ist
+ticketsystem.url = https://{{ .GlobalConfig.Get "fqdn" }}/redmine
+{{ end }}
+...
+```
+
+```bash
+doguctl template <Template-Datei> <Ausgabedatei>
+```
+
+#### doguctl wait-for-tcp
+
+Wartet bis ein gegebener TCP-Port offen ist.
+
+#### doguctl wait-for-http
+
+Wartet bis eine gegebene HTTP-URL bereit ist.
 
 
 ## Service Accounts
