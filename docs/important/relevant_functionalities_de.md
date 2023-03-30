@@ -901,9 +901,9 @@ Die FQDN des CES-Systems ist global im etcd gespeichert und kann von den Dogus a
 
 Dieser Abschnitt zeigt, wie eine einheitliche, abstrahierte Einstellmöglichkeit geschaffen wird, mit der man das Log-Verhalten in allen Dogus auf die gleiche Art und Weise einstellen kann. Dazu werden vier verschiedene über die etcd-Registry setzbare Log-Level genutzt: `ERROR`, `WARN`, `INFO` und `DEBUG`.
 
-Mit diesen abstrakten Log-Leveln soll der Administrator unterstützt werden. Er oder sie muss nicht wissen, wie ein Dogu-spezifisches Log-Level heißt, sondern kann stattdessen auf vier Grundwerte zurückgreifen und diese gefahrlos in allen Dogus wiederverwenden.
+Mit diesen abstrakten Log-Leveln soll der Administrator unterstützt werden. Er muss nicht wissen, wie ein Dogu-spezifisches Log-Level heißt, sondern kann stattdessen auf vier Grundwerte zurückgreifen und diese gefahrlos in allen Dogus wiederverwenden.
 
-Als Entwickler eines Dogus müssen wir darauf achten, dass diese vier Log-Level sinnvoll auf die Log-Level der Software im Dogu gemappt werden, welche ggf. andere Namen haben können (bspw. `TRACE` oder `CRIT`).
+Als Entwickler eines Dogus müssen wir darauf achten, dass diese vier Log-Level sinnvoll auf die Log-Level der Software im Dogu gemappt werden, welche ggf. andere Namen haben können (bspw. `TRACE` oder `FATAL`).
 
 #### Log-Level und deren Spielräume
 
@@ -913,7 +913,7 @@ Der Entwickler hat damit starke Freiheiten, welche Logs bei welchem Log-Level au
 
 ##### `ERROR`
 
-Log-Level analog zu `ERROR` finden sich sehr häufig auf Produktionssystemen. Der Betrieb oder Support möchte keine überflüssigen Zusatzinformationen durchgehen, sondern effizient zum Kern von Problemen stoßen.
+Log-Level analog zu `ERROR` finden sich sehr häufig auf Produktionssystemen. Sie werden genutzt, damit der Betrieb oder Support keine überflüssigen Zusatzinformationen durchgehen muss, sondern effizient zum Kern von Problemen vorstoßen kann.
 
 Logausgaben dieses Levels sollten nur Ausgaben enthalten, die auf akute Fehler, Betriebsverhinderung oder Sicherheitsverstöße usw. hinweisen.
 
@@ -925,6 +925,7 @@ Beispiele:
     - z. B. Postgresql-Dogu ist auch nach mehreren Minuten nicht erreichbar
 - _wiederholte_, fehlgeschlagene Login-Versuche
 - akut drohender oder akut bestehender Mangel an Ressourcen
+- Meldungen mit `FATAL`- oder `SEVERE`-Log-Level
 
 ##### `WARN`
 
@@ -956,12 +957,13 @@ Ausgaben, die in kritischen Situationen von Interesse sein könnten und/oder zur
 
 Beispiele:
 - eine relevante Entscheidung für eine Konfiguration wurde gefällt
+- Meldungen mit `TRACE`-Log-Level
 
 #### Mapping je Dogu
 
-Diese vier abstrakten Log-Levels haben in der Regel keine direkte Beziehung zu konkreten Log-Levels in den Tools oder Plugins im Dogu und müssen in der Dogu-Entwicklung manuell abgebildet werden. Der Grund dafür liegt darin, dass sich sowohl von den Tools als auch damit einhergehenden Plugins und Frameworks die Log-Levels zu stark in Quantität und Qualität unterscheiden.
+Diese vier abstrakten Log-Levels haben hin und wieder keine direkte Beziehung zu konkreten Log-Levels in den Tools oder Plugins im Dogu und müssen in der Dogu-Entwicklung manuell abgebildet werden. Der Grund dafür liegt darin, dass sich sowohl von den Tools als auch damit einhergehenden Plugins und Frameworks die Log-Levels zu stark in Quantität und Qualität unterscheiden.
 
-Die Abbildung eines abstrakten Log-Levels liegt damit in der Hand der Dogu-Entwicklung.
+Die Abbildung eines abstrakten Log-Levels liegt damit in der Hand der Dogu-Entwicklung. Hier kann man beispielsweise entscheiden, dass man das `TRACE`-Log-Level aus der Software auf das `DEBUG`-Log-Level des Dogus mappen möchte.
 
 Diese Abbildung von abstrakten zu konkreten Log-Levels birgt den Vorteil der Flexibilität, z. B. wenn mehrere unterschiedliche Konfigurationsdateien mit unterschiedlichen Log-Leveln gefüllt werden müssen.
 
