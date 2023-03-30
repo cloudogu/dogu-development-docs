@@ -492,7 +492,7 @@ Um dynamisch auf diese Gegebenheiten zu reagieren, hat es sich bei Cloudogu eing
       - auf Dogu-Abhängigkeiten zu warten
       - einmalige Installationsprozesse durchzuführen 
       - ein temporäres Admin-Konto zu generieren
-      - das aktuelle Log-Level umsetzen
+      - das aktuelle Log-Level umzusetzen
       - Registrieren der CES-SSL-Zertifikate in der Software/Zielsystem
       - Vorarbeiten mit API-Zugriffen, um die Software vorzubereiten
         - Replikation von LDAP-Gruppen / Rechten
