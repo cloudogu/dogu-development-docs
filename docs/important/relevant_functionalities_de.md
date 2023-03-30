@@ -857,9 +857,9 @@ Das Post-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#expo
   ]
 ```
 
-Dieses Skript wird nach dem Upgrade des Dogus gestartet, sobald der Container gestartet wurde. Es laufen also im Normalfall sowohl das startup.sh- als auch das post-upgrade.sh-Skript gleichzeitig los. Falls es notwendig sein sollte, dass das post-upgrade.sh-Skript noch vor dem startup.sh-Skript ausgeführt wird, muss das startup.sh-Skript mit einem Wartemechanismus versehen werden. Dies kann bspw. durch das Warten auf einen etcd-Key geschehen, den das post-upgrade.sh-Skript setzt, sobald es komplett durchgelaufen ist.
+Dieses Skript wird nach dem Upgrade des Dogus im neuen Dogu-Container gestartet, sobald dieser hochfährt. Es laufen also im Normalfall sowohl das `startup.sh`- als auch das `post-upgrade.sh`-Skript gleichzeitig los. Falls es notwendig sein sollte, dass das `post-upgrade.sh`-Skript noch vor dem `startup.sh`-Skript ausgeführt wird, muss das `startup.sh`-Skript mit einem Wartemechanismus versehen werden. Dies kann bspw. durch das Warten auf einen etcd-Key geschehen, den das `post-upgrade.sh`-Skript setzt, sobald es komplett durchgelaufen ist.
 
-### upgrade-notification.sh - Zeigt eine Benachrichtigung vor der Upgradebestätiung eines Dogus
+### upgrade-notification.sh - Zeigt eine Benachrichtigung vor der Upgradebestätigung eines Dogus
 
 Das Upgrade-Notification-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der dogu.json eines Dogus definiert werden:
 
