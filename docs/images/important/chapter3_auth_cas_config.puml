@@ -17,11 +17,11 @@ Node "Cloudogu EcoSystem" as ces <<$cloudogu>> {
     redmine =[#black]l=> cas  : "      configures CAS log-in URL"
     redmine =[#black]l=> cas  : "      configures CAS validation URL"
     redmine =[#black]l=> cas  : "      configures CAS log-out URL"
-    cas =[#black]r=> redmine         : configures Redmine as service
+    cas =[#black]r=> redmine         : configures Redmine as a service
 }
 
 user .d-> redmine : wants to work with Redmine
-user <-.-> cas : know log-in credentials
+user <-.-> cas : knows log-in credentials
 user -[hidden]d-> cas
 
 

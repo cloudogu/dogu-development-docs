@@ -15,7 +15,7 @@ Grundlage für CAS ist hier immer eine korrekte Konfiguration eines Benutzer-/Gr
 
 ### CAS-Protokoll
 
-Authentifizierung innerhalb des Cloudogu EcoSystem geschieht über das [CAS-Protokoll](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html), das Single Sign-on und Single Log-out ermöglicht. Es werden unterschiedliche CAS-Protokoll-Versionen unterstützt (2.0 und 3.0). Bei einer Umsetzung mittels CAS-Protokoll wird empfohlen, die Version 3.0 zu verwenden, da (verglichen mit Version 2.0) die Service-Ticket-Validierung wichtige Benutzerattribute zurückliefern kann.
+Authentifizierung innerhalb des Cloudogu EcoSystem geschieht über das [CAS-Protokoll](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html), das Single Sign-on und Single Log-out ermöglicht. Es werden unterschiedliche CAS-Protokoll-Versionen unterstützt (2.0 und 3.0). Bei einer Umsetzung mittels CAS-Protokoll wird empfohlen, die Version 3.0 zu verwenden, da (verglichen mit Version 2.0) nach einer erfolgreichen Authentifizierung wichtige Benutzerattribute zurückliefern kann.
 
 Folgendes Diagramm zeigt die Beteiligten an der Authentifizierungskonfiguration. Bevor ein Dogu (hier am Beispiel von Redmine) an diesem Prozess teilnehmen kann, muss das Dogu intern einen Satz von CAS-URLs konfigurieren:
 
@@ -38,12 +38,12 @@ Weitere Informationen und eine genauere Abbildung vor, während und nach einer A
 
 ### OAuth-Protokoll
 
-CAS bietet OAuth/OIDC als Protokoll zur Authentifizierung samt SSO/SSL an. Im Folgenden wird die Spezifikation des OAuth 2.0 Protokolls in CAS beschrieben.
+CAS bietet OAuth/OIDC als Protokoll zur Authentifizierung samt SSO/SLO an. Im Folgenden wird die Spezifikation des OAuth 2.0 Protokolls in CAS beschrieben.
 
 #### OAuth Service Account für Dogu erstellen
 
 Damit ein Dogu die OAuth-Endpunkte des CAS benutzen kann, muss sich dieser beim CAS als Client anmelden.
-Dafür kann die Aufforderung eines CAS-Service Account in der `dogu.json` des betreffenden Dogus hinterlegt werden.
+Dafür kann die Anforderung eines OAuth-spezifischen CAS-Service Accounts in der `dogu.json` des betreffenden Dogus hinterlegt werden.
 
 **Eintrag für einen OAuth Client:**
 ``` json
@@ -68,14 +68,14 @@ Die folgenden Schritte beschreiben einen erfolgreichen Ablauf der OAuth-Authenti
 1. Anfordern eines Kurzzeit-Tokens: Siehe Abschnitt unten "OAuth-Authorize-Endpunkt"
 2. Kurzzeittoken gegen ein Langzeittoken tauschen: Siehe Abschnitt unten "AccessToken-Endpunkt"
 3. Langzeittoken kann nun zur Authentifizierung gegen Ressourcen benutzen werden.
-   Derzeit bietet CAS nur das Profil der User als Resource an: Siehe Abschnitt unten "OAuth-Userprofil"
+   Derzeit bietet CAS nur das Profil der User als Resource an: Siehe Abschnitt [OAuth-Userprofil](#oauth-userprofil)
 
 ![Ablauf der Authentifizierung mit OAuth 2.0](../images/important/chapter3_auth_oauth_sequencediag.png)
 
 #### OAuth-Authorize-Endpunkt
 
-Dieser Endpunkt dient als initialer Start der OAuth-Authorisation.
-Der Authorisation-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzufordern.
+Dieser Endpunkt dient als initialer Start der OAuth-Autorisation.
+Der `authorize`-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzufordern.
 
 **URL** : `<fqdn>/oauth2.0/authorize`
 
@@ -164,7 +164,7 @@ https://local.cloudogu.com/cas/oauth2.0/accessToken?grant_type=authorization_cod
 
 **Fehler:** Der Kurzzeittoken ist ungültig oder schon abgelaufen.
 
-**Status:** 500 OK
+**Status:** 500 Bad request
 
 **Beispiel-Antwort:**
 
@@ -222,7 +222,7 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
 
 **Fehler:** Der Langzeittoken ist ungültig oder schon abgelaufen.
 
-**Status:** 500 OK
+**Status:** 500 Bad request
 
 **Beispiel-Antwort:**
 
@@ -241,7 +241,7 @@ Der Logout-Endpunkt wird benutzt, um ein den Langzeit-Token vom CAS zu invalidie
 
 ### OpenID Connect-Protokoll
 
-CAS bietet OAuth/OpenID Connect (OIDC) als Protokoll zur Authentifizierung samt SSO/SSL an. Im Folgenden wird die Spezifikation des OpenID Connect-Protokolls in CAS beschrieben. 
+CAS bietet OAuth/OpenID Connect (OIDC) als Protokoll zur Authentifizierung samt SSO/SLO an. Im Folgenden wird die Spezifikation des OpenID Connect-Protokolls in CAS beschrieben. 
 
 **Vorsicht!**
 
@@ -250,7 +250,7 @@ Dieser Abschnitt ist noch unzureichend geklärt, insbesondere hinsichtlich der �
 #### OIDC Service Account für Dogu erstellen
 
 Damit ein Dogu die OIDC-Endpunkte des CAS benutzen kann, muss sich dieser beim CAS als Client anmelden.
-Dafür kann die Aufforderung eines CAS-Service-Account in der `dogu.json` des betreffenden Dogus hinterlegt werden.
+Dafür kann die Anforderung eines OIDC-spezifischen CAS-Service Accounts in der `dogu.json` des betreffenden Dogus hinterlegt werden.
 
 **Eintrag für einen OIDC Client:**
 ``` json
@@ -270,8 +270,8 @@ Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusamme
 
 #### OIDC-Authorize-Endpunkt
 
-Dieser Endpunkt dient als initialer Start der OpenID Connect-Authorisation.
-Der Authorisation-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzufordern.
+Dieser Endpunkt dient als initialer Start der OpenID Connect-Autorisation.
+Der `authorize`-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzufordern.
 
 **URL** : `<fqdn>/oidc/authorize`
 
@@ -360,7 +360,7 @@ https://local.cloudogu.com/cas/oidc/accessToken?grant_type=authorization_code&co
 
 **Fehler:** Der Kurzzeittoken ist invalid oder schon abgelaufen.
 
-**Status:** 500 OK
+**Status:** 500 Bad request
 
 **Beispiel-Antwort:**
 
@@ -436,11 +436,11 @@ Die `dogu.json` erlaubt es, eigene Konfigurationswerte zu definieren, die auch a
 
 ```bash
 # liest Konfigurationwert aus dem Schlüssel /config/<dogu>/my_key
->doguctl config my_key
+$ doguctl config my_key
 my old value
 
 # liest globalen Konfigurationwert aus /config/_global/fqdn
->doguctl config -g fqdn
+$ doguctl config -g fqdn
 your-ecosystem.example.com
 ```
 
@@ -456,10 +456,11 @@ Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit
     - z. B. eco.example.com
     - Dieser Wert kann sich im laufenden Betrieb ändern. Siehe hierzu auch den Abschnitt zur [Änderbarkeit der FQDN](#änderbarkeit-der-fqdn)
   - `/config/_global/domain`
-    - der Mail-Domänen-Anteil dieser Cloudogu EcoSystem-Instanz
+    - der Domänen-Anteil dieser Cloudogu EcoSystem-Instanz, den Dogus verwenden können, um Mails zu versenden.
     - z. B. example.com
   - `/config/_global/mail_address`
     - die Emailadresse des Instanzadministrators
+    - z. B. petra.mustermann@example.com
   - `/config/_global/admin_group`
     - der aktuelle Name der LDAP-Gruppe, deren Mitglieder die Cloudogu EcoSystem-Instanz in der UI administrieren
     - Dieser Wert kann sich im laufenden Betrieb ändern. Siehe hierzu auch den Abschnitt zur [Änderbarkeit der Admingruppe](#änderbarkeit-der-admin-gruppe)
@@ -614,29 +615,29 @@ Dieser Aufruf liest und schreibt Konfigurationswerte.
 
 ```bash
 # liest Konfigurationwert aus dem Schlüssel /config/<dogu>/my_key
-doguctl config my_key
+$ doguctl config my_key
 my old value
 
 # liest globalen Konfigurationwert aus /config/_global/fqdn
-doguctl config -g fqdn
+$ doguctl config -g fqdn
 your-ecosystem.example.com
 
 # liest Konfigurationwert aus /config/<dogu>/my_key, gibt einen Defaultwert zurück, wenn dieser nicht gesetzt wurde
-doguctl config --default NOVALUE my_key2
+$ doguctl config --default NOVALUE my_key2
 NOVALUE
 
 # liest verschlüsselten DB-Namen /config/<dogu>/sa-postgresql/db_name
-doguctl config -e sa-postgresql/db_name
+$ doguctl config -e sa-postgresql/db_name
 your-dogu-database-1234
 
 # schreibt Konfigurationswert in /config/<dogu>/my_key hinein
-doguctl config my_key 'my new value'
+$ doguctl config my_key 'my new value'
 
 # schreibt verschlüsselten Geheimnis /config/<dogu>/geheim/credential
-doguctl config -e geheim/credential '$up3r$3cre7'
+$ doguctl config -e geheim/credential '$up3r$3cre7'
 
 # löscht den Schlüssel /config/<dogu>/delete_me
-doguctl config --rm delete_me
+$ doguctl config --rm delete_me
 ```
 
 #### doguctl validate
@@ -644,18 +645,18 @@ doguctl config --rm delete_me
 Dieser Aufruf validiert Konfigurationswerte der Registry. Das Kommando `validate` liefert einen Exit Code == 0, wenn keines der überprüften Dogu-Konfigurationswerte einen Validierungsfehler aufweist. Ansonsten liefert es einen Exit Code == 1.
 
 ```bash
-doguctl validate logging/root # validiert einzelnen Wert, Gutfall: Wert=WARN aus ERROR,WARN,INFO,DEBUG
+$ doguctl validate logging/root # validiert einzelnen Wert, Gutfall: Wert=WARN aus ERROR,WARN,INFO,DEBUG
 Key logging/root: OK
-echo $?
+$ echo $?
 0
 
-doguctl validate logging/root #  validiert einzelnen Wert, Fehlerfall: Wert=foo aus ERROR,WARN,INFO,DEBUG
+$ doguctl validate logging/root #  validiert einzelnen Wert, Fehlerfall: Wert=foo aus ERROR,WARN,INFO,DEBUG
 Key logging/root: INVALID
 at least one key was invalid
-echo $?
+$ echo $?
 1
 
-doguctl validate --all # validiert alle Werte mit Ausgabe
+$ doguctl validate --all # validiert alle Werte mit Ausgabe
 ...
 Key container_config/memory_limit: OK
 Key container_config/swap_limit: OK
@@ -664,14 +665,14 @@ Key container_config/java_min_ram_percentage: OK
 Key logging/root: INVALID
 Key caching/workdir/size: OK (No Validator)
 at least one key was invalid
-echo $?
+$ echo $?
 1
 
-doguctl validate --silent # validiert Werte ohne Ausgabe (kombinierbar mit --all), Gutfall
-echo $?
+$ doguctl validate --silent # validiert Werte ohne Ausgabe (kombinierbar mit --all), Gutfall
+$ echo $?
 0
 
-doguctl validate --silent # validiert Werte ohne Ausgabe (kombinierbar mit --all), Fehlerfall
+$ doguctl validate --silent # validiert Werte ohne Ausgabe (kombinierbar mit --all), Fehlerfall
 at least one key was invalid
 echo $?
 1
@@ -693,13 +694,13 @@ fi
 Dieser Aufruft liest und schreibt Dogu-Zustandswerte. Er wird in Kombination mit einem [HealthCheck](../core/compendium_de.md#healthchecks) verwendet.
 
 ```bash
-doguctl state "installing" # schreibt den Wert in den State
+$ doguctl state "installing" # schreibt den Wert in den State
 # Erledige Installation
 
-doguctl state # Liest den Wert aus dem State
+$ doguctl state # Liest den Wert aus dem State
 installing
 
-doguctl state "ready" # Setzt den State auf den Standard-Healthy-Wert
+$ doguctl state "ready" # Setzt den State auf den Standard-Healthy-Wert
 # Starte nun die Anwendung
 ```
 
@@ -708,9 +709,9 @@ doguctl state "ready" # Setzt den State auf den Standard-Healthy-Wert
 Dieser Aufruf erzeugt Zufallsstrings, geeignet um Passwörter oder sonstige Zugangsdaten zu erzeugen.
 
 ```bash
-doguctl random # erzeugt Zufallsstring mit der Länge 16
+$ doguctl random # erzeugt Zufallsstring mit der Länge 16
 9HoF4nYmlLYtf6Ju
-doguctl random  -l 5 # erzeugt Zufallsstring mit gegebener Länge
+$ doguctl random  -l 5 # erzeugt Zufallsstring mit gegebener Länge
 W6Wmj
 ```
 
@@ -720,7 +721,7 @@ Dieser Aufruf erzeugt eine Datei aus einem [Golang-Template](https://pkg.go.dev/
 
 Der Aufruf nimmt ein bis zwei Parameter entgegen:
 ```bash
-doguctl template <Template-Datei> [Ausgabedatei]
+$ doguctl template <Template-Datei> [Ausgabedatei]
 ```
 
 Wird das Kommando `template` ohne Ausgabedatei verwendet, dann wird die gerenderte Ausgabe auf `stdout` ausgegeben.
