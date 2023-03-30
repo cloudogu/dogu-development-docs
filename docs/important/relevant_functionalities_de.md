@@ -483,7 +483,7 @@ Wiederkehrende Aufgaben beim Container-Start befinden sich im Abschnitt "Typisch
 - [Änderbarkeit der FQDN](#änderbarkeit-der-fqdn)
 - [Loglevel mappen und ändern](#loglevel-mappen-und-ändern)
 
-Um dynamisch auf diese Gegebenheiten zu reagieren hat es sich bei Cloudogu eingebürgert, nicht den Hauptprozess im Container direkt zu starten. Stattdessen werden erst Fehlerfälle in einem Startskript abgeprüft, ggf. neue Konfigurationswerte einarbeitet, um dann erst den Hauptprozess zu starten, z. B. so:
+Um dynamisch auf diese Gegebenheiten zu reagieren, hat es sich bei Cloudogu eingebürgert, nicht den Hauptprozess im Container direkt zu starten. Stattdessen werden erst Fehlerfälle in einem Startskript abgeprüft, ggf. neue Konfigurationswerte eingearbeitet, um dann erst den Hauptprozess zu starten, z. B. so:
 
 1. Container startet `startup.sh`
 2. `startup.sh`
