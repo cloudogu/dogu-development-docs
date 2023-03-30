@@ -67,7 +67,7 @@ Die folgenden Schritte beschreiben einen erfolgreichen Ablauf der OAuth-Authenti
 
 1. Anfordern eines Kurzzeit-Tokens: Siehe Abschnitt unten "OAuth-Authorize-Endpunkt"
 2. Kurzzeittoken gegen ein Langzeittoken tauschen: Siehe Abschnitt unten "AccessToken-Endpunkt"
-3. Langzeittoken kann nun zu Authentifizierung gegen Ressourcen benutzen werden.
+3. Langzeittoken kann nun zur Authentifizierung gegen Ressourcen benutzen werden.
    Derzeit bietet CAS nur das Profil der User als Resource an: Siehe Abschnitt unten "OAuth-Userprofil"
 
 ![Ablauf der Authentifizierung mit OAuth 2.0](../images/important/chapter3_auth_oauth_sequencediag.png)
@@ -87,7 +87,7 @@ Der Authorisation-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzufo
 ?response_type = code
 ?client_id     = Valide ClientID von dem Dogu
 ?state         = Irgendeine Zeichenkette
-?redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
+?redirect_url  = <URL, zu die der Kurzzeittoken bei erfolgreicher Authentifizierung weitergeleitet wird>
 ```
 
 **Daten-Beispiel**
@@ -107,14 +107,14 @@ https://local.cloudogu.com/cas/oauth2.0/authorize?client_id=portainer&redirect_u
 
 ##### Erfolgreiche Antwort
 
-Leitet einen automatisch zur CAS-Login-Maske.
-Nach erfolgreichem Login wird die `redirect_url` mit einem `code` als GET-Parameter übergeben.
+Leitet den User automatisch zur CAS-Login-Maske weiter.
+Nach erfolgreichem Login wird die `redirect_url` als `code` GET-Parameter übergeben.
 
 Beispiel für `code`: `ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local`
 
 #### OAuth-Access-Token
 
-Dieser Endpunkt dient zum Austausch eines Kurzzeittokens (`code`) gegen ein Langzeittoken (`access_token`).
+Dieser Endpunkt dient zum Austausch eines Kurzzeittokens (`code`) gegen einen Langzeittoken (`access_token`).
 
 **URL** : `<fqdn>/oauth2.0/accessToken`
 
@@ -123,17 +123,17 @@ Dieser Endpunkt dient zum Austausch eines Kurzzeittokens (`code`) gegen ein Lang
 **Data constraints**
 
 ```
-?grant_type    = athorization_code
+?grant_type    = authorization_code
 ?code          = Valider Code vom `authorize` Endpunkt
 ?client_id     = Valide ClientID von dem Dogu
 ?client_secret = Valides Secret von dem Dogu
-?redirect_url  = <URL zu die der Langzeittoken erfolgreicher Authentifizierung geschickt wird>
+?redirect_url  = <URL, zu die der Langzeittoken bei erfolgreicher Authentifizierung geschickt wird>
 ```
 
 **Data example**
 
 ```
-?grant_type    = athorization_code
+?grant_type    = authorization_code
 ?code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
 ?client_id     = portainer
 ?client_secret = sPJtcNrmROZ3sZu3
@@ -162,7 +162,7 @@ https://local.cloudogu.com/cas/oauth2.0/accessToken?grant_type=authorization_cod
 
 ##### Nicht-Erfolgreiche Antwort
 
-**Fehler:** Der Kurzzeittoken ist invalid oder schon abgelaufen.
+**Fehler:** Der Kurzzeittoken ist ungültig oder schon abgelaufen.
 
 **Status:** 500 OK
 
@@ -220,7 +220,7 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
 
 ##### Nicht-Erfolgreiche Antwort
 
-**Fehler:** Der Langzeittoken ist invalid oder schon abgelaufen.
+**Fehler:** Der Langzeittoken ist ungültig oder schon abgelaufen.
 
 **Status:** 500 OK
 
@@ -243,7 +243,7 @@ Dieser Abschnitt ist noch unzureichend geklärt, insbesondere hinsichtlich der �
 #### OIDC Service Account für Dogu erstellen
 
 Damit ein Dogu die OIDC-Endpunkte des CAS benutzen kann, muss sich dieser beim CAS als Client anmelden.
-Dafür kann die Aufforderung eines CAS-Service Account in der `dogu.json` des betreffenden Dogus hinterlegt werden.
+Dafür kann die Aufforderung eines CAS-Service-Account in der `dogu.json` des betreffenden Dogus hinterlegt werden.
 
 **Eintrag für einen OIDC Client:**
 ``` json
@@ -277,29 +277,29 @@ Das folgende Bild fokussiert Teile, die in der Kommunikation zwischen Dogu (exem
   - Diese wird während der Dogu-Installation automatisch in das Dogu gemountet. Sie enthält die IP-Adresse der Registry, damit das Dogu auf die Registry zugreifen kann.
 - Datei `/private/private.pem`
   - Diese Datei enthält den Private Key des Dogus. Dieser wird u. a. zum Entschlüsseln von verschlüsselten Werten der Registry verwendet.
-  - Häufig handelt es sich hierbei um [Service-Accounts](../core/compendium_de.md#serviceaccounts) zu anderen Dogus
+  - Häufig handelt es sich hierbei um [Service-Accounts](../core/compendium_de.md#serviceaccounts) zu anderen Dogus.
 
 Die Dogu-spezifische Konfiguration liegt im Registry-Pfad `/config/<dogu>/`. [Registry-Schlüssel](../core/compendium_de.md#configuration) sollten im `snake_case` geschrieben werden, also Lowercase mit Unterstrichen.
 
-Eine wertvolle Hilfe ist das Kommandozeilenwerkzeug `doguctl` unter anderem auch in der Startphase des Dogu-Containers. Dieses Werkzeug vereinfacht den Zugriff auf die Registry, indem automatisch die `node_master`-Datei ausgelesen wird oder wie Dogu-eigene Registry-Schlüssel adressiert werden. Weitere Aufrufmöglichkeiten befinden sich im Abschnitt (Die Nutzung von `doguctl`)[#die-nutzung-von-doguctl].
+Eine wertvolle Hilfe ist das Kommandozeilenwerkzeug `doguctl` unter anderem auch in der Startphase des Dogu-Containers. Dieses Werkzeug vereinfacht den Zugriff auf die Registry, z.B. durch das automatische Auslesen der `node_master`-Datei oder die einfache Adressierung von Dogu-eigenen Registry-Schlüsseln. Eine Auflistung der genauen Kommandos ist unter [Die Nutzung von doguctl](#die-nutzung-von-doguctl) zu finden.
 
-Die `dogu.json` erlaubt es, eigene Konfigurationswerte zu definieren, die sogar validiert werden können.
+Die `dogu.json` erlaubt es, eigene Konfigurationswerte zu definieren, die auch automatisch validiert werden können.
 
 ```bash
 # liest Konfigurationwert aus dem Schlüssel /config/<dogu>/my_key
-doguctl config my_key
+>doguctl config my_key
 my old value
 
 # liest globalen Konfigurationwert aus /config/_global/fqdn
-doguctl config -g fqdn
+>doguctl config -g fqdn
 your-ecosystem.example.com
 ```
 
-### Interessante Registryzweige
+### Weitere Registryeinträge
 
-Es existieren jenseits der Dogu-eigenen Registrywerte noch weitere Bereiche, die in der Dogu-Startphase von Interesse sind.
+Es existieren jenseits der doguspezifischen Registrywerte noch weitere Bereiche, die in der Dogu-Startphase von Interesse sind.
 
-Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit [`doguctl`](#die-nutzung-von-doguctl) verwaltet werden..
+Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit [doguctl](#die-nutzung-von-doguctl) verwaltet werden.
 
 - Globale Werte `/config/_global`
   - `/config/_global/fqdn`
@@ -312,7 +312,7 @@ Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit
   - `/config/_global/mail_address`
     - die Emailadresse des Instanzadministrators
   - `/config/_global/admin_group`
-    - der aktuelle Name der LDAP-Gruppe, deren Mitglieder die Clodogu EcoSystem-Instanz in der UI administrieren
+    - der aktuelle Name der LDAP-Gruppe, deren Mitglieder die Cloudogu EcoSystem-Instanz in der UI administrieren
     - Dieser Wert kann sich im laufenden Betrieb ändern. Siehe hierzu auch den Abschnitt zur [Änderbarkeit der Admingruppe](#änderbarkeit-der-admin-gruppe)
 - Doguzustände `/state/<dogu>`
   - wenn das Dogu einen [HealthCheck](../core/compendium_de.md#healthchecks) vom Typen `state` definiert, dann ermöglicht es dem Administrator und anderen Dogus Health-Hinweise auf das Dogu zu erhalten
@@ -320,7 +320,7 @@ Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit
   - Im EcoSystem-Host lässt sich dies mit `cesapp healthy <dogu>` überprüfen
   - In anderen Dogus lässt sich dies mit `doguctl healthy <dogu>` überprüfen
     - Mit dem Schalter `--timeout <Sekunden>` kann man so auf Dogus warten, von denen das eigene Dogu abhängt.
-    - Ein Exit-Code ungleich null (0) deutet darauf hin, dass entweder das Dogu nicht rechtzeitig seinen Startvorgang beendet hat oder die Registry-Kommunikation fehlschlug.
+    - Ein Exit-Code ungleich Null (0) deutet darauf hin, dass entweder das Dogu nicht rechtzeitig seinen Startvorgang beendet hat oder die Registry-Kommunikation fehlschlug.
 
 ## Aufbau und Best Practices von `startup.sh` 
 
