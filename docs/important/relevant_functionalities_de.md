@@ -232,6 +232,13 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
 }
 ```
 
+#### OAuth-Logout-Endpunkt
+
+Dieser Endpunkt dient zur Beendigung der OAuth-Session.
+Der Logout-Endpunkt wird benutzt, um ein den Langzeit-Token vom CAS zu invalidieren.
+
+**URL** : `<fqdn>/cas/logout`
+
 ### OpenID Connect-Protokoll
 
 CAS bietet OAuth/OpenID Connect (OIDC) als Protokoll zur Authentifizierung samt SSO/SSL an. Im Folgenden wird die Spezifikation des OpenID Connect-Protokolls in CAS beschrieben. 
@@ -260,6 +267,148 @@ Dafür kann die Aufforderung eines CAS-Service-Account in der `dogu.json` des be
 Die Credentials des Service Accounts werden zufällig generiert (siehe [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) und verschlüsselt in der Registry unter dem Pfad `/config/<dogu>/sa-cas/oidc` und `/config/<dogu>/sa-cas/oidc_client_secret` hinterlegt.
 
 Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusammen. Für den CAS wird das `CLIENT_SECRET` als Hash in der Cloudogu EcoSystem Registry unter dem Pfad `/config/cas/service_accounts/oidc/<CLIENT_ID>` abgelegt.
+
+#### OIDC-Authorize-Endpunkt
+
+Dieser Endpunkt dient als initialer Start der OpenID Connect-Authorisation.
+Der Authorisation-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzufordern.
+
+**URL** : `<fqdn>/oidc/authorize`
+
+**Method** : `GET`
+
+**Bedingung der Daten**
+
+```
+?response_type = code
+?client_id     = Valide ClientID von dem Dogu
+?state         = Irgendeine Zeichenkette
+?redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
+```
+
+**Daten-Beispiel**
+
+```
+?response_type = code
+?client_id     = teamscale
+?state         = b8c57125-9281-4b67-b857-1559cdfcdf31
+?redirect_url  = http://local.cloudogu.com/teamscale/
+```
+
+**Aufruf Beispiel**
+
+```
+https://local.cloudogu.com/cas/oidc/authorize?client_id=portainer&redirect_uri=http%3A%2F%2Flocal.cloudogu.com%2Fteamscale%2F&response_type=code&state=b8c57125-9281-4b67-b857-1559cdfcdf31
+```
+
+##### Erfolgreiche Antwort
+
+Leitet einen automatisch zur CAS-Login-Maske.
+Nach erfolgreichem Login wird die `redirect_url` mit einem `code` als GET-Parameter übergeben.
+
+Beispiel für `code`: `ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local`
+
+#### OIDC-Access-Token
+
+Dieser Endpunkt dient zum Austausch eines Kurzzeittokens (`code`) gegen ein Langzeittoken (`access_token`).
+
+**URL** : `<fqdn>/oidc/accessToken`
+
+**Method** : `GET`
+
+**Data constraints**
+
+```
+?grant_type    = authorization_code
+?code          = Valider Code vom `authorize` Endpunkt
+?client_id     = Valide ClientID von dem Dogu
+?client_secret = Valides Secret von dem Dogu
+?redirect_url  = <URL zu die der Langzeittoken erfolgreicher Authentifizierung geschickt wird>
+```
+
+**Data example**
+
+```
+?grant_type    = authorization_code
+?code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
+?client_id     = teamscale
+?client_secret = sPJtcNrmROZ3sZu3
+?redirect_url  = https://local.cloudogu.com/teamscale/
+```
+
+**Call example**
+
+```
+https://local.cloudogu.com/cas/oidc/accessToken?grant_type=authorization_code&code=ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local&client_id=teamscale&client_secret=sPJtcNrmROZ3sZu3&redirect_uri=https%3A%2F%2Flocal.cloudogu.com%2Fteamscale%2F
+```
+
+##### Erfolgreiche Antwort
+
+**Status:** 200 OK
+
+**Beispiel-Antwort:**
+
+``` json
+{
+    "access_token": "TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-cas.ces.local",
+    "expires_in": "7196",
+    "token_type": "Bearer"
+}
+``` 
+
+##### Nicht-Erfolgreiche Antwort
+
+**Fehler:** Der Kurzzeittoken ist invalid oder schon abgelaufen.
+
+**Status:** 500 OK
+
+**Beispiel-Antwort:**
+
+``` json
+{
+    "message": "invalid_grant"
+}
+```
+
+#### OIDC-Logout-Endpunkt
+
+Dieser Endpunkt dient zur Beendigung der OpenID Connect-Session.
+Der Logout-Endpunkt wird benutzt, um ein den Langzeit-Token vom CAS zu invalidieren.
+
+**URL** : `<fqdn>/oidc/logout`
+
+**Method** : `GET`
+
+**Bedingung der Daten**
+
+```
+?response_type = code
+?client_id     = Valide ClientID von dem Dogu
+?state         = Irgendeine Zeichenkette
+?redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
+```
+
+**Daten-Beispiel**
+
+```
+?response_type = code
+?client_id     = teamscale
+?state         = b8c57125-9281-4b67-b857-1559cdfcdf31
+?redirect_url  = http://local.cloudogu.com/teamscale/
+```
+
+**Aufruf Beispiel**
+
+```
+https://local.cloudogu.com/cas/oidc/authorize?client_id=teamscale&redirect_uri=http%3A%2F%2Flocal.cloudogu.com%2Fteamscale%2F&response_type=code&state=b8c57125-9281-4b67-b857-1559cdfcdf31
+```
+
+##### Erfolgreiche Antwort
+
+Leitet einen automatisch zur CAS-Login-Maske.
+Nach erfolgreichem Login wird die `redirect_url` mit einem `code` als GET-Parameter übergeben.
+
+Beispiel für `code`: `ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local`
 
 ## Auf die Registry zugreifen
 
