@@ -1039,7 +1039,7 @@ Falls ein Dogu seine Speicherlimitierung überschreitet, wird der größte Proze
 Dies ist normalerweise der Hauptprozess des Dogus und führt dazu, dass der Container neu gestartet wird.
 
 Wird kein Wert bei der Memory-Limitierung gesetzt, findet diese auch nicht statt.
-Bei der Swap-Limitierung is `0b` der Standardwert und stellt somit keinen Swap zur Verfügung.
+Bei der Swap-Limitierung ist `0b` der Standardwert und stellt somit keinen Swap zur Verfügung.
 
 Um eine Limitierung vornehmen zu können, muss die dogu.json des Dogus folgende Einträge enthalten:
 
