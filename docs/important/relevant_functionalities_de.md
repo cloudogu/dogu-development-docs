@@ -800,6 +800,80 @@ Bei einem Service Account handelt es sich um eine besondere Form der Abhängigke
 
 ## Dogu-Upgrades
 
+Das Upgrade eines Dogus kann mit `cesapp upgrade dogu <doguname>` durchgeführt werden. Dabei verwaltet die cesapp alle wichtigen Schritte, um das Dogu erfolgreich zu upgraden.
+
+Der Upgrade-Prozess enthält u.A. folgende Schritte:
+- Anzeigen von Upgrade Notifications, falls vorhanden
+- Download des neuen Dogu-Images
+- Sicherstellen, dass das Dogu healthy ist
+- Sicherstellen, dass alle abhängigen Dogus verfügbar sind
+- Ausführen des Pre-Upgrade-Skripts im alten Dogu, falls vorhanden
+- Ersetzen des alten Dogus durch das neue
+- Starten des neuen Dogus
+- Ausführen des Post-Upgrade-Skripts im neuen Dogu, falls vorhanden
+
+Falls es beim Dogu-Upgrade notwendig ist, vor- oder nachbereitende Schritte durchzuführen, können optionale Pre- und Post-Upgrade-Skripte erstellt werden.
+Als Beispiel kann man eine Software betrachten, die in einer neueren Version eine andere Struktur der Datenbank benötigt.
+In einem solchen Fall ist es möglich, Upgrade-Skripte zu schreiben, um eine Migration der Datenbank nach einem Dogu-Upgrade zu starten.
+
+Außerdem kann man über wichtige Änderungen beim Upgrade eines Dogus durch ein Upgrade-Notification-Skript hinweisen lassen.
+
+### Ermittlung der Upgrade-Pfade
+
+Bei der Entwicklung der Dogus ist dafür zu sorgen, dass Upgrades eines Dogus auch über mehrere Versionen hinweg funktionieren. Dafür müssen die Upgrade-Skripte so gestaltet sein, dass sie den Upgradepfad ermitteln und ggf. nötige Migrationsschritte automatisch ausführen.
+
+Hierfür können in allen Upgrade-Skripten die vorherige (`FROM`) und neue (`TO`) Dogu-Version ausgelesen werden:
+
+```bash
+FROM_VERSION="${1}"
+TO_VERSION="${2}"
+```
+
+### pre-upgrade.sh - Führt alle Aktionen vor dem Upgrade des Dogus durch
+
+Das Pre-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der dogu.json eines Dogus definiert werden:
+
+```json
+  "ExposedCommands": [
+    {
+      "Name": "pre-upgrade",
+      "Command": "/pre-upgrade.sh"
+    }
+  ]
+```
+
+Dieses Skript wird vor dem eigentlichen Upgrade des Dogus im alten Dogu-Container ausgeführt.
+
+### post-upgrade.sh - Führt alle Aktionen nach dem Upgrade des Dogus durch
+
+Das Post-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der dogu.json eines Dogus definiert werden:
+
+```json
+  "ExposedCommands": [
+    {
+      "Name": "post-upgrade",
+      "Command": "/post-upgrade.sh"
+    }
+  ]
+```
+
+Dieses Skript wird nach dem Upgrade des Dogus gestartet, sobald der Container gestartet wurde. Es laufen also im Normalfall sowohl das startup.sh- als auch das post-upgrade.sh-Skript gleichzeitig los. Falls es notwendig sein sollte, dass das post-upgrade.sh-Skript noch vor dem startup.sh-Skript ausgeführt wird, muss das startup.sh-Skript mit einem Wartemechanismus versehen werden. Dies kann bspw. durch das Warten auf einen etcd-Key geschehen, den das post-upgrade.sh-Skript setzt, sobald es komplett durchgelaufen ist.
+
+### upgrade-notification.sh - Zeigt eine Benachrichtigung vor der Upgradebestätiung eines Dogus
+
+Das Upgrade-Notification-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der dogu.json eines Dogus definiert werden:
+
+```json
+  "ExposedCommands": [
+    {
+      "Name": "upgrade-notification",
+      "Command": "/upgrade-notification.sh"
+    }
+  ]
+```
+
+Dieses Skript wird vor dem Upgrade-Vorgang ausgeführt und sollte ausschließlich Informationen (per `echo`) ausgeben, die für den Administrator vor dem Upgrade relevant sein können. Beispielsweise kann hier auf Breaking Changes hingewiesen werden oder darauf, dass man vor dem Upgrade ein Backup anlegen sollte.
+
 
 ## Typische Dogu-Features
 
