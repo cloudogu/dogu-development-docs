@@ -818,6 +818,8 @@ In einem solchen Fall ist es möglich, Upgrade-Skripte zu schreiben, um eine Mig
 
 Außerdem kann man über wichtige Änderungen beim Upgrade eines Dogus durch ein Upgrade-Notification-Skript hinweisen lassen.
 
+Alle im Folgenden beschriebenen Upgrade-Skripte sollten (neben bspw. dem `startup.sh`-Skript) im `resources`-Ordner abgelegt werden.
+
 ### Ermittlung der Upgrade-Pfade
 
 Bei der Entwicklung der Dogus ist dafür zu sorgen, dass Upgrades eines Dogus auch über mehrere Versionen hinweg funktionieren. Dafür müssen die Upgrade-Skripte so gestaltet sein, dass sie den Upgradepfad ermitteln und ggf. nötige Migrationsschritte automatisch ausführen.
