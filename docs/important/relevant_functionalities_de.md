@@ -986,12 +986,16 @@ TO_VERSION="${2}"
 Das Pre-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der `dogu.json` eines Dogus definiert werden:
 
 ```json
+{
+   ...,
   "ExposedCommands": [
     {
       "Name": "pre-upgrade",
       "Command": "/pre-upgrade.sh"
     }
-  ]
+  ],
+  ...
+  }
 ```
 
 Dieses Skript wird vor dem eigentlichen Upgrade des Dogus im alten Dogu-Container ausgeführt.
@@ -1001,12 +1005,16 @@ Dieses Skript wird vor dem eigentlichen Upgrade des Dogus im alten Dogu-Containe
 Das Post-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der `dogu.json` eines Dogus definiert werden:
 
 ```json
+{
+  ...,
   "ExposedCommands": [
     {
       "Name": "post-upgrade",
       "Command": "/post-upgrade.sh"
     }
-  ]
+  ],
+  ...,
+}
 ```
 
 Dieses Skript wird nach dem Upgrade des Dogus im neuen Dogu-Container gestartet, sobald dieser hochfährt. Es laufen also im Normalfall sowohl das `startup.sh`- als auch das `post-upgrade`-Skript gleichzeitig los. Falls es notwendig sein sollte, dass das `post-upgrade`-Skript noch vor dem `startup.sh`-Skript ausgeführt wird, muss das `startup.sh`-Skript mit einem Wartemechanismus versehen werden. Dies kann bspw. durch das Warten auf einen Registry-Key geschehen, den das `post-upgrade`-Skript setzt, sobald es komplett durchgelaufen ist.
@@ -1085,26 +1093,32 @@ Das Setzen der Werte kann über folgende Wege erfolgen:
 
 Um die Limitierungen zu übernehmen, muss das Dogu neu erstellt (`cesapp recreate <doguname>`) und anschließend neu gestartet (`cesapp start <doguname>`) werden.
 
-Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dogu einen Java-Prozess, können folgende zusätzliche Einträge in die dogu.json eingebaut werden:
+Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dogu einen Java-Prozess, können folgende zusätzliche Einträge in die `dogu.json` eingebaut werden:
 
 ```json
 {
-  "Name": "container_config/java_max_ram_percentage",
-  "Description": "Limits the heap stack size of the Java process to the configured percentage of the available physical memory when the container has more than approx. 250 MB of memory available. Is only considered when a memory_limit is set. Use a valid float value with decimals between 0 and 100 (f. ex. 55.0 for 55%). Default value: 25%",
-  "Optional": true,
-  "Default": "25.0",
-  "Validation": {
-    "Type": "FLOAT_PERCENTAGE_HUNDRED"
-  }
-},
-{
-  "Name": "container_config/java_min_ram_percentage",
-  "Description": "Limits the heap stack size of the Java process to the configured percentage of the available physical memory when the container has less than approx. 250 MB of memory available. Is only considered when a memory_limit is set. Use a valid float value with decimals between 0 and 100 (f. ex. 55.0 for 55%). Default value: 50%",
-  "Optional": true,
-  "Default": "50.0",
-  "Validation": {
-    "Type": "FLOAT_PERCENTAGE_HUNDRED"
-  }
+  ...,
+  "Configuration": [
+    {
+      "Name": "container_config/java_max_ram_percentage",
+      "Description": "Limits the heap stack size of the Java process to the configured percentage of the available physical memory when the container has more than approx. 250 MB of memory available. Is only considered when a memory_limit is set. Use a valid float value with decimals between 0 and 100 (f. ex. 55.0 for 55%). Default value: 25%",
+      "Optional": true,
+      "Default": "25.0",
+      "Validation": {
+        "Type": "FLOAT_PERCENTAGE_HUNDRED"
+      }
+    },
+    {
+      "Name": "container_config/java_min_ram_percentage",
+      "Description": "Limits the heap stack size of the Java process to the configured percentage of the available physical memory when the container has less than approx. 250 MB of memory available. Is only considered when a memory_limit is set. Use a valid float value with decimals between 0 and 100 (f. ex. 55.0 for 55%). Default value: 50%",
+      "Optional": true,
+      "Default": "50.0",
+      "Validation": {
+        "Type": "FLOAT_PERCENTAGE_HUNDRED"
+      }
+    }
+  ],
+  ...,
 }
 ```
 
@@ -1116,7 +1130,7 @@ Die damit konfigurierbaren Werte müssen in den Start-Skripten des Dogus dem ent
 
 Ein Feature des Cloudogu EcoSystems ist, dass alle Dogus so ausgelegt sind, dass sie sich über ein zentrales Backupsystem sichern und wiederherstellen lassen. Damit das funktioniert, müssen alle Dogus ihre veränderlichen Daten in Volumes auslagern. Dieses Vorgehen wird bereits im [Compendium](../core/compendium_de.md#volumes) beschrieben.
 
-Bei der Entwicklung eines Dogus ist darauf zu achten, dass das Dogu nach einem erfolgreichen Backup- und Restore-Vorgang weiterhin normal funktioniert und alle Daten und Funktionen vorhanden sind. Dazu müssen zuerst alle Volumes in der dogu.json, die Produktivdaten enthalten, mit dem [NeedsBackup](../core/compendium_de.md#needsbackup)-Flag gekennzeichnet werden. Danach sollte das Dogu gebaut und mit Testdaten gefüllt werden.
+Bei der Entwicklung eines Dogus ist darauf zu achten, dass das Dogu nach einem erfolgreichen Backup- und Restore-Vorgang weiterhin normal funktioniert und alle Daten und Funktionen vorhanden sind. Dazu müssen zuerst alle Volumes in der `dogu.json`, die Produktivdaten enthalten, mit dem [NeedsBackup](../core/compendium_de.md#needsbackup)-Flag gekennzeichnet werden. Danach sollte das Dogu gebaut und mit Testdaten gefüllt werden.
 Anschließend führt man ein Backup des Systems und danach einen Restore durch. Dazu können die Befehle [cesapp backup](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/backup/) und [cesapp restore](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/restore/) genutzt werden.
 
 Sind alle Dogus wieder hochgefahren, testet man, ob das eigene Dogu normal läuft und alle Testdaten weiterhin vorhanden sind.
@@ -1135,7 +1149,7 @@ Die FQDN des CES-Systems ist global im etcd gespeichert und kann von den Dogus a
 
 ### Logging-Verhalten steuern
 
-Dieser Abschnitt zeigt, wie eine einheitliche, abstrahierte Einstellmöglichkeit geschaffen wird, mit der man das Log-Verhalten in allen Dogus auf die gleiche Art und Weise einstellen kann. Dazu werden vier verschiedene über die etcd-Registry setzbare Log-Level genutzt: `ERROR`, `WARN`, `INFO` und `DEBUG`.
+Dieser Abschnitt zeigt, wie eine einheitliche, abstrahierte Einstellmöglichkeit geschaffen wird, mit der man das Log-Verhalten in allen Dogus auf die gleiche Art und Weise einstellen kann. Dazu werden vier verschiedene über die Registry setzbare Log-Level genutzt: `ERROR`, `WARN`, `INFO` und `DEBUG`.
 
 Mit diesen abstrakten Log-Leveln soll der Administrator unterstützt werden. Er muss nicht wissen, wie ein Dogu-spezifisches Log-Level heißt, sondern kann stattdessen auf vier Grundwerte zurückgreifen und diese gefahrlos in allen Dogus wiederverwenden.
 
