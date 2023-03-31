@@ -438,7 +438,7 @@ The following image focuses on parts that play a role in the communication betwe
 
 The Dogu specific configuration is located in the registry path `/config/<dogu>/`. [Registry keys](../core/compendium_en.md#configuration) should be written in `snake_case`, i.e. lowercase with underscores.
 
-A valuable help is the command line tool `doguctl` among other things also in the start phase of the Dogu container. This tool simplifies access to the registry, e.g. by automatically reading the `node_master` file or simply addressing Dogu's own registry keys. A list of the exact commands can be found under [The use of doguctl](#the-use-of-doguctl).
+A valuable help is the command line tool `doguctl` among other things also in the start phase of the Dogu container. This tool simplifies access to the registry, e.g. by automatically reading the `node_master` file or simply addressing Dogu's own registry keys. A list of the exact commands can be found under [The use of doguctl](#usage-of-doguctl).
 
 The `dogu.json` allows you to define your own configuration values, which can also be validated automatically.
 
@@ -456,13 +456,13 @@ your-ecosystem.example.com
 
 There are other areas beyond the dogu-specific registry values that are of interest in the dogu startup phase.
 
-The global configuration is located in the registry path `/config/_global/` and can be managed with [doguctl](#the-use-of-doguctl).
+The global configuration is located in the registry path `/config/_global/` and can be managed with [doguctl](#usage-of-doguctl).
 
 - Global values `/config/_global`
    - `/config/_global/fqdn`
       - the FQDN of this Cloudogu EcoSystem instance.
       - e.g. eco.example.com
-      - This value may change during operation. See also the section on [Changeability of FQDN](#changeability-of-fqdn).
+      - This value may change during operation. See also the section on [Changeability of the FQDN](#changeability-of-the-fqdn).
    - `/config/_global/domain`
       - the domain portion of this Cloudogu EcoSystem instance that dogus can use to send mail.
       - e.g. example.com
@@ -471,7 +471,7 @@ The global configuration is located in the registry path `/config/_global/` and 
       - e.g. petra.mustermann@example.com
    - `/config/_global/admin_group`
       - the current name of the LDAP group whose members administer the Cloudogu EcoSystem instance in the UI.
-      - This value may change during operation. See also the section on [admin group changeability](#changeability-admin-group).
+      - This value may change during operation. See also the section on [admin group changeability](#changeability-of-the-admin-group).
 - Dogu states `/state/<dogu>`
    - if the dogu defines a [HealthCheck](../core/compendium_en.md#healthchecks) of type `state`, then it allows the
      administrator and other dogus to get health hints on the dogu
@@ -489,9 +489,9 @@ At Cloudogu, we quickly discovered that it is more clever to be able to deal wit
 
 Recurring tasks at container startup can be found in the section "Typical Dogu Features" in the sections:
 
-- [changeability-of-admin-group](#changeability-of-admin-group).
-- [Changeability of FQDN](#changeability-of-fqdn)
-- [control-logging-behavior](#control-logging-behavior)
+- [changeability-of-admin-group](#changeability-of-the-admin-group).
+- [Changeability of FQDN](#changeability-of-the-fqdn)
+- [control-logging-behavior](#controlling-the-logging-behavior)
 
 In order to dynamically respond to these conditions, Cloudogu has adopted the practice of not starting the main process in the container directly. Instead, error cases are first checked in a startup script, new configuration values are set if necessary, and only then the main process is started, e.g. like this:
 
@@ -507,7 +507,7 @@ In order to dynamically respond to these conditions, Cloudogu has adopted the pr
       - Prepare system changes to the registry with API accesses to prepare the software
          - Replication of LDAP groups/rights
       - Setting the software (log level, other configuration, e.g. by `doguctl template`)
-      - React on system changes of the registry: e.g. [admin-group](#changeability-of-admin-group) has changed, which needs further action in the Dogu
+      - React on system changes of the registry: e.g. [admin-group](#changeability-of-the-admin-group) has changed, which needs further action in the Dogu
    3. set the Dogu state to `ready` (appropriate [HealthCheck](../core/compendium_en.md#healthchecks) provided)
    4. start the main process
 
@@ -612,9 +612,9 @@ For more complex tasks, a startup script such as `startup.sh` may gain complexit
 
 Analysis tools such as [Shellcheck](https://www.shellcheck.net/) can detect errors in the use of shell calls.
 
-### The use of `doguctl`
+### Usage of `doguctl`
 
-The section [about registry access](#registry-access-from-dogu-here) has already touched on the subject of `doguctl`. `doguctl` is a command line tool that bundles and simplifies recurring interactions with the Cloudogu EcoSystem registry. This section describes possible calls.
+The section [about registry access](#registry-access-from-the-dogu) has already touched on the subject of `doguctl`. `doguctl` is a command line tool that bundles and simplifies recurring interactions with the Cloudogu EcoSystem registry. This section describes possible calls.
 
 With `--help`, each subcommand of `doguctl` prints a help page.
 
@@ -1141,7 +1141,7 @@ After that, one performs a backup and a restore of the system. The commands [ces
 
 Once all dogus have been restarted, test whether your own dogu is running normally and all test data is still available.
 
-### Modifiability of the admin group
+### Changeability of the admin group
 
 When installing the Cloudogu EcoSystem, a global admin group is set. All members of this group should be given admin rights in all Dogus. This must be ensured during the development of the Dogus. The name of the globally defined admin group can be queried from within the Dogu using `doguctl`: `doguctl config --global 'admin_group'`.
 
@@ -1149,9 +1149,9 @@ Additionally, the admin group can be changed afterwards. The Dogu must then reac
 
 ### Changeability of the FQDN
 
-The FQDN of the Cloudogu EcoSystem is stored globally in the registry and can be read by the Dogus using [`doguctl`](#the-usage-of-doguctl). If necessary, it can be integrated into the Dogu configuration (see also [creating-an-exemplary-application](../core/basics_en.md#5-creating-an-exemplary-application). In addition, care must be taken during Dogu development to ensure that the FQDN is changeable. So the Dogu should be able (after a restart if necessary) to read a new FQDN and adapt its configuration to this new FQDN.
+The FQDN of the Cloudogu EcoSystem is stored globally in the registry and can be read by the Dogus using [`doguctl`](#usage-of-doguctl). If necessary, it can be integrated into the Dogu configuration (see also [creating-an-exemplary-application](../core/basics_en.md#5--creating-an-exemplary-application). In addition, care must be taken during Dogu development to ensure that the FQDN is changeable. So the Dogu should be able (after a restart if necessary) to read a new FQDN and adapt its configuration to this new FQDN.
 
-### Controlling logging behavior
+### Controlling the logging behavior
 
 This section shows how to create a uniform, abstracted setting option that can be used to set the log behavior in all Dogus in the same way. Four different log levels that can be set via the registry are used for this purpose: `ERROR`, `WARN`, `INFO` and `DEBUG`.
 
