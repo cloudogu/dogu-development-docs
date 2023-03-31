@@ -1138,7 +1138,7 @@ Sind alle Dogus wieder hochgefahren, testet man, ob das eigene Dogu normal läuf
 
 ### Änderbarkeit der Admin-Gruppe
 
-Bei der Installation des CES wird eine globale Admin-Gruppe eingestellt. Alle Mitglieder dieser Gruppe sollen in allen Dogus Admin-Rechte bekommen. Dies muss bei der Entwicklung des Dogus sichergestellt werden. Der Name der global definierten Admin-Gruppe lässt sich aus dem Dogu heraus mit `doguctl` abfragen: `doguctl config --global 'admin_group'`
+Bei der Installation des Cloudogu EcoSystems wird eine globale Admin-Gruppe eingestellt. Alle Mitglieder dieser Gruppe sollen in allen Dogus Admin-Rechte bekommen. Dies muss bei der Entwicklung des Dogus sichergestellt werden. Der Name der global definierten Admin-Gruppe lässt sich aus dem Dogu heraus mit `doguctl` abfragen: `doguctl config --global 'admin_group'`
 
 Zusätzlich kann die Admin-Gruppe im Nachhinein geändert werden. Das Dogu muss dann (ggf. nach einem Neustart) so reagieren, dass nur noch die Mitglieder der neuen Admin-Gruppe Admin-Rechte erhalten. Nutzer in der alten Admin-Gruppe erhalten nur noch normale Nutzerrechte, sofern sie sich nicht auch in der neuen Admin-Gruppe befinden.
 
