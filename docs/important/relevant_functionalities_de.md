@@ -950,7 +950,7 @@ Bei einem Service Account handelt es sich um eine besondere Form der Abhängigke
 
 ## Dogu-Upgrades
 
-Das Upgrade eines Dogus kann mit `cesapp upgrade dogu <doguname>` durchgeführt werden. Dabei verwaltet die cesapp alle wichtigen Schritte, um das Dogu erfolgreich zu upgraden.
+Dogus können im Cloudogu EcoSystem mit einfachen Mitteln (bspw. `cesapp upgrade dogu <doguname>`) aktualisiert werden. Der gesamte Upgrade-Prozess muss dazu vorher bei der Dogu-Entwicklung automatisiert werden und kann dann von den CES-Tools (hier: `cesapp`) ohne große Zuarbeit der Admins durchlaufen.
 
 Der Upgrade-Prozess enthält u. A. folgende Schritte:
 - Anzeigen von Upgrade Notifications, falls vorhanden
