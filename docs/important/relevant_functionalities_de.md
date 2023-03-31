@@ -934,8 +934,8 @@ Bei einem Service Account handelt es sich um eine besondere Form der Abhängigke
   ...,
   "Dependencies": [
     {
-      "name": "produzentendogu",
-      "type": "dogu"
+      "Name": "produzentendogu",
+      "Type": "dogu"
     }
   ],
   "ServiceAccounts": [
@@ -944,7 +944,7 @@ Bei einem Service Account handelt es sich um eine besondere Form der Abhängigke
       "Kind": "dogu"
     }
   ],
-  ...
+  ...,
 }
 ```
 
