@@ -6,14 +6,13 @@ Therefore, the following sections deal with recurring functionalities on how a D
 
 ## Authentication
 
-Provided Dogus provide this, user:ins can enjoy the benefits of enterprise-level single sign-on (SSO) and single logout (SLO). Authentication is enabled by the Central Authentication Service (CAS). Dogu developers have several authentication options at their disposal. The following three sections deal with methods that have already been successfully used, namely:
+Given a Dogu provides this, users can enjoy the benefits of enterprise-level single sign-on (SSO) and single logout (SLO). Authentication is enabled by the Central Authentication Service (CAS). Dogu developers have several authentication options at their disposal. The following three sections deal with methods that have already been successfully used, namely:
 
 - Authentication using CAS protocol
-- Authentication using OAuth
-- Authentication using OpenID Connect
+- Authentication using OAuth 2.0 protocol
+- Authentication using OpenID Connect protocol
 
-The basis for CAS here is always a correct configuration of a user/group directory, be it
-the [LDAP](https://github.com/cloudogu/ldap) dogu or an external LDAP-compatible service.
+The basis for CAS is always a correct configuration of a user/group directory, be it the [LDAP](https://github.com/cloudogu/ldap) dogu or an external LDAP-compatible service.
 
 ### CAS protocol
 

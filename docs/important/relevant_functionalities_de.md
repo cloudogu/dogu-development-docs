@@ -8,8 +8,8 @@ Die folgenden Abschnitte beschäftigen sich daher mit wiederkehrenden Funktionen
 Sofern Dogus dies bereitstellen, können Benutzer:innen die Vorteile von Single Sign-on (SSO) und Single Logout (SLO) auf Enterprise-Niveau genießen. Die Authentifizierung wird hierbei durch den Central Authentication Service (CAS) ermöglicht. Dogu-Entwickler:innen stehen hierbei mehrere Authentifizierungsmöglichkeiten zur Verfügung. Die folgenden drei Abschnitte beschäftigen sich mit Methoden, die bereits erfolgreich eingesetzt wurden, nämlich:
 
 - Authentifizierung mittels CAS-Protokoll 
-- Authentifizierung mittels OAuth 
-- Authentifizierung mittels OpenID Connect
+- Authentifizierung mittels OAuth 2.0-Protokoll 
+- Authentifizierung mittels OpenID Connect-Protokoll
 
 Grundlage für CAS ist hier immer eine korrekte Konfiguration eines Benutzer-/Gruppenverzeichnisses, sei es das [LDAP](https://github.com/cloudogu/ldap)-Dogu oder ein externer LDAP-kompatibler Dienst.
 
