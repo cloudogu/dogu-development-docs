@@ -983,7 +983,7 @@ TO_VERSION="${2}"
 
 ### pre-upgrade.sh - Führt alle Aktionen vor dem Upgrade des Dogus durch
 
-Das Pre-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der dogu.json eines Dogus definiert werden:
+Das Pre-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der `dogu.json` eines Dogus definiert werden:
 
 ```json
   "ExposedCommands": [
