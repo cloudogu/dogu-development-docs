@@ -963,7 +963,7 @@ Der Upgrade-Prozess enthält u. A. folgende Schritte:
 - Ausführen des Post-Upgrade-Skripts im neuen Dogu, falls vorhanden
 
 Falls es beim Dogu-Upgrade notwendig ist, vor- oder nachbereitende Schritte durchzuführen, können optionale Pre- und Post-Upgrade-Skripte erstellt werden.
-Als Beispiel kann man eine Software betrachten, die in einer neueren Version eine andere Struktur der Datenbank benötigt.
+Als Beispiel kann man eine Software betrachten, die nach einem Update ein anderes Datenbankschema benötigt.
 In einem solchen Fall ist es möglich, Upgrade-Skripte zu schreiben, um eine Migration der Datenbank nach einem Dogu-Upgrade zu starten.
 
 Außerdem kann man über wichtige Änderungen beim Upgrade eines Dogus durch ein Upgrade-Notification-Skript hinweisen lassen.
