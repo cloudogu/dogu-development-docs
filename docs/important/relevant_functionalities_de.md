@@ -1033,7 +1033,7 @@ Dieses Kapitel beschreibt Funktionen, die Dogus tiefer in das Cloudogu EcoSystem
 
 ### Memory-/Swap-Limit
 
-Mit Memory- und Swap-Limits kann man den Speicherverbrauch (Arbeitsspeicher und Swap) von Dogus einschränken.
+Mit Memory- und Swap-Limits kann man den Speicherverbrauch (Arbeitsspeicher und Auslagerungsspeicher) von Dogus einschränken.
 
 Falls ein Dogu seine Speicherlimitierung überschreitet, wird der größte Prozess im Container beendet.
 Dies ist normalerweise der Hauptprozess des Dogus und führt dazu, dass der Container neu gestartet wird.
