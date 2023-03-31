@@ -46,7 +46,7 @@ Damit ein Dogu die OAuth-Endpunkte des CAS benutzen kann, muss sich dieser beim 
 Dafür kann die Anforderung eines OAuth-spezifischen CAS-Service Accounts in der `dogu.json` des betreffenden Dogus hinterlegt werden.
 
 **Eintrag für einen OAuth Client:**
-``` json
+```json
 "ServiceAccounts": [
     {
         "Type": "cas",
@@ -152,7 +152,7 @@ https://local.cloudogu.com/cas/oauth2.0/accessToken?grant_type=authorization_cod
 
 **Beispiel-Antwort:**
 
-``` json
+```json
 {
     "access_token": "TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-cas.ces.local",
     "expires_in": "7196",
@@ -168,7 +168,7 @@ https://local.cloudogu.com/cas/oauth2.0/accessToken?grant_type=authorization_cod
 
 **Beispiel-Antwort:**
 
-``` json
+```json
 {
     "message": "invalid_grant"
 }
@@ -200,7 +200,7 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
 
 **Beispiel-Antwort:**
 
-``` json
+```json
 {
   "id": "cesadmin",
   "attributes": {
@@ -226,7 +226,7 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
 
 **Beispiel-Antwort:**
 
-``` json
+```json
 {
     "message": "expired_accessToken"
 }
@@ -348,7 +348,7 @@ https://local.cloudogu.com/cas/oidc/accessToken?grant_type=authorization_code&co
 
 **Beispiel-Antwort:**
 
-``` json
+```json
 {
     "access_token": "TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-cas.ces.local",
     "expires_in": "7196",
@@ -364,7 +364,7 @@ https://local.cloudogu.com/cas/oidc/accessToken?grant_type=authorization_code&co
 
 **Beispiel-Antwort:**
 
-``` json
+```json
 {
     "message": "invalid_grant"
 }
