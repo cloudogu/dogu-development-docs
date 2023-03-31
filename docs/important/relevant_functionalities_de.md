@@ -1016,12 +1016,16 @@ Dieses Skript wird nach dem Upgrade des Dogus im neuen Dogu-Container gestartet,
 Das Upgrade-Notification-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der dogu.json eines Dogus definiert werden:
 
 ```json
+{
+  ...,
   "ExposedCommands": [
     {
       "Name": "upgrade-notification",
       "Command": "/upgrade-notification.sh"
     }
   ]
+  ...,
+}
 ```
 
 Dieses Skript wird vor dem Upgrade-Vorgang ausgeführt und sollte ausschließlich Informationen (per `echo`) ausgeben, die für den Administrator vor dem Upgrade relevant sein können. Beispielsweise kann hier auf Breaking Changes hingewiesen werden oder darauf, dass man vor dem Upgrade ein Backup anlegen sollte.
