@@ -1153,7 +1153,7 @@ Dieser Abschnitt zeigt, wie eine einheitliche, abstrahierte Einstellmöglichkeit
 
 Mit diesen abstrakten Log-Leveln soll der Administrator unterstützt werden. Er muss nicht wissen, wie ein Dogu-spezifisches Log-Level heißt, sondern kann stattdessen auf vier Grundwerte zurückgreifen und diese gefahrlos in allen Dogus wiederverwenden.
 
-Als Entwickler eines Dogus müssen wir darauf achten, dass diese vier Log-Level sinnvoll auf die Log-Level der Software im Dogu gemappt werden, welche ggf. andere Namen haben können (bspw. `TRACE` oder `FATAL`).
+Dogu-Entwickler müssen darauf achten, dass diese vier Log-Level sinnvoll auf die Log-Level der Software im Dogu gemappt werden, welche ggf. andere Namen haben können (bspw. `TRACE` oder `FATAL`).
 
 #### Log-Level und deren Spielräume
 
