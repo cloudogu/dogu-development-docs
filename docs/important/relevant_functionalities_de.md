@@ -1009,7 +1009,7 @@ Das Post-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#expo
   ]
 ```
 
-Dieses Skript wird nach dem Upgrade des Dogus im neuen Dogu-Container gestartet, sobald dieser hochfährt. Es laufen also im Normalfall sowohl das `startup.sh`- als auch das `post-upgrade.sh`-Skript gleichzeitig los. Falls es notwendig sein sollte, dass das `post-upgrade.sh`-Skript noch vor dem `startup.sh`-Skript ausgeführt wird, muss das `startup.sh`-Skript mit einem Wartemechanismus versehen werden. Dies kann bspw. durch das Warten auf einen etcd-Key geschehen, den das `post-upgrade.sh`-Skript setzt, sobald es komplett durchgelaufen ist.
+Dieses Skript wird nach dem Upgrade des Dogus im neuen Dogu-Container gestartet, sobald dieser hochfährt. Es laufen also im Normalfall sowohl das `startup.sh`- als auch das `post-upgrade`-Skript gleichzeitig los. Falls es notwendig sein sollte, dass das `post-upgrade`-Skript noch vor dem `startup.sh`-Skript ausgeführt wird, muss das `startup.sh`-Skript mit einem Wartemechanismus versehen werden. Dies kann bspw. durch das Warten auf einen Registry-Key geschehen, den das `post-upgrade`-Skript setzt, sobald es komplett durchgelaufen ist.
 
 ### upgrade-notification.sh - Zeigt eine Benachrichtigung vor der Upgradebestätigung eines Dogus
 
