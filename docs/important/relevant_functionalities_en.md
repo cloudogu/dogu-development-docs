@@ -56,7 +56,7 @@ the [CAS documentation](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol
 CAS offers OAuth/OIDC as a protocol for authentication including SSO/SLO. The following describes the specification of
 OAuth 2.0 protocol in CAS.
 
-#### Creating an OAuth Service Account for Dogu
+#### Creating an OAuth Service Account for a dogu
 
 In order for a Dogu to use the CAS's OAuth endpoints, it must log in to the CAS as a client.
 To do this, the request for an OAuth-specific CAS service account can be stored in the `dogu.json` of the dogu in
@@ -86,7 +86,7 @@ registry under the path `/config/<dogu>/sa-cas/oauth` and `/config/<dogu>/sa-cas
 The credentials are composed of the `CLIENT_ID` and the `CLIENT_SECRET`. For the CAS, the `CLIENT_SECRET` is stored as a
 hash in the Cloudogu EcoSystem Registry under the path `/config/cas/service_accounts/oauth/<CLIENT_ID>`.
 
-### OAuth endpoints and authentication flow.
+#### OAuth endpoints and authentication flow
 
 The following steps describe a successful OAuth authentication flow.
 
@@ -97,7 +97,7 @@ The following steps describe a successful OAuth authentication flow.
 
 ![Authentication sequence with OAuth 2.0](../images/important/chapter3_auth_oauth_sequencediag.png)
 
-#### OAuth authorize endpoint.
+#### OAuth authorize endpoint
 
 This endpoint serves as the initial start of OAuth authorization.
 The `authorize` endpoint is used to request a short-lived token from the CAS.
@@ -255,7 +255,6 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
 {
   "message": "expired_accessToken"
 }
-
 ```
 
 #### OAuth logout endpoint
