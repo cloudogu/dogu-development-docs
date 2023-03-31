@@ -981,7 +981,7 @@ FROM_VERSION="${1}"
 TO_VERSION="${2}"
 ```
 
-### pre-upgrade.sh - Führt alle Aktionen vor dem Upgrade des Dogus durch
+### pre-upgrade - Führt alle Aktionen vor dem Upgrade des Dogus durch
 
 Das Pre-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der `dogu.json` eines Dogus definiert werden:
 
@@ -1000,7 +1000,7 @@ Das Pre-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#expos
 
 Dieses Skript wird vor dem eigentlichen Upgrade des Dogus im alten Dogu-Container ausgeführt.
 
-### post-upgrade.sh - Führt alle Aktionen nach dem Upgrade des Dogus durch
+### post-upgrade - Führt alle Aktionen nach dem Upgrade des Dogus durch
 
 Das Post-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der `dogu.json` eines Dogus definiert werden:
 
@@ -1019,7 +1019,7 @@ Das Post-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#expo
 
 Dieses Skript wird nach dem Upgrade des Dogus im neuen Dogu-Container gestartet, sobald dieser hochfährt. Es laufen also im Normalfall sowohl das `startup.sh`- als auch das `post-upgrade`-Skript gleichzeitig los. Falls es notwendig sein sollte, dass das `post-upgrade`-Skript noch vor dem `startup.sh`-Skript ausgeführt wird, muss das `startup.sh`-Skript mit einem Wartemechanismus versehen werden. Dies kann bspw. durch das Warten auf einen Registry-Key geschehen, den das `post-upgrade`-Skript setzt, sobald es komplett durchgelaufen ist.
 
-### upgrade-notification.sh - Zeigt eine Benachrichtigung vor der Upgradebestätigung eines Dogus
+### upgrade-notification - Zeigt eine Benachrichtigung vor der Upgradebestätigung eines Dogus
 
 Das Upgrade-Notification-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der `dogu.json` eines Dogus definiert werden:
 
