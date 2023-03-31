@@ -268,7 +268,7 @@ The logout endpoint is used to invalidate the long term token from CAS.
 
 CAS provides OAuth/OpenID Connect (OIDC) as a protocol for authentication including SSO/SLO. The following describes the specification of the OpenID Connect protocol in CAS. 
 
-#### Create OIDC service account for dogu.
+#### Creating an OIDC Service Account for a dogu
 
 In order for a dogu to use the CAS's OIDC endpoints, it must log in to the CAS as a client.
 To do this, the request for an OIDC-specific CAS service account can be stored in the `dogu.json` of the dogu in question.
@@ -296,7 +296,7 @@ registry under the path `/config/<dogu>/sa-cas/oidc` and `/config/<dogu>/sa-cas/
 The credentials are composed of the `CLIENT_ID` and the `CLIENT_SECRET`. For the CAS, the `CLIENT_SECRET` is stored as a
 hash in the Cloudogu EcoSystem Registry under the path `/config/cas/service_accounts/oidc/<CLIENT_ID>`.
 
-#### OIDC-Authorize-Endpoint.
+#### OIDC-Authorize-Endpoint
 
 This endpoint serves as the initial start of the OpenID Connect authorization.
 The `authorize` endpoint is used to request a short-lived token from the CAS.
@@ -401,7 +401,7 @@ https://local.cloudogu.com/cas/oidc/accessToken?grant_type=authorization_code&co
 #### OIDC logout endpoint
 
 This endpoint is used to terminate the OpenID Connect session.
-The logout endpoint is used to invalidate a the long term token from the CAS.
+The logout endpoint is used to invalidate the long term token from the CAS.
 
 **URL** : `<fqdn>/oidc/logout`
 

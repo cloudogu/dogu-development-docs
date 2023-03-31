@@ -373,7 +373,7 @@ https://local.cloudogu.com/cas/oidc/accessToken?grant_type=authorization_code&co
 #### OIDC-Logout-Endpunkt
 
 Dieser Endpunkt dient zur Beendigung der OpenID Connect-Session.
-Der Logout-Endpunkt wird benutzt, um ein den Langzeit-Token vom CAS zu invalidieren.
+Der Logout-Endpunkt wird benutzt, um den Langzeit-Token vom CAS zu invalidieren.
 
 **URL** : `<fqdn>/oidc/logout`
 
