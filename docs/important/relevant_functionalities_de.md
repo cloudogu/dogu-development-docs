@@ -866,7 +866,7 @@ In Schritt 2 muss ein Account mit den generierten Informationen in der Dogu-Soft
 In Schritt 3 werden die Zugangsdaten mit dem Format `echo "<registrykey>: <registryvalue>"` ausgegeben. `registrykey` und `registryvalue` müssen durch einen Doppelpunkt und einem Leerzeichen getrennt sein. Die gesamte Zeile muss durch einen Zeilenumbruch beendet werden.
 
 Diese Zugangsdaten werden vom verarbeitenden Client automatisch eingelesen und in den Dogu-spezifischen Konfigurationsbereich des Verbrauchers verschlüsselt abgelegt.
-Nach dem obigen Beispiel würde das Konsumenten-Dogu zwei Registry-Einträge einrichten, die das jeweilige Geheimnis als Wert enthalten:  
+Nach dem obigen Beispiel würde das Konsumenten-Dogu je einen Registry-Eintrag für Username und Passwort erzeugen:
 
 - `/config/<konsument>/sa-<produzent>/username`
 - `/config/<konsument>/sa-<produzent>/password` 
