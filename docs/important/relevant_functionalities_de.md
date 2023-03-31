@@ -481,7 +481,7 @@ Bei Cloudogu haben wir schnell festgestellt, dass es im Betrieb geschickter ist,
 Wiederkehrende Aufgaben beim Container-Start befinden sich im Abschnitt "Typische Dogu-Features" in den Abschnitten:
 - [Änderbarkeit der Admingruppe](#änderbarkeit-der-admin-gruppe)
 - [Änderbarkeit der FQDN](#änderbarkeit-der-fqdn)
-- [Loglevel mappen und ändern](#loglevel-mappen-und-ändern)
+- [Logging-Verhalten steuern](#logging-verhalten-steuern)
 
 Um dynamisch auf diese Gegebenheiten zu reagieren, hat es sich bei Cloudogu eingebürgert, nicht den Hauptprozess im Container direkt zu starten. Stattdessen werden erst Fehlerfälle in einem Startskript abgeprüft, ggf. neue Konfigurationswerte eingearbeitet, um dann erst den Hauptprozess zu starten, z. B. so:
 
