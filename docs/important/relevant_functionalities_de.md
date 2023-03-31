@@ -1041,7 +1041,7 @@ Dies ist normalerweise der Hauptprozess des Dogus und führt dazu, dass der Cont
 Wird kein Wert bei der Memory-Limitierung gesetzt, findet diese auch nicht statt.
 Bei der Swap-Limitierung ist `0b` der Standardwert und stellt somit keinen Swap zur Verfügung.
 
-Um eine Limitierung vornehmen zu können, muss die dogu.json des Dogus folgende Einträge enthalten:
+Um eine Limitierung vornehmen zu können, muss die `dogu.json` des Dogus folgende Einträge enthalten:
 
 ```json
 {
