@@ -1013,7 +1013,7 @@ Dieses Skript wird nach dem Upgrade des Dogus im neuen Dogu-Container gestartet,
 
 ### upgrade-notification.sh - Zeigt eine Benachrichtigung vor der Upgradebestätigung eines Dogus
 
-Das Upgrade-Notification-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der dogu.json eines Dogus definiert werden:
+Das Upgrade-Notification-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der `dogu.json` eines Dogus definiert werden:
 
 ```json
 {
