@@ -235,7 +235,7 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
 #### OAuth-Logout-Endpunkt
 
 Dieser Endpunkt dient zur Beendigung der OAuth-Session.
-Der Logout-Endpunkt wird benutzt, um ein den Langzeit-Token vom CAS zu invalidieren.
+Der Logout-Endpunkt wird benutzt, um den Langzeit-Token vom CAS zu invalidieren.
 
 **URL** : `<fqdn>/cas/logout`
 
@@ -243,25 +243,25 @@ Der Logout-Endpunkt wird benutzt, um ein den Langzeit-Token vom CAS zu invalidie
 
 CAS bietet OAuth/OpenID Connect (OIDC) als Protokoll zur Authentifizierung samt SSO/SLO an. Im Folgenden wird die Spezifikation des OpenID Connect-Protokolls in CAS beschrieben. 
 
-**Vorsicht!**
-
-Dieser Abschnitt ist noch unzureichend geklärt, insbesondere hinsichtlich der Ähnlichkeit zur Authentifizierung durch OAuth 2.0. Pull-Requests durch die Community sind hier gern gesehen. :blue_heart:
-
 #### OIDC Service Account für Dogu erstellen
 
 Damit ein Dogu die OIDC-Endpunkte des CAS benutzen kann, muss sich dieser beim CAS als Client anmelden.
 Dafür kann die Anforderung eines OIDC-spezifischen CAS-Service Accounts in der `dogu.json` des betreffenden Dogus hinterlegt werden.
 
 **Eintrag für einen OIDC Client:**
-``` json
-"ServiceAccounts": [
+```json
+{
+  ...,
+  "ServiceAccounts": [
     {
-        "Type": "cas",
-        "Params": [
-            "oidc"
-        ]
+      "Type": "cas",
+      "Params": [
+        "oidc"
+      ]
     }
-]
+  ],
+  ...,
+}
 ```
 
 Die Credentials des Service Accounts werden zufällig generiert (siehe [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) und verschlüsselt in der Registry unter dem Pfad `/config/<dogu>/sa-cas/oidc` und `/config/<dogu>/sa-cas/oidc_client_secret` hinterlegt.
