@@ -1,10 +1,8 @@
 # Relevant functionalities
 
-This chapter describes the features and possible implementation ideas/solutions of those functionalities that make up a
-real Dogu in the first place and solve recurring problems.
+This chapter describes the features and possible implementation ideas/solutions of those functionalities that make up a real Dogu in the first place and solve recurring problems.
 
-Therefore, the following sections deal with recurring functionalities on how a Dogu can embed itself into the Cloudogu
-EcoSystem landscape.
+Therefore, the following sections deal with recurring functionalities on how a Dogu can embed itself into the Cloudogu EcoSystem landscape.
 
 ## Authentication
 
@@ -962,4 +960,317 @@ A service account is a special form of dependency. Therefore, it makes sense to 
   ],
   ...,
 }
+```
+
+## Dogu upgrades
+
+Dogus can be upgraded in the Cloudogu EcoSystem using simple means (e.g. `cesapp upgrade dogu <doguname>`). The entire upgrade process must be automated beforehand during dogu development and can then be run through by the CES tools (here: `cesapp`) without much assistance from the admins.
+
+The upgrade process includes the following steps:
+- Displaying upgrade notifications, if any
+- Downloading the new Dogu image
+- Ensure that the Dogu is healthy
+- Ensuring that all dependent dogus are available
+- Run the pre-upgrade script on the old dogu, if available
+- Replace the old dogu with the new one
+- Start the new dogu
+- Run the post-upgrade script in the new dogu, if any
+
+If it is necessary to perform pre- or post-upgrade steps during the dogu upgrade, optional pre- and post-upgrade scripts can be created. As an example, consider software that requires a different database schema after an update. In such a case it is possible to write upgrade scripts to start a migration of the database after a Dogu upgrade.
+
+In addition, it is possible to be notified about important changes when upgrading a Dogus by an upgrade notification script.
+
+All upgrade scripts described below should be placed in the `resources` folder (besides e.g. the `startup.sh` script).
+
+### Determining the upgrade paths
+
+When developing the Dogus, it must be ensured that upgrades of a Dogus also work across multiple versions. For this purpose, the upgrade scripts must be designed in such a way that they determine the upgrade path and automatically perform any necessary migration steps.
+
+For this purpose, all upgrade scripts can read the previous (`FROM`) and new (`TO`) Dogu version:
+
+```bash
+FROM_VERSION="${1}"
+TO_VERSION="${2}"
+```
+
+### pre-upgrade - Perform actions before upgrading a dogu
+
+The pre-upgrade script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a Dogus:
+
+```json
+{
+   ...,
+  "ExposedCommands": [
+    {
+      "Name": "pre-upgrade",
+      "Command": "/pre-upgrade.sh"
+    }
+  ],
+  ...
+  }
+```
+
+This script is executed before the actual upgrade of the Dogus in the old Dogu container.
+
+### post-upgrade - Perform actions after the upgrade of a dogu
+
+The post-upgrade script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogus:
+
+```json
+{
+  ...,
+  "ExposedCommands": [
+    {
+      "Name": "post-upgrade",
+      "Command": "/post-upgrade.sh"
+    }
+  ],
+  ...
+}
+```
+
+This script will be started in the new dogu container after the dogu has been upgraded, as soon as it boots up. So normally both the `startup.sh` and the `post-upgrade` script will run at the same time. If it should be necessary that the `post-upgrade` script is executed before the `startup.sh` script, the `startup.sh` script must be provided with a waiting mechanism. This can be done, for example, by waiting for a registry key to be set by the `post-upgrade` script once it has run completely.
+
+### upgrade-notification - Show a notification before the dogu upgrade confirmation
+
+The upgrade-notification script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogus:
+
+```json
+{
+  ...,
+  "ExposedCommands": [
+    {
+      "Name": "upgrade-notification",
+      "Command": "/upgrade-notification.sh"
+    }
+  ]
+  ...
+}
+```
+
+This script is executed before the upgrade process and should only output information (via `echo`) that may be relevant for the administrator before the upgrade. For example, it may indicate breaking changes or that a backup should be made before the upgrade.
+
+## Typical Dogu features
+
+This chapter describes features that integrate Dogus deeper into the Cloudogu EcoSystem and make them uniformly administrable.
+
+### Memory/Swap Limit
+
+Memory and swap limits can be used to restrict the memory consumption (working memory and swap space) of Dogus.
+
+If a dogu exceeds its memory limit, the largest process in the container is killed. This is usually the main process of the dogus and causes the container to be restarted.
+
+If no value is set for memory limiting, it will not take place. For swap limiting `0b` is the default value and thus does not provide swap.
+
+To be able to limit, the `dogu.json` of the Dogus must contain the following entries:
+
+```json
+{
+  ...,
+  "Configuration": [
+    {
+      "Name": "container_config/memory_limit",
+      "Description":"Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
+      "Name": "container_config/swap_limit",
+      "Description":"Limits the container's swap memory usage. Use zero or a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). 0 will disable swapping.",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    }
+  ]
+  ...,
+}
+```
+
+This can be used to create the registry entries `container_config/memory_limit` and `container_config/swap_limit` in the respective Dogu configuration.
+
+The configurable values for the keys are each a string of the form `<number value><unit>` and describe the maximum amount of memory that can be used by the Dogu. Note here that there must be no space between the numeric value and the unit. Available units are `b`, `k`, `m` and `g` (for byte, kibibyte, mebibyte and gibibyte).
+
+Setting the values can be done in the following ways:
+- `doguctl config container_config/memory_limit 1g`.
+- `cesapp edit-config <doguname>` (only from the host)
+- `etcdctl set /config/<doguname>/container_config/memory_limit "1g"` (only from the host)
+
+To apply the limits, the dogu must be recreated (`cesapp recreate <doguname>`) and then restarted (`cesapp start <doguname>`).
+
+A special case is the limiting of a Java process. If a dogu contains a Java process, the following additional entries can be added to `dogu.json`:
+
+```json
+{
+  ...,
+  "Configuration": [
+    {
+      "Name": "container_config/java_max_ram_percentage",
+      "Description": "Limits the heap stack size of the Java process to the configured percentage of the available physical memory when the container has more than approx. 250 MB of memory available. Is only considered when a memory_limit is set. Use a valid float value with decimals between 0 and 100 (f. ex. 55.0 for 55%). Default value: 25%",
+      "Optional": true,
+      "Default": "25.0",
+      "Validation": {
+        "Type": "FLOAT_PERCENTAGE_HUNDRED"
+      }
+    },
+    {
+      "Name": "container_config/java_min_ram_percentage",
+      "Description": "Limits the heap stack size of the Java process to the configured percentage of the available physical memory when the container has less than approx. 250 MB of memory available. Is only considered when a memory_limit is set. Use a valid float value with decimals between 0 and 100 (f. ex. 55.0 for 55%). Default value: 50%",
+      "Optional": true,
+      "Default": "50.0",
+      "Validation": {
+        "Type": "FLOAT_PERCENTAGE_HUNDRED"
+      }
+    }
+  ],
+  ...,
+}
+```
+
+The values configurable with it must be given in the start scripts of the Dogus to the appropriate Java process as parameters. A reference implementation can be found in [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
+
+### Backup & restore capability
+
+One feature of the Cloudogu EcoSystem is that Dogus can be backed up and restored via a central backup system. For this to work, all Dogus must offload their mutable data to volumes. This procedure is already described in the [Compendium](../core/compendium_en.md#volumes).
+
+When developing a Dogus, care must be taken to ensure that the Dogu continues to function normally after a successful backup and restore operation and that all data and functions are available. To do this, all volumes in the `dogu.json` that contain production data must first be marked with the [NeedsBackup](../core/compendium_en.md#needsbackup) flag. After that the dogu should be built and filled with test data.
+
+After that, one performs a backup and a restore of the system. The commands [cesapp backup](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/backup/) and [cesapp restore](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/restore/) can be used for this.
+
+Once all dogus have been restarted, test whether your own dogu is running normally and all test data is still available.
+
+### Modifiability of the admin group
+
+When installing the Cloudogu EcoSystem, a global admin group is set. All members of this group should be given admin rights in all Dogus. This must be ensured during the development of the Dogus. The name of the globally defined admin group can be queried from within the Dogu using `doguctl`: `doguctl config --global 'admin_group'`.
+
+Additionally, the admin group can be changed afterwards. The Dogu must then react (after a reboot, if necessary) in such a way that only members of the new admin group are granted admin rights. Users in the old admin group will only receive normal user rights unless they are also in the new admin group.
+
+### Changeability of the FQDN
+
+The FQDN of the Cloudogu EcoSystem is stored globally in the registry and can be read by the Dogus using [`doguctl`](#the-usage-of-doguctl). If necessary, it can be integrated into the Dogu configuration (see also [creating-an-exemplary-application](../core/basics_en.md#5-creating-an-exemplary-application). In addition, care must be taken during Dogu development to ensure that the FQDN is changeable. So the Dogu should be able (after a restart if necessary) to read a new FQDN and adapt its configuration to this new FQDN.
+
+### Controlling logging behavior
+
+This section shows how to create a uniform, abstracted setting option that can be used to set the log behavior in all Dogus in the same way. Four different log levels that can be set via the registry are used for this purpose: `ERROR`, `WARN`, `INFO` and `DEBUG`.
+
+With these abstract log levels the administrator should be supported. He does not need to know what a Dogu-specific log level is called, but can instead fall back on four basic values and reuse them safely in all Dogus.
+
+Dogu developers must take care that these four log levels are mapped meaningfully to the log levels of the software in the Dogu, which may have different names (e.g. `TRACE` or `FATAL`).
+
+#### Log levels and their margins
+
+The log levels are sorted by level of detail from coarse to fine and contain the respective level above. For example, log outputs of the level `WARN` thus also contain log outputs of the level `ERROR`.
+
+This gives the developer a great deal of freedom as to which logs are output at which log level.
+
+##### `ERROR`
+
+Log levels analogous to `ERROR` are very often found on production systems. They are used so that operations or support do not have to go through superfluous additional information, but can efficiently get to the core of problems.
+
+Log output of this level should only contain output that indicates acute errors, operational prevention, or security violations, etc.
+
+Examples:
+- Repair of corrupt data in a database
+- application error
+- unplanned stop or restart of services or applications
+- acute connectivity errors
+   - e.g. Postgresql-Dogu is not reachable even after several minutes
+- _repeated_, failed login attempts
+- acutely threatening or acutely existing lack of resources
+- messages with `FATAL` or `SEVERE` log level
+
+##### `WARN`
+
+Log levels analogous to `WARN` are also frequently found on production systems.
+
+Log outputs of this level are very similar to those of `ERROR`. Unlike these, however, they contain output indicating imminent errors.
+
+Examples:
+- faulty or optimizable configuration was detected
+- update of application or libraries is suggested
+- imminent lack of resources in the medium term
+- singular connectivity errors, which are limited in time
+   - e.g. Postgresql-Dogu is not reachable at the first attempt, but after a few minutes it is reachable again
+- _single_ failed login attempts
+- scheduled start and stop of services or applications
+
+##### `INFO`
+
+Outputs that might be of interest in special but non-critical situations. A _catch-all_ for all the output that is not important enough for `WARN`, but does not yet go deep into the details of the application.
+
+Examples:
+- a subsystem was completely loaded
+- Error-free result of background jobs
+- Successful start/stop of a component
+
+##### `DEBUG`
+
+Output that may be of interest in critical situations and/or used for debugging.
+
+Examples:
+- a relevant decision for a configuration was made
+- Messages with `TRACE` log level
+
+#### Mapping per Dogu
+
+These four abstract log levels occasionally have no direct relationship to concrete log levels in the tools or plugins in the Dogu and must be mapped manually in Dogu development. The reason for this is that both the tools and the associated plugins and frameworks have log levels that differ too greatly in quantity and quality.
+
+The mapping of an abstract log level is thus in the hands of the Dogu development. Here one can decide, for example, to map the `TRACE` log level from the software to the `DEBUG` log level of the Dogu.
+
+This mapping from abstract to concrete log levels has the advantage of flexibility, e.g. if several configuration files have to be filled with different log levels.
+
+#### Value range and default
+
+To set the log level, an optional key `/config/${dogu}/logging/root` is introduced per dogu, which can take one of the following abstract log level values.
+
+- `ERROR`
+- `WARN` (default value)
+- `INFO`
+- `DEBUG`
+
+If no `/config/${dogu}/logging/root` key exists, then `doguctl` will automatically use the `WARN` value if properly configured [as default value](#validation-and-default-values).
+
+#### Validation and default values
+
+`doguctl` supports dogu developers in robustly defining a log level for a dogu. This leaves only the mapping of a found log level to the respective logging framework in the dogu.
+
+In the `dogu.json` a validatable log level can be set, which already brings a default value on the Dogu side.
+
+```json
+{
+  "Configuration": [
+    {
+      "Name": "logging/root",
+      "Description": "Set the root log level to one of ERROR, WARN, INFO, DEBUG.",
+      "Optional": true,
+      "Default": "WARN",
+      "Validation": {
+        "Type": "ONE_OF",
+        "Values": [
+          "WARN",
+          "DEBUG",
+          "INFO",
+          "ERROR"
+        ]
+      }
+    }
+  ]
+}
+```
+
+This value can be checked with `doguctl validate`:
+
+```
+if [[ ! doguctl validate logging/root --silent ]]; then
+   echo "WARNING: Found invalid value in logging/root. Resetting it to WARN"
+   doguctl config logging/root WARN
+fi
+```
+
+The set or default value from `dogu.json` can be retrieved as usual. `doguctl` takes care of getting a default value if no value has been set:
+
+```
+rootLogLevel=$(doguctl config logging/root)
 ```

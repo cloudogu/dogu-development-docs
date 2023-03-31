@@ -1123,24 +1123,21 @@ Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dog
 
 Die damit konfigurierbaren Werte müssen in den Start-Skripten des Dogus dem entsprechenden Java-Prozess als Parameter mitgegeben werden. Eine Referenzimplementierung findet sich im [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
 
-
-
 ### Backup & Restore-Fähigkeit
 
 Ein Feature des Cloudogu EcoSystems ist, dass Dogus sich über ein zentrales Backupsystem sichern und wiederherstellen lassen. Damit das funktioniert, müssen alle Dogus ihre veränderlichen Daten in Volumes auslagern. Dieses Vorgehen wird bereits im [Compendium](../core/compendium_de.md#volumes) beschrieben.
 
 Bei der Entwicklung eines Dogus ist darauf zu achten, dass das Dogu nach einem erfolgreichen Backup- und Restore-Vorgang weiterhin normal funktioniert und alle Daten und Funktionen vorhanden sind. Dazu müssen zuerst alle Volumes in der `dogu.json`, die Produktivdaten enthalten, mit dem [NeedsBackup](../core/compendium_de.md#needsbackup)-Flag gekennzeichnet werden. Danach sollte das Dogu gebaut und mit Testdaten gefüllt werden.
+
 Anschließend führt man ein Backup und ein Restore des Systems durch. Dazu können die Befehle [cesapp backup](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/backup/) und [cesapp restore](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/restore/) genutzt werden.
 
 Sind alle Dogus wieder hochgefahren, testet man, ob das eigene Dogu normal läuft und alle Testdaten weiterhin vorhanden sind.
-
 
 ### Änderbarkeit der Admin-Gruppe
 
 Bei der Installation des Cloudogu EcoSystems wird eine globale Admin-Gruppe eingestellt. Alle Mitglieder dieser Gruppe sollen in allen Dogus Admin-Rechte bekommen. Dies muss bei der Entwicklung des Dogus sichergestellt werden. Der Name der global definierten Admin-Gruppe lässt sich aus dem Dogu heraus mit `doguctl` abfragen: `doguctl config --global 'admin_group'`
 
 Zusätzlich kann die Admin-Gruppe im Nachhinein geändert werden. Das Dogu muss dann (ggf. nach einem Neustart) so reagieren, dass nur noch die Mitglieder der neuen Admin-Gruppe Admin-Rechte erhalten. Nutzer in der alten Admin-Gruppe erhalten nur noch normale Nutzerrechte, sofern sie sich nicht auch in der neuen Admin-Gruppe befinden.
-
 
 ### Änderbarkeit der FQDN
 
@@ -1226,7 +1223,6 @@ Zum Einstellen des Log-Levels wird je Dogu ein optionaler Key `/config/${dogu}/l
 - `DEBUG`
 
 Wenn kein Key `/config/${dogu}/logging/root` existiert, dann verwendet `doguctl` automatisch den Wert `WARN`, wenn dieser ordnungsgemäß [als Default-Wert](#validierung-und-default-werte) konfiguriert wurde.
-
 
 #### Validierung und Default-Werte
 
