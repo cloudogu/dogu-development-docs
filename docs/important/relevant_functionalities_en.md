@@ -69,8 +69,8 @@ question.
   ...,
   "ServiceAccounts": [
     {
-      "type": "cas",
-      "params": [
+      "Type": "cas",
+      "Params": [
         "oauth"
       ]
     }
