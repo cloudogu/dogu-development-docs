@@ -998,7 +998,7 @@ Dieses Skript wird vor dem eigentlichen Upgrade des Dogus im alten Dogu-Containe
 
 ### post-upgrade.sh - Führt alle Aktionen nach dem Upgrade des Dogus durch
 
-Das Post-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der dogu.json eines Dogus definiert werden:
+Das Post-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#exposedcommands) in der `dogu.json` eines Dogus definiert werden:
 
 ```json
   "ExposedCommands": [
