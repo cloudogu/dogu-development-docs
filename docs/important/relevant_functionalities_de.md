@@ -493,11 +493,11 @@ Um dynamisch auf diese Gegebenheiten zu reagieren, hat es sich bei Cloudogu eing
       - einmalige Installationsprozesse durchzuführen 
       - ein temporäres Admin-Konto zu generieren
       - das aktuelle Log-Level umzusetzen
-      - Registrieren der CES-SSL-Zertifikate in der Software/Zielsystem
-      - Vorarbeiten mit API-Zugriffen, um die Software vorzubereiten
+      - Registrieren der CES-TLS-Zertifikate in der Software/Zielsystem
+      - VorarbeiSystemänderungen der Registryten mit API-Zugriffen, um die Software vorzubereiten
         - Replikation von LDAP-Gruppen / Rechten
       - Einstellen der Software (Log-Level, sonstige Konfiguration, z. B. durch `doguctl template`)
-      - Auf Systemänderungen der Registry reagieren: z. B. [Admin-Gruppe](#änderbarkeit-der-admin-gruppe) hat sich geändert, das im Dogu weitere Maßnahmen benötigt
+      - Auf Systemänderungen der Registry reagieren: z. B. [Admin-Gruppe](#änderbarkeit-der-admin-gruppe) hat sich geändert, was im Dogu weitere Maßnahmen benötigt
    3. den Dogu-State auf `ready` setzen (geeigneter [HealthCheck](../core/compendium_de.md#healthchecks) vorausgesetzt)
    4. startet den Hauptprozess
 
@@ -511,13 +511,13 @@ Um ein Skript in einem Dogu ausführen zu können, muss ein Skriptinterpreter im
 
 ### Fehlerbehandlung
 
-Je nach Dogu können Fehler an unterschiedlichen Stellen entstehen und (dummerweise) auch wieder verschluckt werden. Es ist eine gute Praxis, Fehler hart aufschlagen zu lassen, um die Fehlerursache schneller zu identifizieren.
+Je nach Dogu können Fehler an unterschiedlichen Stellen entstehen und (dummerweise) auch wieder verschluckt werden. Es ist eine gute Praxis, das Skript bei Fehlern mit einem entsprechenden Exit-Code abzubrechen, um die Fehlerursache schneller zu identifizieren.
 
 Hierzu werden als allererstes die folgenden Optionen gesetzt
 
 ```bash
 #!/bin/bash
-set -o errexit # beende das gesamte Skript (und damit auch den Container) bei einem nicht abgefangenem Fehler 
+set -o errexit # beende das gesamte Skript (und damit auch den Container) bei einem nicht abgefangenen Fehler 
 set -o nounset # finde nicht initialisierte Variablen
 set -o pipefail # verschlucke keine Fehler bei Pipe-Verwendung
 ```
@@ -530,8 +530,8 @@ Wenn man bereits Fehler erwartet, dann kann dieses Konstrukt hilfreich sein:
 yourCommandExitCode=0
 your-command || yourCommandExitCode=$?
 if [[ ${yourCommandExitCode} -ne 0 ]]; then
-  echo "ERROR: Oh no. I found something critical during QuirkyFunction.";
-  doguctl state "ErrorQuirkyFunction"
+  echo "ERROR: Oh no. An error occurred during the execution of your-command.";
+  doguctl state "ErrorYourFunctionality"
   sleep 300
   exit 1
 fi
@@ -561,14 +561,14 @@ function setDoguLogLevel() {
 Wiederkehrende Funktionen können abstrahiert und parametrisiert werden:
 
 ```bash
-function deleteSetupArtefact() {
-  local artefactFile="${1}"
-  rm -f "${artefactFile}"
+function deleteSetupArtifact() {
+  local artifactFile="${1}"
+  rm -f "${artifactFile}"
 }
 
 function cleanUpSetup() {
-  deleteSetupArtefact "/tmp/tracker-extract-3-files.127"
-  deleteSetupArtefact "/usr/share/lib/intermediateFile.bin"
+  deleteSetupArtifact "/tmp/tracker-extract-3-files.127"
+  deleteSetupArtifact "/usr/share/lib/intermediateFile.bin"
 }
 ```
 
@@ -579,12 +579,11 @@ Mit steigender Komplexität ist es eine Idee wert, relevante Schritte mit einem 
 
 Zeitgleich gibt es mit dem [Dogu-State-HealthCheck](../core/compendium_de.md#healthchecks) die Möglichkeit, während des Dogu-Starts eigene Ausführungsphasen zu markieren. Zum Beispiel `doguctl state 'aSpecialInstallPhase'` am Anfang oder `doguctl state 'ready'` am Ende des Skripts.
 
-Der Zustand `ready` ist für die Interpretation des Health-Checks zwingend notwendig.
-
+Ein HealthCheck vom Typ `state` wird ausschließlich dann erfolgreich sein, wenn der state den String `ready` enthält.
 
 #### Auslagerung von Code
 
-Eine weitere Möglichkeit ist die Auslagerung von Funktionen in andere Skriptdateien, die dann mittels `source` in das eigentliche Startskript inkludiert werden. Es sollte allerdings beachtet werden, dass auch ein solches `source`n Fehlschlagen kann und behandelt werden sollte.
+Eine weitere Möglichkeit ist die Auslagerung von Funktionen in andere Skriptdateien, die dann mittels `source` in das eigentliche Startskript inkludiert werden. Es sollte allerdings beachtet werden, dass auch ein solches `source`n fehlschlagen kann und behandelt werden sollte.
 
 ```bash
 sourcingExitCode=0
@@ -605,9 +604,9 @@ Analysewerkzeuge wie [Shellcheck](https://www.shellcheck.net/) können Fehler in
 
 ### Die Nutzung von `doguctl`
 
-Der Abschnitt [über Registry-Zugriff](#registry-zugriff-vom-dogu-heraus) hat das Thema `doguctl` bereits angeschnitten. `doguctl` ist ein Kommandozeilenwerkzeug, das wiederkehrende Interaktionen mit dem Cloudogu EcoSystem bündelt und vereinfacht. Dieser Abschnitt beschreibt mögliche Aufrufe.
+Der Abschnitt [über Registry-Zugriff](#registry-zugriff-vom-dogu-heraus) hat das Thema `doguctl` bereits angeschnitten. `doguctl` ist ein Kommandozeilenwerkzeug, das wiederkehrende Interaktionen mit der Cloudogu EcoSystem-Registry bündelt und vereinfacht. Dieser Abschnitt beschreibt mögliche Aufrufe.
 
-Mit `--help` gibt jedes Unterkommando von `doguctl` gibt eine Hilfeseite aus.  
+Mit `--help` gibt jedes Unterkommando von `doguctl` eine Hilfeseite aus.  
 
 #### doguctl config
 
@@ -622,7 +621,7 @@ my old value
 $ doguctl config -g fqdn
 your-ecosystem.example.com
 
-# liest Konfigurationwert aus /config/<dogu>/my_key, gibt einen Defaultwert zurück, wenn dieser nicht gesetzt wurde
+# liest Konfigurationwert aus /config/<dogu>/my_key und gibt einen Defaultwert zurück, wenn dieser nicht gesetzt wurde
 $ doguctl config --default NOVALUE my_key2
 NOVALUE
 
@@ -633,7 +632,7 @@ your-dogu-database-1234
 # schreibt Konfigurationswert in /config/<dogu>/my_key hinein
 $ doguctl config my_key 'my new value'
 
-# schreibt verschlüsselten Geheimnis /config/<dogu>/geheim/credential
+# schreibt verschlüsseltes Geheimnis /config/<dogu>/geheim/credential
 $ doguctl config -e geheim/credential '$up3r$3cre7'
 
 # löscht den Schlüssel /config/<dogu>/delete_me
@@ -642,7 +641,7 @@ $ doguctl config --rm delete_me
 
 #### doguctl validate
 
-Dieser Aufruf validiert Konfigurationswerte der Registry. Das Kommando `validate` liefert einen Exit Code == 0, wenn keines der überprüften Dogu-Konfigurationswerte einen Validierungsfehler aufweist. Ansonsten liefert es einen Exit Code == 1.
+Dieser Aufruf validiert Konfigurationswerte der Registry. Das Kommando `validate` liefert einen Exit-Code == 0, wenn alle HealthChecks des betrachteten Dogus ein positives Ergebnis zurückgeben. Ansonsten liefert es einen Exit-Code == 1.
 
 ```bash
 $ doguctl validate logging/root # validiert einzelnen Wert, Gutfall: Wert=WARN aus ERROR,WARN,INFO,DEBUG
@@ -680,7 +679,7 @@ echo $?
 
 #### doguctl healthy
 
-Dieser Aufruf prüft, ob ein gegebenes Dogu betriebsbereit (healthy) ist. Das Kommando `healthy` liefert einen Exit Code == 0, wenn das betrachtete Dogu healthy ist. Ansonsten liefert es einen Exit Code == 1.
+Dieser Aufruf prüft, ob ein gegebenes Dogu betriebsbereit (healthy) ist. Das Kommando `healthy` liefert einen Exit-Code == 0, wenn das betrachtete Dogu healthy ist. Ansonsten liefert es einen Exit-Code == 1.
 
 ```bash
 if ! doguctl healthy --wait --timeout 120 postgresql; then
@@ -711,7 +710,7 @@ Dieser Aufruf erzeugt Zufallsstrings, geeignet um Passwörter oder sonstige Zuga
 ```bash
 $ doguctl random # erzeugt Zufallsstring mit der Länge 16
 9HoF4nYmlLYtf6Ju
-$ doguctl random  -l 5 # erzeugt Zufallsstring mit gegebener Länge
+$ doguctl random  -l 5 # erzeugt Zufallsstring mit Länge 5 
 W6Wmj
 ```
 
@@ -731,12 +730,12 @@ Unterstützte Template-Parameter:
   - `.Env.Get <Umgebungsvariable>` - verwendet vorher exportierte Umgebungsvariable "ADMIN_USERNAME"
 - Dogu-Konfiguration
   - `.Config.Get <Dogu-Konfigurationsschlüssel>` - verwendet unverschlüsselten Dogu-Konfigurationswert unter `/config/<dogu>/<schlüssel>` 
-  - `.Config.GetOrDefault <Dogu-Konfigurationsschlüssel> <Fehlwert>` - verwendet unverschlüsselten Dogu-Konfigurationswert oder den bereitgestellten Fehlwert
+  - `.Config.GetOrDefault <Dogu-Konfigurationsschlüssel> <Defaultwert>` - verwendet unverschlüsselten Dogu-Konfigurationswert oder den bereitgestellten Defaultwert
   - `.Config.GetAndDecrypt <verschlüsselter Dogu-Konfigurationsschlüssel>` - entschlüsselt den Dogu-Konfigurationswert und verwendet ihn
   - `.Config.Exists <Dogu-Konfigurationsschlüssel>` - gibt einen `bool`-Wert zurück, ob ein Dogu-Konfigurationswert unter `/config/<dogu>/<schlüssel>` existiert
 - Globale Konfiguration
   - `.GlobalConfig.Get <globaler Konfigurationsschlüssel>` - verwendet globalen Konfigurationswert `/config/_global/<schlüssel>`
-  - `.GlobalConfig.GetOrDefault <globaler Konfigurationsschlüssel> <Fehlwert>` - verwendet unverschlüsselten globalen Konfigurationswert oder den bereitgestellten Fehlwert
+  - `.GlobalConfig.GetOrDefault <globaler Konfigurationsschlüssel> <Defaultwert>` - verwendet unverschlüsselten globalen Konfigurationswert oder den bereitgestellten Defaultwert
   - `.GlobalConfig.Exists <Dogu-Konfigurationsschlüssel>` - gibt einen `bool`-Wert zurück, ob ein globaler Konfigurationswert unter `/config/_global/<schlüssel>` existiert
 - Dogu-Abfragen
   - `.Dogus.IsEnabled <Dogu-Name>` - gibt einen `bool`-Wert zurück, ob ein Dogu installiert ist
@@ -766,22 +765,22 @@ ticketsystem.url = https://{{ .GlobalConfig.Get "fqdn" }}/redmine
 
 #### doguctl wait-for-tcp
 
-Mit diesem Aufruf wartet `doguctl` bis ein gegebener TCP-Port offen ist oder ein Timeout (in Sekunden) eintritt. Ein Exit Code != 0 signalisiert einen Fehler.
+Mit diesem Aufruf wartet `doguctl` bis ein gegebener TCP-Port offen ist oder ein Timeout (in Sekunden) eintritt. Ein Exit-Code != 0 signalisiert einen Fehler.
 
 ```bash
 if ! doguctl wait-for-tcp --timeout 120 8080; then
-  echo "Received timeout during wait for port 8080. Exiting."
+  echo "Received timeout after waiting 120 seconds for port 8080. Exiting."
   exit 1
 fi
 ```
 
 #### doguctl wait-for-http
 
-Mit diesem Aufruf wartet `doguctl` bis eine gegebene HTTP-URL bereit ist oder ein Timeout (in Sekunden) eintritt. Ein Exit Code != 0 signalisiert einen Fehler.
+Mit diesem Aufruf wartet `doguctl` bis eine gegebene HTTP(s)-URL bereit ist oder ein Timeout (in Sekunden) eintritt. Ein Exit-Code != 0 signalisiert einen Fehler.
 
 ```bash
 if ! doguctl wait-for-tcp --host postgresql --timeout 120 5432; then
-  echo "Received timeout during wait for port 5432 of host postgresql. Exiting."
+  echo "Received timeout after waiting 120 seconds for port 5432 of host postgresql. Exiting."
   exit 1
 fi
 ```
@@ -790,17 +789,17 @@ fi
 
 Service Accounts bilden einen Mechanismus für Zugangskonten ab, die Dogus zur Absicherung oder Speicherung ihrer Daten benötigen, diese Funktionalität aber nicht selbst bereitstellen möchten. Dogus können sich als Produzent und/oder als Konsument von Service Accounts darstellen. Bei beiden handelt es sich um ein jeweils optionales Feature eines Dogus. 
 
-In der Regel diktiert die Natur der Applikation im Dogu selbst, ob bzw. welches von beidem am sinnvollsten ist. So wäre ein Datenbankmanagement-Dogu wie PostgreSQL nicht hilfreich, das anderen Dogus keine Zugänge zu seiner Datenbasis anbietet. Andererseits wäre es für ein Dogu wie Redmine fatal, kein Dogu zu haben, in das es per SQL seine Daten ablegen kann.
+In der Regel diktiert die Natur der Applikation im Dogu selbst, ob bzw. welches von beiden am sinnvollsten ist. So wäre ein Datenbankmanagement-Dogu wie PostgreSQL nicht hilfreich, das anderen Dogus keine Zugänge zu seiner Datenbasis anbietet. Andererseits wäre es für ein Dogu wie Redmine fatal, kein Dogu zu haben, in das es per SQL seine Daten ablegen kann.
 
-Dogus, die anderen Dogus gegenüber Zugangskonten bereitstellen können, nennt man auch Service-Account-Produzent. Dogus, die ein Zugangskonto bei einem anderen Dogu benötigen, nennt man Service-Account-Konsument.
+Dogus wie PostgreSQL, die anderen Dogus gegenüber Zugangskonten bereitstellen können, nennt man auch _Service-Account-Produzenten_. Dogus wie Redmine, die ein Zugangskonto bei einem anderen Dogu benötigen, nennt man _Service-Account-Konsumenten_.
 
 ### Service Accounts produzieren 
 
-Service Accounts werden nicht von einem Konsumer-Dogu selbst angefragt, weil ein Dogu sich nicht um diese Form der Orchestrierung kümmern sollte. Dies ist stattdessen die Aufgabe von einem Client wie `cesapp` oder `k8s-dogu-operator` während der Installation des Service-Account-Konsument-Dogus. Das `ExposedCommand` hierfür lautet `service-account-create`. 
+Service Accounts werden nicht von einem Service-Account-Konsumenten selbst angefragt, weil ein Dogu sich nicht um diese Form der Orchestrierung kümmern sollte. Dies ist stattdessen die Aufgabe von einem Client wie `cesapp` oder `k8s-dogu-operator` während der Installation des Service-Account-Konsumenten. Der `ExposedCommand` hierfür lautet `service-account-create`. 
 
-Ähnlich hierzu sieht die Löschung von Service Accounts aus, denn ebenfalls kümmert sich ein Client wie `cesapp` oder `k8s-dogu-operator` während der Deinstallation eines Dogus darum, dass dessen angeforderte Service Accounts wieder gelöscht werden. Das `ExposedCommand` hierfür lautet `service-account-remove`.
+Ähnlich hierzu sieht die Löschung von Service Accounts aus, denn ebenfalls kümmert sich ein Client wie `cesapp` oder `k8s-dogu-operator` während der Deinstallation eines Dogus darum, dass dessen angeforderte Service Accounts wieder gelöscht werden. Der `ExposedCommand` hierfür lautet `service-account-remove`.
 
-Damit ein Dogu als Service-Account-Produzent auftreten kann, muss es in seiner `dogu.json` zwei ausführbare Dateien exponieren:
+Damit ein Dogu als Service-Account-Produzent auftreten kann, muss es in seiner `dogu.json` zwei ausführbare Dateien bereitstellen:
 
 ```json
 {
@@ -821,7 +820,7 @@ Damit ein Dogu als Service-Account-Produzent auftreten kann, muss es in seiner `
 }
 ```
 
-Die Begriffe `service-account-create` und `service-account-remove` sind geschützte Eigenschaften und werden von Clients, die die `dogu.json` interpretieren als Befehle zum Erstellen und Löschen von Service Accounts benutzt.
+Die Begriffe `service-account-create` und `service-account-remove` sind geschützte Eigenschaften und werden von Clients, die die `dogu.json` interpretieren, als Befehle zum Erstellen und Löschen von Service Accounts benutzt.
 
 In den beiden folgenden Abschnitten wird auf die Erzeugung und Löschung von Service Accounts eingegangen. Weitere Information über ExposedCommands befinden sich im [ExposedCommands](../core/compendium_de.md#exposedcommands)-Abschnitt des Kompendiums.
 
@@ -831,9 +830,10 @@ Das `service-account-create`-Skript verwaltet das Erstellen eines neuen Service 
 
 Ein `service-account-create`-Skript besteht aus drei Schritten:
 
-1. Erstellen der Account Informationen
+1. Erstellen der Zugangsdaten
 2. Anlegen eines Accounts für unsere Software mit den Informationen
-3. Schreibe die Accountinformationen verschlüsselt in den Dogu-spezifischen Konfigurationsbereich des Verbrauchers.
+3. Zurückgeben der Zugangsdaten
+   - Dies führt dazu, dass sie automatisch und verschlüsselt in den Dogu-spezifischen Konfigurationsbereich des Verbrauchers geschrieben werden.
 
 Ein Beispiel für das `service-account-create`-Skript könnte folgendermaßen aussehen:
 
@@ -854,7 +854,7 @@ doguName="${1}"
   # ... Implementiere die Dogu-spezifische Logik hier
 } >/dev/null 2>&1 # unterdrücke sonstige Ausgaben auf stdout, da nur Zugangsdaten oder Fehler erwartet werden
 
-  #3) Gib Zugangsdaten zurück. Der Client schreibt die Zugangsdaten verschlüsselt in den Dogu-spezifischen Konfigurationsbereich des Verbrauchers.
+  #3) Gib Zugangsdaten zurück. Der Client kümmert sich um die Speicherung und Verschlüsselung.
 echo "username: ${USER}"
 echo "password: ${PASSWORD}"
 ```
@@ -863,13 +863,13 @@ In Schritt 1 werden Zugangsdaten zufällig generiert. Der Name des Konsumenten-D
 
 In Schritt 2 muss ein Account mit den generierten Informationen in der Dogu-Software erstellt werden. 
 
-In Schritt 3 werden die Zugangsdaten mit dem Format `echo "<registrykey>: <registryvalue>"` ausgegeben. `registrykey` und `registryvalue` müssen durch einen Doppelpunkt und einem Leerzeichen getrennt sein. Die gesamte Zeile muss durch ein Newline beendet werden.
+In Schritt 3 werden die Zugangsdaten mit dem Format `echo "<registrykey>: <registryvalue>"` ausgegeben. `registrykey` und `registryvalue` müssen durch einen Doppelpunkt und einem Leerzeichen getrennt sein. Die gesamte Zeile muss durch einen Zeilenumbruch beendet werden.
 
 Diese Zugangsdaten werden vom verarbeitenden Client automatisch eingelesen und in den Dogu-spezifischen Konfigurationsbereich des Verbrauchers verschlüsselt abgelegt.
-Nach dem obigen Beispiel würde dem Konsumenten-Dogu zwei Registry-Einträge einrichten, die das jeweilige Zugangsdatum als Wert enthalten:  
+Nach dem obigen Beispiel würde das Konsumenten-Dogu zwei Registry-Einträge einrichten, die das jeweilige Geheimnis als Wert enthalten:  
 
 - `/config/<konsument>/sa-<produzent>/username`
-- `/config/<konsument>/sa-<produzent>/passwort` 
+- `/config/<konsument>/sa-<produzent>/password` 
 
 Das Verbaucher-Dogu kann diese nun z. B. durch `doguctl config -e sa-<produzentdogu>/username` auslesen und entschlüsseln.
 
@@ -881,7 +881,7 @@ Es wird immer ausgeführt, wenn das Konsumenten-Dogu deinstalliert wird. Währen
 
 Ein `service-account-remove`-Skript besteht aus zwei Schritten:
 
-1. Identifier von dem Konsumenten identifizieren 
+1. Den Konsumenten identifizieren 
 2. Löschen der Daten und des Service Accounts des Konsumenten
 
 Ein Beispiel für das `service-account-remove`-Skript könnte folgendermaßen aussehen:
@@ -894,7 +894,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-#1) Identifier von dem Konsumenten identifizieren
+#1) den Konsumenten identifizieren
 SERVICE="${1}"
 if [ X"${SERVICE}" = X"" ]; then
   echo "usage remove-sa.sh servicename"
@@ -905,13 +905,13 @@ fi
 # ... Implementiere die Dogu-spezifische Logik hier
 ```
 
-In Schritt 1 wird der Name des Konsumenten-Dogus ausgelesen (z. B. "redmine"), i. d. R. um den Service Account des Dogus zu identifizieren.
+In Schritt 1 wird der Name des Konsumenten-Dogus ausgelesen (z. B. "redmine"), um den Service Account des Dogus zu identifizieren.
 
 In Schritt 2 wird der Account aus der Datenbasis des Produzenten inkl. Zugangsdaten gelöscht.
 
 ### Service Accounts konsumieren
 
-Es ist sehr einfach, bei einem Produzenten-Dogu einen Service Account anzufragen, da die Hauptarbeit beim Client und beim Produzenten liegt. Ein Konsumenten-Dogu muss lediglich in seiner `dogu.json` das gewünschte Produzenten-Dogu als [ServiceAccount]() nennen:
+Es ist sehr einfach, bei einem Produzenten-Dogu einen Service Account anzufragen, da die Hauptarbeit beim Client und beim Produzenten liegt. Ein Konsumenten-Dogu muss lediglich in seiner `dogu.json` das gewünschte Produzenten-Dogu als  [Service-Account](../core/compendium_de.md#serviceaccounts) nennen:
 
 ```json
 {
@@ -926,7 +926,7 @@ Es ist sehr einfach, bei einem Produzenten-Dogu einen Service Account anzufragen
 }
 ```
 
-Bei einem Service Account handelt es sich um eine besondere Form der Abhängigkeit. Trotzdem ist es sinnvoll, das Produzenten-Dogu in seiner [Dependency-Liste]() zu führen. So wird in den unterschiedlichen Phasen einer Dogu-Installation sichergestellt, dass das Produzenten-Dogu wirklich zur Benutzung bereitsteht:
+Bei einem Service Account handelt es sich um eine besondere Form der Abhängigkeit. Daher ist es sinnvoll, das Produzenten-Dogu in seiner [Dependency-Liste](../core/compendium_de.md#dependencies) zu führen. So wird in den unterschiedlichen Phasen einer Dogu-Installation sichergestellt, dass das Produzenten-Dogu wirklich zur Benutzung bereitsteht:
 
 
 ```json
