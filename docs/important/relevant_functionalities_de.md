@@ -1226,7 +1226,7 @@ Zum Einstellen des Log-Levels wird je Dogu ein optionaler Key `/config/${dogu}/l
 - `INFO`
 - `DEBUG`
 
-Wenn kein Key `/config/${dogu}/logging/root` existiert, dann wird automatisch `WARN` verwendet.
+Wenn kein Key `/config/${dogu}/logging/root` existiert, dann verwendet `doguctl` automatisch den Wert `WARN`, wenn dieser ordnungsgemäß [als Default-Wert](#validierung-und-default-werte) konfiguriert wurde.
 
 
 #### Validierung und Default-Werte
