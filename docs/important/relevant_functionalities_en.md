@@ -52,7 +52,6 @@ In order for a Dogu to use the CAS's OAuth endpoints, it must log in to the CAS 
 
 ```json
 {
-  ...,
   "ServiceAccounts": [
     {
       "Type": "cas",
@@ -60,8 +59,7 @@ In order for a Dogu to use the CAS's OAuth endpoints, it must log in to the CAS 
         "oauth"
       ]
     }
-  ],
-  ...
+  ]
 }
 ```
 
@@ -258,7 +256,6 @@ In order for a dogu to use the CAS's OIDC endpoints, it must log in to the CAS a
 **entry for an OIDC client:**
 ```json
 {
-  ...,
   "ServiceAccounts": [
     {
       "Type": "cas",
@@ -266,8 +263,7 @@ In order for a dogu to use the CAS's OIDC endpoints, it must log in to the CAS a
         "oidc"
       ]
     }
-  ],
-  ...
+  ]
 }
 ```
 
@@ -819,7 +815,6 @@ In order for a dogu to act as a service-account producer, it must provide two ex
 
 ```json
 {
-  ...,
   "ExposedCommands": [
     {
       "Name": "service-account-create",
@@ -831,8 +826,7 @@ In order for a dogu to act as a service-account producer, it must provide two ex
       "Description": "Removes a service account",
       "Command": "/remove-sa.sh"
     }
-  ],
-  ...
+  ]
 }
 ```
 
@@ -930,14 +924,12 @@ It is very easy to request a service account from a producer-dogu, since the mai
 
 ```json
 {
-  ...,
   "ServiceAccounts": [
     {
       "Type": "producerdogu",
       "Kind": "dogu"
     }
-  ],
-  ...
+  ]
 }
 ```
 
@@ -945,7 +937,6 @@ A service account is a special form of dependency. Therefore, it makes sense to 
 
 ```json
 {
-  ...,
   "Dependencies": [
     {
       "Name": "producerdogu",
@@ -957,8 +948,7 @@ A service account is a special form of dependency. Therefore, it makes sense to 
       "Type": "producerdogu",
       "Kind": "dogu"
     }
-  ],
-  ...,
+  ]
 }
 ```
 
@@ -999,15 +989,13 @@ The pre-upgrade script can be defined as [Exposed Command](../core/compendium_en
 
 ```json
 {
-   ...,
-  "ExposedCommands": [
+   "ExposedCommands": [
     {
       "Name": "pre-upgrade",
       "Command": "/pre-upgrade.sh"
     }
-  ],
-  ...
-  }
+  ]
+}
 ```
 
 This script is executed before the actual upgrade of the Dogus in the old Dogu container.
@@ -1018,14 +1006,12 @@ The post-upgrade script can be defined as [Exposed Command](../core/compendium_e
 
 ```json
 {
-  ...,
   "ExposedCommands": [
     {
       "Name": "post-upgrade",
       "Command": "/post-upgrade.sh"
     }
-  ],
-  ...
+  ]
 }
 ```
 
@@ -1037,14 +1023,12 @@ The upgrade-notification script can be defined as [Exposed Command](../core/comp
 
 ```json
 {
-  ...,
   "ExposedCommands": [
     {
       "Name": "upgrade-notification",
       "Command": "/upgrade-notification.sh"
     }
   ]
-  ...
 }
 ```
 
@@ -1066,7 +1050,6 @@ To be able to limit, the `dogu.json` of the Dogus must contain the following ent
 
 ```json
 {
-  ...,
   "Configuration": [
     {
       "Name": "container_config/memory_limit",
@@ -1085,7 +1068,6 @@ To be able to limit, the `dogu.json` of the Dogus must contain the following ent
       }
     }
   ]
-  ...,
 }
 ```
 
@@ -1104,7 +1086,6 @@ A special case is the limiting of a Java process. If a dogu contains a Java proc
 
 ```json
 {
-  ...,
   "Configuration": [
     {
       "Name": "container_config/java_max_ram_percentage",
@@ -1124,8 +1105,7 @@ A special case is the limiting of a Java process. If a dogu contains a Java proc
         "Type": "FLOAT_PERCENTAGE_HUNDRED"
       }
     }
-  ],
-  ...,
+  ]
 }
 ```
 

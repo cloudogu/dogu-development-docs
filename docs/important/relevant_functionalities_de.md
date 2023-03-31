@@ -47,14 +47,16 @@ Dafür kann die Anforderung eines OAuth-spezifischen CAS-Service Accounts in der
 
 **Eintrag für einen OAuth Client:**
 ```json
-"ServiceAccounts": [
+{
+  "ServiceAccounts": [
     {
-        "Type": "cas",
-        "Params": [
-            "oauth"
-        ]
+      "Type": "cas",
+      "Params": [
+        "oauth"
+      ]
     }
-]
+  ]
+}
 ```
 
 Die Credentials des Service Accounts werden zufällig generiert (siehe [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) und verschlüsselt in der Registry unter dem Pfad `/config/<dogu>/sa-cas/oauth` und `/config/<dogu>/sa-cas/oauth_client_secret` hinterlegt.
@@ -251,7 +253,6 @@ Dafür kann die Anforderung eines OIDC-spezifischen CAS-Service Accounts in der 
 **Eintrag für einen OIDC Client:**
 ```json
 {
-  ...,
   "ServiceAccounts": [
     {
       "Type": "cas",
@@ -259,8 +260,7 @@ Dafür kann die Anforderung eines OIDC-spezifischen CAS-Service Accounts in der 
         "oidc"
       ]
     }
-  ],
-  ...,
+  ]
 }
 ```
 
@@ -803,7 +803,6 @@ Damit ein Dogu als Service-Account-Produzent auftreten kann, muss es in seiner `
 
 ```json
 {
-  ...,
   "ExposedCommands": [
     {
       "Name": "service-account-create",
@@ -815,8 +814,7 @@ Damit ein Dogu als Service-Account-Produzent auftreten kann, muss es in seiner `
       "Description": "Removes a service account",
       "Command": "/remove-sa.sh"
     }
-  ],
-  ...,
+  ]
 }
 ```
 
@@ -915,14 +913,12 @@ Es ist sehr einfach, bei einem Produzenten-Dogu einen Service Account anzufragen
 
 ```json
 {
-  ...,
   "ServiceAccounts": [
     {
       "Type": "produzentendogu",
       "Kind": "dogu"
     }
-  ],
-  ...
+  ]
 }
 ```
 
@@ -930,7 +926,6 @@ Bei einem Service Account handelt es sich um eine besondere Form der Abhängigke
 
 ```json
 {
-  ...,
   "Dependencies": [
     {
       "Name": "produzentendogu",
@@ -942,8 +937,7 @@ Bei einem Service Account handelt es sich um eine besondere Form der Abhängigke
       "Type": "produzentendogu",
       "Kind": "dogu"
     }
-  ],
-  ...,
+  ]
 }
 ```
 
@@ -986,15 +980,13 @@ Das Pre-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#expos
 
 ```json
 {
-   ...,
   "ExposedCommands": [
     {
       "Name": "pre-upgrade",
       "Command": "/pre-upgrade.sh"
     }
-  ],
-  ...
-  }
+  ]
+}
 ```
 
 Dieses Skript wird vor dem eigentlichen Upgrade des Dogus im alten Dogu-Container ausgeführt.
@@ -1005,14 +997,12 @@ Das Post-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#expo
 
 ```json
 {
-  ...,
   "ExposedCommands": [
     {
       "Name": "post-upgrade",
       "Command": "/post-upgrade.sh"
     }
-  ],
-  ...,
+  ]
 }
 ```
 
@@ -1024,14 +1014,12 @@ Das Upgrade-Notification-Skript kann als [Exposed Command](../core/compendium_de
 
 ```json
 {
-  ...,
   "ExposedCommands": [
     {
       "Name": "upgrade-notification",
       "Command": "/upgrade-notification.sh"
     }
   ]
-  ...,
 }
 ```
 
@@ -1056,7 +1044,6 @@ Um eine Limitierung vornehmen zu können, muss die `dogu.json` des Dogus folgend
 
 ```json
 {
-  ...,
   "Configuration": [
     {
       "Name": "container_config/memory_limit",
@@ -1075,7 +1062,6 @@ Um eine Limitierung vornehmen zu können, muss die `dogu.json` des Dogus folgend
       }
     }
   ]
-  ...,
 }
 ```
 
@@ -1096,7 +1082,6 @@ Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dog
 
 ```json
 {
-  ...,
   "Configuration": [
     {
       "Name": "container_config/java_max_ram_percentage",
@@ -1116,8 +1101,7 @@ Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dog
         "Type": "FLOAT_PERCENTAGE_HUNDRED"
       }
     }
-  ],
-  ...,
+  ]
 }
 ```
 
