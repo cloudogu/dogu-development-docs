@@ -8,10 +8,7 @@ EcoSystem landscape.
 
 ## Authentication
 
-Provided Dogus provide this, user:ins can enjoy the benefits of enterprise-level single sign-on (SSO) and single
-logout (SLO). Authentication is enabled by the Central Authentication Service (CAS). Dogu developers have several
-authentication options at their disposal. The following three sections deal with methods that have already been
-successfully used, namely:
+Provided Dogus provide this, user:ins can enjoy the benefits of enterprise-level single sign-on (SSO) and single logout (SLO). Authentication is enabled by the Central Authentication Service (CAS). Dogu developers have several authentication options at their disposal. The following three sections deal with methods that have already been successfully used, namely:
 
 - Authentication using CAS protocol
 - Authentication using OAuth
@@ -22,14 +19,9 @@ the [LDAP](https://github.com/cloudogu/ldap) dogu or an external LDAP-compatible
 
 ### CAS protocol
 
-Authentication within the Cloudogu EcoSystem is done using
-the [CAS protocol](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html), which enables single sign-on and
-single log-out. Different CAS protocol versions are supported (2.0 and 3.0). When implementing using CAS protocol, it is
-recommended to use version 3.0 because (compared to version 2.0) it can return important user attributes after a
-successful authentication.
+Authentication within the Cloudogu EcoSystem is done using the [CAS protocol](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html), which enables single sign-on and single log-out. Different CAS protocol versions are supported (2.0 and 3.0). When implementing using CAS protocol, it is recommended to use version 3.0 because (compared to version 2.0) it can return important user attributes after a successful authentication.
 
-The following diagram shows the parties involved in the authentication configuration. Before a dogu (here using Redmine
-as an example) can participate in this process, the dogu must internally configure a set of CAS URLs:
+The following diagram shows the parties involved in the authentication configuration. Before a dogu (here using Redmine as an example) can participate in this process, the dogu must internally configure a set of CAS URLs:
 
 - CAS log-in URL (for redirecting users to the web form).
 - CAS validation URL (for validating service tickets)
@@ -39,8 +31,7 @@ as an example) can participate in this process, the dogu must internally configu
 
 ![Participants in the authentication configuration](../images/important/chapter3_auth_cas_config.png)
 
-The actual authentication happens via a sequence of HTTP redirects and the exchange of session cookies in the
-background, of which users are unaware. The display of the CAS login form as an active login step stands out strongly.
+The actual authentication happens via a sequence of HTTP redirects and the exchange of session cookies in the background, of which users are unaware. The display of the CAS login form as an active login step stands out strongly.
 
 The following figure provides a rough overview of the login process with the parties involved.
 
@@ -53,14 +44,11 @@ the [CAS documentation](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol
 
 ### OAuth protocol
 
-CAS offers OAuth/OIDC as a protocol for authentication including SSO/SLO. The following describes the specification of
-OAuth 2.0 protocol in CAS.
+CAS offers OAuth/OIDC as a protocol for authentication including SSO/SLO. The following describes the specification of OAuth 2.0 protocol in CAS.
 
 #### Creating an OAuth Service Account for a dogu
 
-In order for a Dogu to use the CAS's OAuth endpoints, it must log in to the CAS as a client.
-To do this, the request for an OAuth-specific CAS service account can be stored in the `dogu.json` of the dogu in
-question.
+In order for a Dogu to use the CAS's OAuth endpoints, it must log in to the CAS as a client. To do this, the request for an OAuth-specific CAS service account can be stored in the `dogu.json` of the dogu in question.
 
 **entry for an OAuth client:**
 
@@ -79,12 +67,9 @@ question.
 }
 ```
 
-The service account credentials are randomly generated (
-see [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) and stored encrypted in the
-registry under the path `/config/<dogu>/sa-cas/oauth` and `/config/<dogu>/sa-cas/oauth_client_secret`.
+The service account credentials are randomly generated (see [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) and stored encrypted in the registry under the path `/config/<dogu>/sa-cas/oauth` and `/config/<dogu>/sa-cas/oauth_client_secret`.
 
-The credentials are composed of the `CLIENT_ID` and the `CLIENT_SECRET`. For the CAS, the `CLIENT_SECRET` is stored as a
-hash in the Cloudogu EcoSystem Registry under the path `/config/cas/service_accounts/oauth/<CLIENT_ID>`.
+The credentials are composed of the `CLIENT_ID` and the `CLIENT_SECRET`. For the CAS, the `CLIENT_SECRET` is stored as a hash in the Cloudogu EcoSystem Registry under the path `/config/cas/service_accounts/oauth/<CLIENT_ID>`.
 
 #### OAuth endpoints and authentication flow
 
@@ -270,8 +255,7 @@ CAS provides OAuth/OpenID Connect (OIDC) as a protocol for authentication includ
 
 #### Creating an OIDC Service Account for a dogu
 
-In order for a dogu to use the CAS's OIDC endpoints, it must log in to the CAS as a client.
-To do this, the request for an OIDC-specific CAS service account can be stored in the `dogu.json` of the dogu in question.
+In order for a dogu to use the CAS's OIDC endpoints, it must log in to the CAS as a client. To do this, the request for an OIDC-specific CAS service account can be stored in the `dogu.json` of the dogu in question.
 
 **entry for an OIDC client:**
 ```json
@@ -289,12 +273,9 @@ To do this, the request for an OIDC-specific CAS service account can be stored i
 }
 ```
 
-The service account credentials are randomly generated (
-see [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) and stored encrypted in the
-registry under the path `/config/<dogu>/sa-cas/oidc` and `/config/<dogu>/sa-cas/oidc_client_secret`.
+The service account credentials are randomly generated (see [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) and stored encrypted in the registry under the path `/config/<dogu>/sa-cas/oidc` and `/config/<dogu>/sa-cas/oidc_client_secret`.
 
-The credentials are composed of the `CLIENT_ID` and the `CLIENT_SECRET`. For the CAS, the `CLIENT_SECRET` is stored as a
-hash in the Cloudogu EcoSystem Registry under the path `/config/cas/service_accounts/oidc/<CLIENT_ID>`.
+The credentials are composed of the `CLIENT_ID` and the `CLIENT_SECRET`. For the CAS, the `CLIENT_SECRET` is stored as a hash in the Cloudogu EcoSystem Registry under the path `/config/cas/service_accounts/oidc/<CLIENT_ID>`.
 
 #### OIDC-Authorize-Endpoint
 
@@ -440,33 +421,26 @@ Example for `code`: `ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local`
 
 ## Accessing the Registry
 
-The Cloudogu EcoSystem Registry is a key-value database that is also a core element for Dogus. The configuration of a
-Dogus is performed via the Registry. In addition, values that are also of a global nature are stored in the registry.
+The Cloudogu EcoSystem Registry is a key-value database that is also a core element for Dogus. The configuration of a Dogu is performed via the Registry. In addition, values that are also of a global nature are stored in the registry.
 
 ### Registry access from the dogu
 
-The following image focuses on parts that play a role in the communication between Dogu (exemplary here: Redmine) and
-the Registry:
+The following image focuses on parts that play a role in the communication between Dogu (that is: Redmine) and the Registry:
 
 ![Involved components that play a role in the interaction between Dogu and Registry](../images/important/chapter3_ces_registry_components.png)
 
 - Registry: It runs beyond the Dogu container and can be reached via an IP address from the container network.
    - After installation, the registry contains the public key of each dogu among other keys.
 - File `/etc/ces/node_master`.
-   - This is automatically mounted in the dogu during the dogu installation. It contains the IP address of the registry
-     so that the dogu can access the registry.
+   - This is automatically mounted in the dogu during the dogu installation. It contains the IP address of the registry so that the dogu can access the registry.
 - File `/private/private.pem`
    - This file contains the private key of the dogu. This is used, among other things, to decrypt encrypted registry
      values.
    - Often these are [service accounts](../core/compendium_en.md#serviceaccounts) to other Dogus.
 
-The Dogu specific configuration is located in the registry
-path `/config/<dogu>/`. [Registry keys](../core/compendium_en.md#configuration) should be written in `snake_case`, i.e.
-lowercase with underscores.
+The Dogu specific configuration is located in the registry path `/config/<dogu>/`. [Registry keys](../core/compendium_en.md#configuration) should be written in `snake_case`, i.e. lowercase with underscores.
 
-A valuable help is the command line tool `doguctl` among other things also in the start phase of the Dogu container.
-This tool simplifies access to the registry, e.g. by automatically reading the `node_master` file or simply addressing
-Dogu's own registry keys. A list of the exact commands can be found under [The use of doguctl](#the-use-of-doguctl).
+A valuable help is the command line tool `doguctl` among other things also in the start phase of the Dogu container. This tool simplifies access to the registry, e.g. by automatically reading the `node_master` file or simply addressing Dogu's own registry keys. A list of the exact commands can be found under [The use of doguctl](#the-use-of-doguctl).
 
 The `dogu.json` allows you to define your own configuration values, which can also be validated automatically.
 
@@ -484,8 +458,7 @@ your-ecosystem.example.com
 
 There are other areas beyond the dogu-specific registry values that are of interest in the dogu startup phase.
 
-The global configuration is located in the registry path `/config/_global/` and can be managed
-with [doguctl](#the-use-of-doguctl).
+The global configuration is located in the registry path `/config/_global/` and can be managed with [doguctl](#the-use-of-doguctl).
 
 - Global values `/config/_global`
    - `/config/_global/fqdn`
@@ -500,27 +473,21 @@ with [doguctl](#the-use-of-doguctl).
       - e.g. petra.mustermann@example.com
    - `/config/_global/admin_group`
       - the current name of the LDAP group whose members administer the Cloudogu EcoSystem instance in the UI.
-      - This value may change during operation. See also the section
-        on [admin group changeability](#changeability-admin-group).
+      - This value may change during operation. See also the section on [admin group changeability](#changeability-admin-group).
 - Dogu states `/state/<dogu>`
    - if the dogu defines a [HealthCheck](../core/compendium_en.md#healthchecks) of type `state`, then it allows the
      administrator and other dogus to get health hints on the dogu
-   - In your own dogu e.g. set `doguctl state installing` when a longer installation routine is started. Just before the
-     main process is started then use `doguctl state ready` to indicate a proper operating state.
+   - In your own dogu e.g. set `doguctl state installing` when a longer installation routine is started. Just before the main process is started then use `doguctl state ready` to indicate a proper operating state.
    - In the EcoSystem host this can be checked with `cesapp healthy <dogu>`.
    - In other dogus this can be checked with `doguctl healthy <dogu>`.
       - With the `--timeout <seconds>` switch, you can thus wait for dogus on which your own dogu depends.
-      - A non-zero exit code (0) indicates that either the dogu did not finish its startup process in time or the
-        registry communication failed.
+      - A non-zero exit code (0) indicates that either the dogu did not finish its startup process in time or the registry communication failed.
 
 ## Structure and best practices of `startup.sh`.
 
-A simple Dogu actually only needs a `dogu.json` and a container image. But what happens when the reality of continuous
-operation differs from the assumptions made during Dogu development?
+A simple Dogu actually only needs a `dogu.json` and a container image. But what happens when the reality of continuous operation differs from the assumptions made during Dogu development?
 
-At Cloudogu, we quickly discovered that it is more clever to be able to deal with such changes during operation. The
-spectrum here is broad. It can be waiting times compared to other Dogus, or changing originally fixed identifiers to
-glitches in the container engine.
+At Cloudogu, we quickly discovered that it is more clever to be able to deal with such changes during operation. The spectrum here is broad. It can be waiting times compared to other Dogus, or changing originally fixed identifiers to glitches in the container engine.
 
 Recurring tasks at container startup can be found in the section "Typical Dogu Features" in the sections:
 
@@ -528,9 +495,7 @@ Recurring tasks at container startup can be found in the section "Typical Dogu F
 - [Changeability of FQDN](#changeability-of-fqdn)
 - [control-logging-behavior](#control-logging-behavior)
 
-In order to dynamically respond to these conditions, Cloudogu has adopted the practice of not starting the main process
-in the container directly. Instead, error cases are first checked in a startup script, new configuration values are set
-if necessary, and only then the main process is started, e.g. like this:
+In order to dynamically respond to these conditions, Cloudogu has adopted the practice of not starting the main process in the container directly. Instead, error cases are first checked in a startup script, new configuration values are set if necessary, and only then the main process is started, e.g. like this:
 
 1. container starts `startup.sh`.
 2. `startup.sh`
@@ -540,12 +505,11 @@ if necessary, and only then the main process is started, e.g. like this:
       - perform one-time installation processes
       - generate a temporary admin account
       - implement the current log level
-      - register the CES-TLS certificates in the software/target system
+      - register the CES TLS certificates in the software/target system
       - Prepare system changes to the registry with API accesses to prepare the software
          - Replication of LDAP groups/rights
       - Setting the software (log level, other configuration, e.g. by `doguctl template`)
-      - React on system changes of the registry: e.g. [admin-group](#changeability-of-admin-group) has changed, which
-        needs further action in the Dogu
+      - React on system changes of the registry: e.g. [admin-group](#changeability-of-admin-group) has changed, which needs further action in the Dogu
    3. set the Dogu state to `ready` (appropriate [HealthCheck](../core/compendium_en.md#healthchecks) provided)
    4. start the main process
 
@@ -556,15 +520,11 @@ scripts [e.g., in Redmine-Dogu](https://github.com/cloudogu/redmine/blob/develop
 
 ### Script interpreter
 
-In order to run a script in a dogu, a script interpreter must exist in the container image. This can be an official
-package (like `bash`), but there is nothing against using your own script interpreter. Since bash scripts are widely
-used, bash syntax is used here.
+In order to run a script in a dogu, a script interpreter must exist in the container image. This can be an official package (like `bash`), but there is nothing against using your own script interpreter. Since bash scripts are widely used, bash syntax is used here.
 
 ### Error handling
 
-Depending on the dogu, errors can occur in different places and (stupidly) be swallowed again. It is a good practice to
-abort the script with an appropriate exit code when errors occur, in order to identify the cause of the error more
-quickly.
+Depending on the dogu, errors can occur in different places and (stupidly) be swallowed again. It is a good practice to abort the script with an appropriate exit code when errors occur, in order to identify the cause of the error more quickly.
 
 The first thing to do is to set the following options
 
@@ -572,11 +532,10 @@ The first thing to do is to set the following options
 #!/bin/bash
 set -o errexit # terminate the whole script (and thus the container) on an uncaught error 
 set -o nounset # find uninitialized variables
-set -o pipefail # don't swallow errors on pipe usage
+set -o pipefail # don't ignore errors on pipe usage
 ```
 
-How an error is caught is an implementation detail. Sometimes it is convenient to test an error case and send a separate
-message, sometimes the error itself is sufficient.
+How an error is caught is an implementation detail. Sometimes it is convenient to test an error case and send a separate message, sometimes the error itself is sufficient.
 
 If you already expect errors, then this construct can be helpful:
 
@@ -591,18 +550,13 @@ if [[ ${yourCommandExitCode} -ne 0 ]]; then
 fi
 ```
 
-The error of the command `your-command` is caught. A separate error text is printed. The dogu-state is set to a
-non-`ready`-value, which could be useful for debugging. Finally, five minutes (= 300 seconds) are waited until `exit 1`
-restarts the dogu as faulty.
+The error of the command `your-command` is caught. A separate error text is printed. The dogu-state is set to a non-`ready`-value, which could be useful for debugging. Finally, five minutes (= 300 seconds) are waited until `exit 1` restarts the dogu as faulty.
 
 ### Divide and conquer with Bash
 
-The longer you develop an application, the more functionality you add to it. The same can happen with `startup.sh`.
-Apart from easier testability (e.g. with [BATS](https://github.com/bats-core/bats-core)), small execution parts are
-easier to understand.
+The longer you develop an application, the more functionality you add to it. The same can happen with `startup.sh`. Apart from easier testability (e.g. with [BATS](https://github.com/bats-core/bats-core)), small execution parts are easier to understand.
 
-It is therefore a good idea to design Dogu functions in `startup.sh` in the same way from the point of view of
-testability, readability or refactorability.
+It is therefore a good idea to design Dogu functions in `startup.sh` in the same way from the point of view of testability, readability or refactorability.
 
 #### Shell functions
 
@@ -633,19 +587,15 @@ function cleanUpSetup() {
 
 #### Traceability during the startup phase
 
-As complexity increases, it is worth an idea to add a `echo` to relevant steps to speed up a search for the error in log
-output in case of an error.
+As complexity increases, it is worth an idea to add a `echo` to relevant steps to speed up a search for the error in log output in case of an error.
 
-At the same time, the [Dogu-State-HealthCheck](../core/compendium_en.md#healthchecks) provides the possibility to mark
-custom execution phases during Dogu startup. For example `doguctl state 'aSpecialInstallPhase'` at the beginning
-or `doguctl state 'ready'` at the end of the script.
+At the same time, the [Dogu-State-HealthCheck](../core/compendium_en.md#healthchecks) provides the possibility to mark custom execution phases during Dogu startup. For example `doguctl state 'aSpecialInstallPhase'` at the beginning or `doguctl state 'ready'` at the end of the script.
 
 A HealthCheck of type `state` will only succeed if the state contains the string `ready`.
 
 #### Code swapping
 
-Another possibility is to outsource functions to other script files, which are then included in the actual start script
-using `source`. It should be noted, however, that even such a `source`n can fail and should be handled.
+Another possibility is to outsource functions to other script files, which are then included in the actual start script using `source`. It should be noted, however, that even such a `source`n can fail and should be handled.
 
 ```bash
 sourcingExitCode=0
@@ -660,17 +610,13 @@ fi
 
 ### Quality assurance of startup scripts
 
-For more complex tasks, a startup script such as `startup.sh` may gain complexity. Like any other program, it should be
-tested and analyzed for robustness. There are several ways to do this. [BATS](https://github.com/bats-core/bats-core)
-can assist in unit testing shell functions.
+For more complex tasks, a startup script such as `startup.sh` may gain complexity. Like any other program, it should be tested and analyzed for robustness. There are several ways to do this. [BATS](https://github.com/bats-core/bats-core) can assist in unit testing shell functions.
 
 Analysis tools such as [Shellcheck](https://www.shellcheck.net/) can detect errors in the use of shell calls.
 
 ### The use of `doguctl`
 
-The section [about registry access](#registry-access-from-dogu-here) has already touched on the subject
-of `doguctl`. `doguctl` is a command line tool that bundles and simplifies recurring interactions with the Cloudogu
-EcoSystem registry. This section describes possible calls.
+The section [about registry access](#registry-access-from-dogu-here) has already touched on the subject of `doguctl`. `doguctl` is a command line tool that bundles and simplifies recurring interactions with the Cloudogu EcoSystem registry. This section describes possible calls.
 
 With `--help`, each subcommand of `doguctl` prints a help page.
 
@@ -707,8 +653,7 @@ $ doguctl config --rm delete_me
 
 #### doguctl validate
 
-This call validates registry configuration values. The command `validate` returns an exit code == 0 if all HealthChecks
-of the dogus under consideration return a positive result. Otherwise it returns an exit code == 1.
+This call validates registry configuration values. The command `validate` returns an exit code == 0 if all HealthChecks of the dogus under consideration return a positive result. Otherwise it returns an exit code == 1.
 
 ```bash
 $ doguctl validate logging/root # validate single value, good case: value=WARN from ERROR,WARN,INFO,DEBUG
@@ -746,20 +691,18 @@ echo $?
 
 #### doguctl healthy
 
-This call checks whether a given dogu is healthy. The command `healthy` returns an exit code == 0 if the given dogu is
-healthy. Otherwise, it returns an exit code == 1.
+This call checks whether a given dogu is healthy. The command `healthy` returns an exit code == 0 if the given dogu is healthy. Otherwise, it returns an exit code == 1.
 
 ```bash
 if ! doguctl healthy --wait --timeout 120 postgresql; then
-   echo "timeout reached by waiting of ldap to get healthy".
+   echo "timeout reached by waiting of ldap to get healthy"
    exit 1
 fi
 ```
 
 #### doguctl state
 
-This call reads and writes dogu state values. It is used in combination with
-a [HealthCheck](../core/compendium_en.md#healthchecks).
+This call reads and writes dogu state values. It is used in combination with a [HealthCheck](../core/compendium_en.md#healthchecks).
 
 ```bash
 $ doguctl state "installing" # write the value to the state
@@ -785,8 +728,7 @@ W6Wmj
 
 #### doguctl template
 
-This call creates a file from a [golang template](https://pkg.go.dev/text/template). Different registry values and
-environment variables can be processed directly in this.
+This call creates a file from a [golang template](https://pkg.go.dev/text/template). Different registry values and environment variables can be processed directly in this.
 
 The call takes one or two parameters:
 
@@ -799,7 +741,7 @@ If the `template` command is used without an output file, then the rendered outp
 Supported template parameters:
 
 - Environment variables
-   - `.Env.Get <environment variable>` - uses previously exported environment variable "ADMIN_USERNAME".
+   - `.Env.Get <environment variable>` - uses previously exported environment variable "ADMIN_USERNAME"
 - Dogu configuration
    - `.Config.Get <Dogu configuration key>` - uses unencrypted Dogu configuration value under `/config/<dogu>/<key>`
    - `.Config.GetOrDefault <Dogu configuration key> <default value>` - uses unencrypted Dogu configuration value or
@@ -852,8 +794,7 @@ fi
 
 #### doguctl wait-for-http
 
-With this call `doguctl` waits until a given HTTP(s) URL is ready or a timeout (in seconds) occurs. An exit code != 0
-signals an error.
+With this call `doguctl` waits until a given HTTP(s) URL is ready or a timeout (in seconds) occurs. An exit code != 0 signals an error.
 
 ```bash
 if ! doguctl wait-for-tcp --host postgresql --timeout 120 5432; then
@@ -864,27 +805,17 @@ fi
 
 ## Service Accounts
 
-Service Accounts represent a mechanism for access accounts that Dogus need to secure or store their data, but do not
-want to provide this functionality themselves. Dogus can represent themselves as producers and/or consumers of Service
-Accounts. In each case, both are optional features of a Dogus.
+Service Accounts represent a mechanism for access accounts that Dogus need to secure or store their data, but do not want to provide this functionality themselves. Dogus can represent themselves as producers and/or consumers of Service Accounts. In each case, both are optional features of a Dogus.
 
-Generally, the nature of the application in the dogu itself dictates whether or which of the two makes the most sense.
-For example, a database management dogu such as PostgreSQL that does not offer other dogus access to its database would
-not be useful. On the other hand, it would be fatal for a dogu like Redmine not to have a dogu into which it can store
-its data via SQL.
+Generally, the nature of the application in the dogu itself dictates whether or which of the two makes the most sense. For example, a database management dogu such as PostgreSQL that does not offer other dogus access to its database would not be useful. On the other hand, it would be fatal for a dogu like Redmine not to have a dogu into which it can store its data via SQL.
 
-Dogus like PostgreSQL that can provide access accounts to other dogus are also called _service account producers_. Dogus
-like Redmine that require an access account to another dogu are called _service account consumers_.
+Dogus like PostgreSQL that can provide access accounts to other dogus are also called _service account producers_. Dogus like Redmine that require an access account to another dogu are called _service account consumers_.
 
 ### Producing service accounts
 
-Service accounts are not requested by a service account consumer itself, because a dogu should not care about this form
-of orchestration. This is instead the job of a client like `cesapp` or `k8s-dogu-operator` during the installation of
-the service account consumer. The `ExposedCommand` for this is `service-account-create`.
+Service accounts are not requested by a service account consumer itself, because a dogu should not care about this form of orchestration. This is instead the job of a client like `cesapp` or `k8s-dogu-operator` during the installation of the service account consumer. The `ExposedCommand` for this is `service-account-create`.
 
-Similarly, the deletion of service accounts is handled by a client like `cesapp` or `k8s-dogu-operator` during the
-uninstallation of a dogus to delete its requested service accounts. The `ExposedCommand` for this
-is `service-account-remove`.
+Similarly, the deletion of service accounts is handled by a client like `cesapp` or `k8s-dogu-operator` during the uninstallation of a dogus to delete its requested service accounts. The `ExposedCommand` for this is `service-account-remove`.
 
 In order for a dogu to act as a service-account producer, it must provide two executables in its `dogu.json`:
 
@@ -946,31 +877,24 @@ echo "username: ${USER}"
 echo "password: ${PASSWORD}"
 ```
 
-In step 1, credentials are randomly generated. The name of the consumer dogus can be included in the credentials, but
-this is not mandatory.
+In step 1, credentials are randomly generated. The name of the consumer dogus can be included in the credentials, but this is not mandatory.
 
 In step 2, an account must be created in the Dogu software with the generated information.
 
-In step 3, the credentials are output with the format `echo "<registrykey>: <registryvalue>"`. `registrykey`
-and `registryvalue` must be separated by a colon and a space. The whole line must be terminated by a newline.
+In step 3, the credentials are output with the format `echo "<registrykey>: <registryvalue>"`. `registrykey` and `registryvalue` must be separated by a colon and a space. The whole line must be terminated by a newline.
 
-These credentials are automatically read by the processing client and stored in the consumer's Dogu-specific
-configuration area in encrypted form.
-Following the example above, the consumer dogu would set up two registry entries containing the respective secret as a
-value:
+These credentials are automatically read by the processing client and stored in the consumer's Dogu-specific configuration area in encrypted form. Following the example above, the consumer dogu would set up two registry entries containing the respective secret as a value:
 
 - `/config/<consumer>/sa-<producer>/username`
 - `/config/<consumer>/sa-<producer>/password`
 
 The verbaucher-dogu can now read and decrypt these e.g. by `doguctl config -e sa-<produzentdogu>/username`.
 
-Delete #### service account
+#### Deleting a Service Account
 
 The `service-account-remove` script deletes an existing service account of a consumer dogu.
 
-It is executed whenever the consumer dogu is uninstalled. During the call, the `service-account-remove` script receives
-the name of the consumer dogu as its first argument. Since no output from the script is processed here, error messages
-can also be printed to `stdout`.
+It is executed whenever the consumer dogu is uninstalled. During the call, the `service-account-remove` script receives the name of the consumer dogu as its first argument. Since no output from the script is processed here, error messages can also be printed to `stdout`.
 
 A `service-account-remove` script consists of two steps:
 
@@ -1004,9 +928,7 @@ In step 2 the account is deleted from the producer's database including access d
 
 ### Consume service accounts
 
-It is very easy to request a service account from a producer-dogu, since the main work is done by the client and the
-producer. A consumer dogu just needs to name the desired producer dogu
-as [service account](../core/compendium_en.md#serviceaccounts) in its `dogu.json`:
+It is very easy to request a service account from a producer-dogu, since the main work is done by the client and the producer. A consumer dogu just needs to name the desired producer dogu as [service account](../core/compendium_en.md#serviceaccounts) in its `dogu.json`:
 
 ```json
 {
@@ -1021,9 +943,7 @@ as [service account](../core/compendium_en.md#serviceaccounts) in its `dogu.json
 }
 ```
 
-A service account is a special form of dependency. Therefore, it makes sense to keep the producer Dogu in
-its [dependency list](../core/compendium_en.md#dependencies). This ensures in the different phases of a Dogu
-installation that the producer Dogu is really available for use:
+A service account is a special form of dependency. Therefore, it makes sense to keep the producer Dogu in its [dependency list](../core/compendium_en.md#dependencies). This ensures in the different phases of a Dogu installation that the producer Dogu is really available for use:
 
 ```json
 {

@@ -576,7 +576,6 @@ function cleanUpSetup() {
 
 Mit steigender Komplexität ist es eine Idee wert, relevante Schritte mit einem `echo` zu versehen, um im Fehlerfall eine Suche nach dem Fehler in den Logausgaben zu beschleunigen.
 
-
 Zeitgleich gibt es mit dem [Dogu-State-HealthCheck](../core/compendium_de.md#healthchecks) die Möglichkeit, während des Dogu-Starts eigene Ausführungsphasen zu markieren. Zum Beispiel `doguctl state 'aSpecialInstallPhase'` am Anfang oder `doguctl state 'ready'` am Ende des Skripts.
 
 Ein HealthCheck vom Typ `state` wird ausschließlich dann erfolgreich sein, wenn der state den String `ready` enthält.
@@ -726,6 +725,7 @@ $ doguctl template <Template-Datei> [Ausgabedatei]
 Wird das Kommando `template` ohne Ausgabedatei verwendet, dann wird die gerenderte Ausgabe auf `stdout` ausgegeben.
 
 Unterstützte Template-Parameter:
+
 - Umgebungsvariablen
   - `.Env.Get <Umgebungsvariable>` - verwendet vorher exportierte Umgebungsvariable "ADMIN_USERNAME"
 - Dogu-Konfiguration
@@ -927,7 +927,6 @@ Es ist sehr einfach, bei einem Produzenten-Dogu einen Service Account anzufragen
 ```
 
 Bei einem Service Account handelt es sich um eine besondere Form der Abhängigkeit. Daher ist es sinnvoll, das Produzenten-Dogu in seiner [Dependency-Liste](../core/compendium_de.md#dependencies) zu führen. So wird in den unterschiedlichen Phasen einer Dogu-Installation sichergestellt, dass das Produzenten-Dogu wirklich zur Benutzung bereitsteht:
-
 
 ```json
 {
