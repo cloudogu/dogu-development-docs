@@ -952,7 +952,7 @@ Bei einem Service Account handelt es sich um eine besondere Form der Abhängigke
 
 Das Upgrade eines Dogus kann mit `cesapp upgrade dogu <doguname>` durchgeführt werden. Dabei verwaltet die cesapp alle wichtigen Schritte, um das Dogu erfolgreich zu upgraden.
 
-Der Upgrade-Prozess enthält u.A. folgende Schritte:
+Der Upgrade-Prozess enthält u. A. folgende Schritte:
 - Anzeigen von Upgrade Notifications, falls vorhanden
 - Download des neuen Dogu-Images
 - Sicherstellen, dass das Dogu healthy ist
