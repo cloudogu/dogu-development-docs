@@ -498,7 +498,7 @@ In order to dynamically respond to these conditions, Cloudogu has adopted the pr
       - perform one-time installation processes
       - generate a temporary admin account
       - implement the current log level
-      - register the CES TLS certificates in the software/target system
+      - register the Cloudogu EcoSystem's TLS certificates in the software/target system
       - Prepare system changes to the registry with API accesses to prepare the software
          - Replication of LDAP groups/rights
       - Setting the software (log level, other configuration, e.g. by `doguctl template`)
@@ -509,7 +509,7 @@ In order to dynamically respond to these conditions, Cloudogu has adopted the pr
 This section therefore addresses findings and _best practices_ related to such startup scripts: The `startup.sh`.
 
 By the way, diligent developer:s can gather inspiration in Cloudogu`s own startup
-scripts [e.g., in Redmine-Dogu](https://github.com/cloudogu/redmine/blob/develop/resources/startup.sh).
+scripts [e.g. in the Redmine dogu](https://github.com/cloudogu/redmine/blob/develop/resources/startup.sh).
 
 ### Script interpreter
 
@@ -842,7 +842,7 @@ A `service-account-create` script consists of three steps:
 1. create the access data
 2. creating an account for our software with the information
 3. returning the access data
-   - This results in them being automatically written in encrypted form to the consumer's Dogu-specific configuration area.
+   - This results in them being automatically written in encrypted form to the consumer's dogu-specific configuration area.
 
 An example of the `service-account-create` script could look like this:
 
@@ -874,12 +874,12 @@ In step 2, an account must be created in the Dogu software with the generated in
 
 In step 3, the credentials are output with the format `echo "<registrykey>: <registryvalue>"`. `registrykey` and `registryvalue` must be separated by a colon and a space. The whole line must be terminated by a newline.
 
-These credentials are automatically read by the processing client and stored in the consumer's Dogu-specific configuration area in encrypted form. Following the example above, the consumer dogu would set up two registry entries containing the respective secret as a value:
+These credentials are automatically read by the processing client and stored in the consumer's dogu-specific configuration area in encrypted form. Following the example above, the consumer dogu would set up two registry entries containing the respective secret as a value:
 
 - `/config/<consumer>/sa-<producer>/username`
 - `/config/<consumer>/sa-<producer>/password`
 
-The verbaucher-dogu can now read and decrypt these e.g. by `doguctl config -e sa-<produzentdogu>/username`.
+The consumer dogu can now read and decrypt these e.g. by `doguctl config -e sa-<producer>/username`.
 
 #### Deleting a Service Account
 
@@ -903,9 +903,9 @@ set -o nounset
 set -o pipefail
 
 #1) identify the consumer
-SERVICE="${1}"
-if [ X"${SERVICE}" = X"" ]; then
-  echo "usage remove-sa.sh servicename"
+doguName="${1}"
+if [ X"${doguName}" = X"" ]; then
+  echo "usage remove-sa.sh dogu-name"
   exit 1
 fi
 
@@ -919,32 +919,32 @@ In step 2 the account is deleted from the producer's database including access d
 
 ### Consume service accounts
 
-It is very easy to request a service account from a producer-dogu, since the main work is done by the client and the producer. A consumer dogu just needs to name the desired producer dogu as [service account](../core/compendium_en.md#serviceaccounts) in its `dogu.json`:
+It is very easy to request a service account from a producer dogu, since the main work is done by the client and the producer. A consumer dogu just needs to name the desired producer dogu as [service account](../core/compendium_en.md#serviceaccounts) in its `dogu.json`:
 
 ```json
 {
   "ServiceAccounts": [
     {
-      "Type": "producerdogu",
+      "Type": "your-producer-dogu",
       "Kind": "dogu"
     }
   ]
 }
 ```
 
-A service account is a special form of dependency. Therefore, it makes sense to keep the producer Dogu in its [dependency list](../core/compendium_en.md#dependencies). This ensures in the different phases of a Dogu installation that the producer Dogu is really available for use:
+A service account is a special form of dependency. Therefore, it makes sense to keep the producer dogu in its [dependency list](../core/compendium_en.md#dependencies). This ensures in the different phases of a Dogu installation that the producer dogu is really available for use:
 
 ```json
 {
   "Dependencies": [
     {
-      "Name": "producerdogu",
+      "Name": "your-producer-dogu",
       "Type": "dogu"
     }
   ],
   "ServiceAccounts": [
     {
-      "Type": "producerdogu",
+      "Type": "your-producer-dogu",
       "Kind": "dogu"
     }
   ]
@@ -953,7 +953,7 @@ A service account is a special form of dependency. Therefore, it makes sense to 
 
 ## Dogu upgrades
 
-Dogus can be upgraded in the Cloudogu EcoSystem using simple means (e.g. `cesapp upgrade dogu <doguname>`). The entire upgrade process must be automated beforehand during dogu development and can then be run through by the CES tools (here: `cesapp`) without much assistance from the admins.
+Dogus can be upgraded in the Cloudogu EcoSystem using simple means (e.g. `cesapp upgrade dogu <dogu name>`). The entire upgrade process must be automated beforehand during dogu development and can then be run through by the CES tools (here: `cesapp`) without much assistance from the admins.
 
 The upgrade process includes the following steps:
 - Displaying upgrade notifications, if any
@@ -1076,10 +1076,10 @@ The configurable values for the keys are each a string of the form `<number valu
 
 Setting the values can be done in the following ways:
 - `doguctl config container_config/memory_limit 1g`.
-- `cesapp edit-config <doguname>` (only from the host)
-- `etcdctl set /config/<doguname>/container_config/memory_limit "1g"` (only from the host)
+- `cesapp edit-config <dogu name>` (only from the host)
+- `etcdctl set /config/<dogu name>/container_config/memory_limit "1g"` (only from the host)
 
-To apply the limits, the dogu must be recreated (`cesapp recreate <doguname>`) and then restarted (`cesapp start <doguname>`).
+To apply the limits, the dogu must be recreated (`cesapp recreate <dogu name>`) and then restarted (`cesapp start <dogu name>`).
 
 A special case is the limiting of a Java process. If a dogu contains a Java process, the following additional entries can be added to `dogu.json`:
 
@@ -1108,7 +1108,7 @@ A special case is the limiting of a Java process. If a dogu contains a Java proc
 }
 ```
 
-The values configurable with it must be given in the start scripts of the Dogus to the appropriate Java process as parameters. A reference implementation can be found in [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
+The values configurable with it must be given in the start scripts of the Dogus to the appropriate Java process as parameters. A reference implementation can be found in the [Nexus Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
 
 ### Backup & restore capability
 
@@ -1128,13 +1128,13 @@ Additionally, the admin group can be changed afterwards. The Dogu must then reac
 
 ### Changeability of the FQDN
 
-The FQDN of the Cloudogu EcoSystem is stored globally in the registry and can be read by the Dogus using [`doguctl`](#usage-of-doguctl). If necessary, it can be integrated into the Dogu configuration (see also [Creating an exemplary application](../core/basics_en.md#5-creating-an-exemplary-application). In addition, care must be taken during Dogu development to ensure that the FQDN is changeable. So the Dogu should be able (after a restart if necessary) to read a new FQDN and adapt its configuration to this new FQDN.
+The Fully Qualified Domain Name (FQDN) of the Cloudogu EcoSystem is stored globally in the registry and can be read by the Dogus using [`doguctl`](#usage-of-doguctl). If necessary, it can be integrated into the Dogu configuration (see also [Creating an exemplary application](../core/basics_en.md#5-creating-an-exemplary-application). In addition, care must be taken during Dogu development to ensure that the FQDN is changeable. So the Dogu should be able (after a restart if necessary) to read a new FQDN and adapt its configuration to this new FQDN.
 
 ### Controlling the logging behavior
 
 This section shows how to create a uniform, abstracted setting option that can be used to set the log behavior in all Dogus in the same way. Four different log levels that can be set via the registry are used for this purpose: `ERROR`, `WARN`, `INFO` and `DEBUG`.
 
-With these abstract log levels the administrator should be supported. He does not need to know what a Dogu-specific log level is called, but can instead fall back on four basic values and reuse them safely in all Dogus.
+With these abstract log levels the administrator should be supported. He does not need to know what a dogu-specific log level is called, but can instead fall back on four basic values and reuse them safely in all Dogus.
 
 Dogu developers must take care that these four log levels are mapped meaningfully to the log levels of the software in the Dogu, which may have different names (e.g. `TRACE` or `FATAL`).
 
@@ -1155,7 +1155,7 @@ Examples:
 - application error
 - unplanned stop or restart of services or applications
 - acute connectivity errors
-   - e.g. Postgresql-Dogu is not reachable even after several minutes
+   - e.g. Postgresql dogu is not reachable even after several minutes
 - _repeated_, failed login attempts
 - acutely threatening or acutely existing lack of resources
 - messages with `FATAL` or `SEVERE` log level
@@ -1171,7 +1171,7 @@ Examples:
 - update of application or libraries is suggested
 - imminent lack of resources in the medium term
 - singular connectivity errors, which are limited in time
-   - e.g. Postgresql-Dogu is not reachable at the first attempt, but after a few minutes it is reachable again
+   - e.g. Postgresql dogu is not reachable at the first attempt, but after a few minutes it is reachable again
 - _single_ failed login attempts
 - scheduled start and stop of services or applications
 
@@ -1215,7 +1215,7 @@ If no `/config/${dogu}/logging/root` key exists, then `doguctl` will automatical
 
 `doguctl` supports dogu developers in robustly defining a log level for a dogu. This leaves only the mapping of a found log level to the respective logging framework in the dogu.
 
-In the `dogu.json` a validatable log level can be set, which already brings a default value on the Dogu side.
+In the `dogu.json` a log level configuration value can be set, which both can be validated and also provides a default value on the dogu.
 
 ```json
 {

@@ -493,8 +493,8 @@ Um dynamisch auf diese Gegebenheiten zu reagieren, hat es sich bei Cloudogu eing
       - einmalige Installationsprozesse durchzuführen 
       - ein temporäres Admin-Konto zu generieren
       - das aktuelle Log-Level umzusetzen
-      - Registrieren der CES-TLS-Zertifikate in der Software/Zielsystem
-      - VorarbeiSystemänderungen der Registryten mit API-Zugriffen, um die Software vorzubereiten
+      - Registrieren der Cloudogu EcoSystem-TLS-Zertifikate in der Software/Zielsystem
+      - Systemänderungen der Registry mit API-Zugriffen verarbeiten, um die Software vorzubereiten
         - Replikation von LDAP-Gruppen / Rechten
       - Einstellen der Software (Log-Level, sonstige Konfiguration, z. B. durch `doguctl template`)
       - Auf Systemänderungen der Registry reagieren: z. B. [Admin-Gruppe](#änderbarkeit-der-admin-gruppe) hat sich geändert, was im Dogu weitere Maßnahmen benötigt
@@ -893,9 +893,9 @@ set -o nounset
 set -o pipefail
 
 #1) den Konsumenten identifizieren
-SERVICE="${1}"
-if [ X"${SERVICE}" = X"" ]; then
-  echo "usage remove-sa.sh servicename"
+doguName="${1}"
+if [ X"${doguName}" = X"" ]; then
+  echo "usage remove-sa.sh dogu-name"
   exit 1
 fi
 
