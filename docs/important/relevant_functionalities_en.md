@@ -6,7 +6,7 @@ Therefore, the following sections deal with recurring functionalities on how a D
 
 ## Authentication
 
-Given a Dogu provides this, users can enjoy the benefits of enterprise-level single sign-on (SSO) and single logout (SLO). Authentication is enabled by the Central Authentication Service (CAS). Dogu developers have several authentication options at their disposal. The following three sections deal with methods that have already been successfully used, namely:
+Given a Dogu provides this, users can enjoy the benefits of enterprise-level single sign-on (SSO) and single log-out (SLO). Authentication is enabled by the Central Authentication Service (CAS). Dogu developers have several authentication options at their disposal. The following three sections deal with methods that have already been successfully used, namely:
 
 - Authentication using CAS protocol
 - Authentication using OAuth 2.0 protocol
@@ -145,7 +145,7 @@ This endpoint is used to exchange a short term token (`code`) for a long term to
 ?redirect_url = https://local.cloudogu.com/portainer/
 ```
 
-**Call example**
+**Request example**
 
 ```
 https://local.cloudogu.com/cas/oauth2.0/accessToken?grant_type=authorization_code&code=ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local&client_id=portainer&client_secret=sPJtcNrmROZ3sZu3&redirect_uri=https%3A%2F%2Flocal.cloudogu.com%2Fportainer%2F
@@ -297,7 +297,7 @@ The `authorize` endpoint is used to request a short-lived token from the CAS.
 ?redirect_url = http://local.cloudogu.com/teamscale/
 ```
 
-**call example**
+**Request example**
 
 ```
 https://local.cloudogu.com/cas/oidc/authorize?client_id=portainer&redirect_uri=http%3A%2F%2Flocal.cloudogu.com%2Fteamscale%2F&response_type=code&state=b8c57125-9281-4b67-b857-1559cdfcdf31
@@ -338,7 +338,7 @@ This endpoint is used to exchange a short term token (`code`) for a long term to
 ?redirect_url = https://local.cloudogu.com/teamscale/
 ```
 
-**Call example**
+**Request example**
 
 ```
 https://local.cloudogu.com/cas/oidc/accessToken?grant_type=authorization_code&code=ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local&client_id=teamscale&client_secret=sPJtcNrmROZ3sZu3&redirect_uri=https%3A%2F%2Flocal.cloudogu.com%2Fteamscale%2F
@@ -399,7 +399,7 @@ The logout endpoint is used to invalidate the long term token from the CAS.
 ?redirect_url = http://local.cloudogu.com/teamscale/
 ```
 
-**call example**
+**Request example**
 
 ```
 https://local.cloudogu.com/cas/oidc/authorize?client_id=teamscale&redirect_uri=http%3A%2F%2Flocal.cloudogu.com%2Fteamscale%2F&response_type=code&state=b8c57125-9281-4b67-b857-1559cdfcdf31
@@ -407,7 +407,7 @@ https://local.cloudogu.com/cas/oidc/authorize?client_id=teamscale&redirect_uri=h
 
 ##### Successful response
 
-Automatically redirects one to the CAS login screen.
+Automatically redirects to the CAS login screen.
 After successful login the `redirect_url` is passed with a `code` as GET parameter.
 
 Example for `code`: `ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local`
@@ -459,17 +459,17 @@ The global configuration is located in the registry path `/config/_global/` and 
       - e.g. eco.example.com
       - This value may change during operation. See also the section on [Changeability of the FQDN](#changeability-of-the-fqdn).
    - `/config/_global/domain`
-      - the domain portion of this Cloudogu EcoSystem instance that dogus can use to send mail.
+      - the domain portion of this Cloudogu EcoSystem instance, often identical with the mail domain.
       - e.g. example.com
    - `/config/_global/mail_address`
       - the email address of the instance administrator
-      - e.g. petra.mustermann@example.com
+      - e.g. jane.doe@example.com
    - `/config/_global/admin_group`
       - the current name of the LDAP group whose members administer the Cloudogu EcoSystem instance in the UI.
       - This value may change during operation. See also the section on [admin group changeability](#changeability-of-the-admin-group).
 - Dogu states `/state/<dogu>`
-   - if the dogu defines a [HealthCheck](../core/compendium_en.md#healthchecks) of type `state`, then it allows the
-     administrator and other dogus to get health hints on the dogu
+   - if the dogu defines a [HealthCheck](../core/compendium_en.md#healthchecks) of type `state`, then it allows 
+     administrators and other dogus to get health hints on the dogu.
    - In your own dogu e.g. set `doguctl state installing` when a longer installation routine is started. Just before the main process is started then use `doguctl state ready` to indicate a proper operating state.
    - In the EcoSystem host this can be checked with `cesapp healthy <dogu>`.
    - In other dogus this can be checked with `doguctl healthy <dogu>`.
@@ -500,15 +500,15 @@ In order to dynamically respond to these conditions, Cloudogu has adopted the pr
       - implement the current log level
       - register the Cloudogu EcoSystem's TLS certificates in the software/target system
       - Prepare system changes to the registry with API accesses to prepare the software
-         - Replication of LDAP groups/rights
-      - Setting the software (log level, other configuration, e.g. by `doguctl template`)
+         - Replication of LDAP groups/permissions
+      - Configure the software (log level, other configuration, e.g. by `doguctl template`)
       - React on system changes of the registry: e.g. [admin-group](#changeability-of-the-admin-group) has changed, which needs further action in the Dogu
    3. set the Dogu state to `ready` (appropriate [HealthCheck](../core/compendium_en.md#healthchecks) provided)
    4. start the main process
 
 This section therefore addresses findings and _best practices_ related to such startup scripts: The `startup.sh`.
 
-By the way, diligent developer:s can gather inspiration in Cloudogu`s own startup
+By the way, diligent developers can gather inspiration in Cloudogu`s own startup
 scripts [e.g. in the Redmine dogu](https://github.com/cloudogu/redmine/blob/develop/resources/startup.sh).
 
 ### Script interpreter
@@ -543,11 +543,11 @@ if [[ ${yourCommandExitCode} -ne 0 ]]; then
 fi
 ```
 
-The error of the command `your-command` is caught. A separate error text is printed. The dogu-state is set to a non-`ready`-value, which could be useful for debugging. Finally, five minutes (= 300 seconds) are waited until `exit 1` restarts the dogu as faulty.
+The error of the command `your-command` is caught. A separate error text is printed. The dogu-state is set to a non-`ready` value, which could be useful for debugging. Finally, five minutes (= 300 seconds) are waited until `exit 1` restarts the dogu as faulty.
 
 ### Divide and conquer with Bash
 
-The longer you develop an application, the more functionality you add to it. The same can happen with `startup.sh`. Apart from easier testability (e.g. with [BATS](https://github.com/bats-core/bats-core)), small execution parts are easier to understand.
+The longer you develop an application, the more functionality you add to it. The same can happen with `startup.sh`. Apart from easier testability (e.g. with [BATS](https://github.com/bats-core/bats-core)), smaller functions and components are easier to understand.
 
 It is therefore a good idea to design Dogu functions in `startup.sh` in the same way from the point of view of testability, readability or refactorability.
 
@@ -588,7 +588,7 @@ A HealthCheck of type `state` will only succeed if the state contains the string
 
 #### Code swapping
 
-Another possibility is to outsource functions to other script files, which are then included in the actual start script using `source`. It should be noted, however, that even such a `source`n can fail and should be handled.
+Another possibility is to outsource functions to other script files, which are then included in the actual startup script using `source`. It should be noted, however, that even `source` can fail and should be handled.
 
 ```bash
 sourcingExitCode=0
@@ -646,7 +646,7 @@ $ doguctl config --rm delete_me
 
 #### doguctl validate
 
-This call validates registry configuration values. The command `validate` returns an exit code == 0 if all HealthChecks of the dogus under consideration return a positive result. Otherwise it returns an exit code == 1.
+This call validates registry configuration values. The command `validate` returns an exit code == 0 if all health checks of the dogus under consideration return a positive result. Otherwise it returns an exit code == 1.
 
 ```bash
 $ doguctl validate logging/root # validate single value, good case: value=WARN from ERROR,WARN,INFO,DEBUG
@@ -750,7 +750,7 @@ Supported template parameters:
      at `/config/_global/<key>`
 - Dogu queries
    - `.Dogus.IsEnabled <Dogu-name>` - returns a `bool` value if a Dogu is installed
-   - `.Dogus.Get <Dogu-Name>` - returns a [Dogu](../core/compendium_en.md#type-dogu)-Struct
+   - `.Dogus.Get <Dogu-Name>` - returns a [Dogu](../core/compendium_en.md#type-dogu) struct
    - `.Dogus.GetAll` - return a slice of all [Dogus](../core/compendium_en.md#type-dogu)
 
 Example of a template file:
@@ -798,7 +798,7 @@ fi
 
 ## Service Accounts
 
-Service Accounts represent a mechanism for access accounts that Dogus need to secure or store their data, but do not want to provide this functionality themselves. Dogus can represent themselves as producers and/or consumers of Service Accounts. In each case, both are optional features of a Dogus.
+Service Accounts represent a mechanism for access accounts that Dogus need to secure or store their data, but do not want to provide this functionality themselves. Dogus can represent themselves as producers and/or consumers of Service Accounts. In each case, both are optional features of a Dogu.
 
 Generally, the nature of the application in the dogu itself dictates whether or which of the two makes the most sense. For example, a database management dogu such as PostgreSQL that does not offer other dogus access to its database would not be useful. On the other hand, it would be fatal for a dogu like Redmine not to have a dogu into which it can store its data via SQL.
 
@@ -808,9 +808,9 @@ Dogus like PostgreSQL that can provide access accounts to other dogus are also c
 
 Service accounts are not requested by a service account consumer itself, because a dogu should not care about this form of orchestration. This is instead the job of a client like `cesapp` or `k8s-dogu-operator` during the installation of the service account consumer. The `ExposedCommand` for this is `service-account-create`.
 
-Similarly, the deletion of service accounts is handled by a client like `cesapp` or `k8s-dogu-operator` during the uninstallation of a dogus to delete its requested service accounts. The `ExposedCommand` for this is `service-account-remove`.
+Similarly, the deletion of service accounts is handled by a client like `cesapp` or `k8s-dogu-operator` during the uninstallation of a dogu to delete its requested service accounts. The `ExposedCommand` for this is `service-account-remove`.
 
-In order for a dogu to act as a service-account producer, it must provide two executables in its `dogu.json`:
+In order for a dogu to act as a service account producer, it must provide two executables in its `dogu.json`:
 
 ```json
 {
@@ -831,11 +831,11 @@ In order for a dogu to act as a service-account producer, it must provide two ex
 
 The terms `service-account-create` and `service-account-remove` are protected properties and are used by clients interpreting `dogu.json` as commands to create and delete service accounts.
 
-The following two sections discuss the creation and deletion of service accounts. More information about ExposedCommands can be found in the [ExposedCommands](../core/compendium_en.md#exposedcommands) section of the compendium.
+The following two sections discuss the creation and deletion of service accounts. More information about exposed commands can be found in the [ExposedCommands](../core/compendium_en.md#exposedcommands) section of the compendium.
 
 #### Create Service Account
 
-The `service-account-create` script manages the creation of a new service account. It is always executed when a new consumer is installed. In any case, during the call, the `service-account-create` script receives the name of the consumer dogus as its first argument. A second argument to fine-tune the service account is optional and depends on the support of the producer dogus.
+The `service-account-create` script manages the creation of a new service account. It is always executed when a new consumer is installed. In any case, during the call, the `service-account-create` script receives the name of consumer dogu as its first argument. A second argument to fine-tune the service account is optional and depends on the support of the producer dogu.
 
 A `service-account-create` script consists of three steps:
 
@@ -872,7 +872,7 @@ In step 1, credentials are randomly generated. The name of the consumer dogus ca
 
 In step 2, an account must be created in the Dogu software with the generated information.
 
-In step 3, the credentials are output with the format `echo "<registrykey>: <registryvalue>"`. `registrykey` and `registryvalue` must be separated by a colon and a space. The whole line must be terminated by a newline.
+In step 3, the credentials get printed in the format `<registrykey>: <registryvalue>`. `registrykey` and `registryvalue` must be separated by a colon and a space. The whole line must be terminated by a newline.
 
 These credentials are automatically read by the processing client and stored in the consumer's dogu-specific configuration area in encrypted form. Following the example above, the consumer dogu would set up two registry entries containing the respective secret as a value:
 
@@ -885,7 +885,7 @@ The consumer dogu can now read and decrypt these e.g. by `doguctl config -e sa-<
 
 The `service-account-remove` script deletes an existing service account of a consumer dogu.
 
-It is executed whenever the consumer dogu is uninstalled. During the call, the `service-account-remove` script receives the name of the consumer dogu as its first argument. Since no output from the script is processed here, error messages can also be printed to `stdout`.
+It is executed whenever the consumer dogu gets uninstalled. During the call, the `service-account-remove` script receives the name of the consumer dogu as its first argument. Since no output from the script is processed here, error messages can also be printed to `stdout`.
 
 A `service-account-remove` script consists of two steps:
 
@@ -932,7 +932,7 @@ It is very easy to request a service account from a producer dogu, since the mai
 }
 ```
 
-A service account is a special form of dependency. Therefore, it makes sense to keep the producer dogu in its [dependency list](../core/compendium_en.md#dependencies). This ensures in the different phases of a Dogu installation that the producer dogu is really available for use:
+A service account is a special form of dependency. Therefore, it makes sense to keep the producer dogu in its [dependency list](../core/compendium_en.md#dependencies).  In the different phases of a Dogu installation, this ensures that the producer dogu is really available for use:
 
 ```json
 {
@@ -958,22 +958,22 @@ Dogus can be upgraded in the Cloudogu EcoSystem using simple means (e.g. `cesapp
 The upgrade process includes the following steps:
 - Displaying upgrade notifications, if any
 - Downloading the new Dogu image
-- Ensure that the Dogu is healthy
+- Ensuring that the Dogu is healthy
 - Ensuring that all dependent dogus are available
-- Run the pre-upgrade script on the old dogu, if available
-- Replace the old dogu with the new one
-- Start the new dogu
-- Run the post-upgrade script in the new dogu, if any
+- Running the pre-upgrade script on the old dogu, if available
+- Replacing the old dogu with the new one
+- Starting the new dogu
+- Running the post-upgrade script in the new dogu, if any
 
-If it is necessary to perform pre- or post-upgrade steps during the dogu upgrade, optional pre- and post-upgrade scripts can be created. As an example, consider software that requires a different database schema after an update. In such a case it is possible to write upgrade scripts to start a migration of the database after a Dogu upgrade.
+If it is necessary to perform pre- or post-upgrade steps during a dogu update, optional pre- and post-upgrade scripts can be created. As an example, consider software that requires a different database schema after an update. In such a case it is possible to write upgrade scripts to start a migration of the database after a Dogu update.
 
-In addition, it is possible to be notified about important changes when upgrading a Dogus by an upgrade notification script.
+In addition, it is possible to be notified by an upgrade notification script about important changes when upgrading Dogus.
 
 All upgrade scripts described below should be placed in the `resources` folder (besides e.g. the `startup.sh` script).
 
 ### Determining the upgrade paths
 
-When developing the Dogus, it must be ensured that upgrades of a Dogus also work across multiple versions. For this purpose, the upgrade scripts must be designed in such a way that they determine the upgrade path and automatically perform any necessary migration steps.
+When developing Dogus, it must be ensured that upgrades of Dogus also work across multiple versions. For this purpose, the upgrade scripts must be designed in such a way that they determine the upgrade path and automatically perform any necessary migration steps.
 
 For this purpose, all upgrade scripts can read the previous (`FROM`) and new (`TO`) Dogu version:
 
@@ -984,7 +984,7 @@ TO_VERSION="${2}"
 
 ### pre-upgrade - Perform actions before upgrading a dogu
 
-The pre-upgrade script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a Dogus:
+The pre-upgrade script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a Dogu:
 
 ```json
 {
@@ -997,11 +997,11 @@ The pre-upgrade script can be defined as [Exposed Command](../core/compendium_en
 }
 ```
 
-This script is executed before the actual upgrade of the Dogus in the old Dogu container.
+This script is executed before the actual upgrade of the Dogu in the old Dogu container.
 
 ### post-upgrade - Perform actions after the upgrade of a dogu
 
-The post-upgrade script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogus:
+The post-upgrade script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogu:
 
 ```json
 {
@@ -1014,11 +1014,11 @@ The post-upgrade script can be defined as [Exposed Command](../core/compendium_e
 }
 ```
 
-This script will be started in the new dogu container after the dogu has been upgraded, as soon as it boots up. So normally both the `startup.sh` and the `post-upgrade` script will run at the same time. If it should be necessary that the `post-upgrade` script is executed before the `startup.sh` script, the `startup.sh` script must be provided with a waiting mechanism. This can be done, for example, by waiting for a registry key to be set by the `post-upgrade` script once it has run completely.
+As soon as it boots up, this script will be started in the new dogu container after the dogu has been upgraded. So normally both the `startup.sh` and the `post-upgrade` script will run at the same time. If it should be necessary that the `post-upgrade` script is executed before the `startup.sh` script, the `startup.sh` script must be provided with a waiting mechanism. This can be done, for example, by waiting for a registry key to be set by the `post-upgrade` script once it has run completely.
 
-### upgrade-notification - Show a notification before the dogu upgrade confirmation
+### upgrade notification - Show a notification before the dogu upgrade confirmation
 
-The upgrade-notification script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogus:
+The upgrade notification script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogus:
 
 ```json
 {
@@ -1134,7 +1134,7 @@ The Fully Qualified Domain Name (FQDN) of the Cloudogu EcoSystem is stored globa
 
 This section shows how to create a uniform, abstracted setting option that can be used to set the log behavior in all Dogus in the same way. Four different log levels that can be set via the registry are used for this purpose: `ERROR`, `WARN`, `INFO` and `DEBUG`.
 
-With these abstract log levels the administrator should be supported. He does not need to know what a dogu-specific log level is called, but can instead fall back on four basic values and reuse them safely in all Dogus.
+These abstract log levels help the administrator as he does not need to know what a dogu-specific log level is called, but can instead fall back on four basic values and reuse them safely in all Dogus.
 
 Dogu developers must take care that these four log levels are mapped meaningfully to the log levels of the software in the Dogu, which may have different names (e.g. `TRACE` or `FATAL`).
 
@@ -1196,7 +1196,7 @@ Examples:
 
 These four abstract log levels occasionally have no direct relationship to concrete log levels in the tools or plugins in the Dogu and must be mapped manually in Dogu development. The reason for this is that both the tools and the associated plugins and frameworks have log levels that differ too greatly in quantity and quality.
 
-The mapping of an abstract log level is thus in the hands of the Dogu development. Here one can decide, for example, to map the `TRACE` log level from the software to the `DEBUG` log level of the Dogu.
+The mapping of an abstract log level is thus in the hands of the Dogu development. Here the developers can decide, for example, to map the `TRACE` log level from the software to the `DEBUG` log level of the Dogu.
 
 This mapping from abstract to concrete log levels has the advantage of flexibility, e.g. if several configuration files have to be filled with different log levels.
 
