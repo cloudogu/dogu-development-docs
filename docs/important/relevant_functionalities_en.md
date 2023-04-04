@@ -1118,7 +1118,7 @@ When developing a Dogu, care must be taken to ensure that the Dogu continues to 
 
 After that, one performs a backup and a restore of the system. The commands [cesapp backup](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/backup/) and [cesapp restore](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/restore/) can be used for this.
 
-Once all dogus have been restarted, test whether your own dogu is running normally and all test data is still available.
+Once all Dogus have been restarted, test whether your own Dogu is running normally and all test data is still available.
 
 ### Changeability of the admin group
 
