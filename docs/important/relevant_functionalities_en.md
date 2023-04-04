@@ -513,7 +513,9 @@ scripts [e.g. in the Redmine dogu](https://github.com/cloudogu/redmine/blob/deve
 
 ### Script interpreter
 
-In order to run a script in a dogu, a script interpreter must exist in the container image. This can be an official package (like `bash`), but there is nothing against using your own script interpreter. Since bash scripts are widely used, bash syntax is used here.
+In order to run a script in a dogu, a script interpreter must exist in the container image. This can be an official package (like `bash`), but there is nothing against using your own script interpreter. 
+
+There is a broad landscape of available scripting languages. While interpreters like Python, Ruby, Groovy, or Kotlin provide a certain developer experience, they also bring a larger binary size to the table. Since the [Bash interpreter](https://www.gnu.org/software/bash/) is widely used in the Linux community and because of its small footprint regarding the container image size, Bash syntax is used here.
 
 ### Error handling
 
