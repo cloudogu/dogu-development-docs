@@ -1,0 +1,40 @@
+@startuml
+!define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
+
+!includeurl CLOUDOGUURL/common.puml
+!includeurl CLOUDOGUURL/dogus/cloudogu.puml
+!includeurl CLOUDOGUURL/dogus/redmine.puml
+!includeurl CLOUDOGUURL/tools/docker.puml
+!includeurl CLOUDOGUURL/tools/etcd.puml
+!define SECONDARY_COLOR #55EE55
+
+node "Cloudogu EcoSystem" as ces {
+
+    TOOL_ETCD(registry, Registry) #white
+    note top of registry #lightyellow
+        IP address under which
+        the registry is available
+        f. e. 10.21.34.56
+    end note
+
+    TOOL_DOCKER(docker, Docker) #white {
+        DOGU_REDMINE(redmine, Redmine) #white {
+            rectangle "doguctl" as etcdClient << $cloudogu >> #white
+            file "/private/private.pem" as privateKey #white
+
+            file "/etc/ces/node_master" as dogu_node_master #white
+            note bottom of dogu_node_master #lightyellow
+                IP address mounts
+                automatically as file
+                f. e. 10.21.34.56
+            end note
+        }
+    }
+}
+
+etcdClient <-l.- dogu_node_master
+etcdClient --> registry : reads/writes key/values
+etcdClient <-d- privateKey
+
+caption Interesting components between a dogu and the registry
+@enduml

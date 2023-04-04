@@ -5,9 +5,9 @@ This repository is designed to help developers of external organizations to deve
 It has 3 main topics:
 - Core knowledge
   - [basics](docs/core/basics_en.md)
-  - [compendium](TODO)
+  - [compendium](docs/core/compendium_en.md)
 - Important knowledge
-  - [relevant functionalities](TODO)
+  - [relevant functionalities](docs/important/relevant_functionalities_en.md)
   - [ces context](TODO)
 - Additional knowledge
   - [interesting aspects](TODO)
