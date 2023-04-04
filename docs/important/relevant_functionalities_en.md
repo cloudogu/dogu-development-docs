@@ -982,9 +982,9 @@ FROM_VERSION="${1}"
 TO_VERSION="${2}"
 ```
 
-### pre-upgrade - Perform actions before upgrading a dogu
+### `pre-upgrade` - Perform actions before upgrading a dogu
 
-The pre-upgrade script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a Dogu:
+The `pre-upgrade` script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a Dogu:
 
 ```json
 {
@@ -999,9 +999,9 @@ The pre-upgrade script can be defined as [Exposed Command](../core/compendium_en
 
 This script is executed before the actual upgrade of the Dogu in the old Dogu container.
 
-### post-upgrade - Perform actions after the upgrade of a dogu
+### `post-upgrade` - Perform actions after the upgrade of a dogu
 
-The post-upgrade script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogu:
+The `post-upgrade` script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogu:
 
 ```json
 {
@@ -1016,9 +1016,9 @@ The post-upgrade script can be defined as [Exposed Command](../core/compendium_e
 
 As soon as it boots up, this script will be started in the new dogu container after the dogu has been upgraded. So normally both the `startup.sh` and the `post-upgrade` script will run at the same time. If it should be necessary that the `post-upgrade` script is executed before the `startup.sh` script, the `startup.sh` script must be provided with a waiting mechanism. This can be done, for example, by waiting for a registry key to be set by the `post-upgrade` script once it has run completely.
 
-### upgrade notification - Show a notification before the dogu upgrade confirmation
+### `upgrade-notification` - Show a notification before the dogu upgrade confirmation
 
-The upgrade notification script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogus:
+The `upgrade-notification` script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogus:
 
 ```json
 {
