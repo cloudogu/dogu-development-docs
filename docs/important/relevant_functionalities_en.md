@@ -1202,7 +1202,7 @@ This mapping from abstract to concrete log levels has the advantage of flexibili
 
 #### Value range and default
 
-To set the log level, an optional key `/config/${dogu}/logging/root` is introduced per dogu, which can take one of the following abstract log level values.
+To set the log level, an optional key `/config/${dogu}/logging/root` is introduced per Dogu, which can take one of the following abstract log level values.
 
 - `ERROR`
 - `WARN` (default value)
