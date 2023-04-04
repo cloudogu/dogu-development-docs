@@ -973,7 +973,7 @@ All upgrade scripts described below should be placed in the `resources` folder (
 
 ### Determining the upgrade paths
 
-When developing Dogus, it must be ensured that upgrades of Dogus also work across multiple versions. For this purpose, the upgrade scripts must be designed in such a way that they determine the upgrade path and automatically perform any necessary migration steps.
+When developing a Dogu, it must be ensured that upgrading a Dogu also works across multiple versions. For this purpose, the upgrade scripts must be designed in such a way that they determine the upgrade path and automatically perform any necessary migration steps.
 
 For this purpose, all upgrade scripts can read the previous (`FROM`) and new (`TO`) Dogu version:
 
