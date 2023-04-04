@@ -45,7 +45,7 @@ CAS offers OAuth/OIDC as a protocol for authentication including SSO/SLO. The fo
 
 #### Creating an OAuth Service Account for a dogu
 
-In order for a Dogu to use the CAS's OAuth endpoints, it must log in to the CAS as a client. To do this, the request for an OAuth-specific CAS service account can be stored in the `dogu.json` of the dogu in question.
+In order for a Dogu to use the CAS's OAuth endpoints, it must log in to the CAS as a client. To do this, the OAuth-specific CAS service can be requested via the `dogu.json` of the respective dogu.
 
 **entry for an OAuth client:**
 
