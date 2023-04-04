@@ -1041,7 +1041,7 @@ This chapter describes features that integrate Dogus deeper into the Cloudogu Ec
 
 Memory and swap limits can be used to restrict the memory consumption (working memory and swap space) of Dogus.
 
-If a dogu exceeds its memory limit, the largest process in the container is killed. This is usually the main process of the dogus and causes the container to be restarted.
+If a Dogu exceeds its memory limit, the largest process in the container is killed. This is usually the main process of the Dogus and causes the container to be restarted.
 
 If no value is set for memory limiting, it will not take place. For swap limiting `0b` is the default value and thus does not provide swap.
 
