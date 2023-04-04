@@ -70,7 +70,7 @@ The credentials are composed of the `CLIENT_ID` and the `CLIENT_SECRET`. For the
 
 The following steps describe a successful OAuth authentication flow.
 
-1. request a short term token: see section below "OAuth authorize endpoint".
+1. request a short term token: see section "OAuth authorize endpoint" below.
 2. swap short-term token for long-term token: see section below "AccessToken endpoint".
 3. long term token can now be used to authenticate against resources.
    Currently, CAS only offers the user's profile as a resource: See section [OAuth user profile](#oauth-user-profile).
