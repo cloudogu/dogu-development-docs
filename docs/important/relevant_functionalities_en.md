@@ -1081,7 +1081,7 @@ Setting the values can be done in the following ways:
 
 To apply the limits, the dogu must be recreated (`cesapp recreate <dogu name>`) and then restarted (`cesapp start <dogu name>`).
 
-A special case is the limiting of a Java process. If a dogu contains a Java process, the following additional entries can be added to `dogu.json`:
+A special case is the limiting of a Java process. If a Dogu contains a Java process, the following additional entries can be added to `dogu.json`:
 
 ```json
 {
