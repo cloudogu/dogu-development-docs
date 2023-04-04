@@ -1114,7 +1114,7 @@ The values configurable with it must be given in the start scripts of the Dogus 
 
 One feature of the Cloudogu EcoSystem is that Dogus can be backed up and restored via a central backup system. For this to work, all Dogus must offload their mutable data to volumes. This procedure is already described in the [Compendium](../core/compendium_en.md#volumes).
 
-When developing a Dogus, care must be taken to ensure that the Dogu continues to function normally after a successful backup and restore operation and that all data and functions are available. To do this, all volumes in the `dogu.json` that contain production data must first be marked with the [NeedsBackup](../core/compendium_en.md#needsbackup) flag. After that the dogu should be built and filled with test data.
+When developing a Dogu, care must be taken to ensure that the Dogu continues to function normally after a successful backup and restore operation and that all data and functions are available. To do this, all volumes in the `dogu.json` that contain production data must first be marked with the [NeedsBackup](../core/compendium_en.md#needsbackup) flag. After that the Dogu should be built and filled with test data.
 
 After that, one performs a backup and a restore of the system. The commands [cesapp backup](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/backup/) and [cesapp restore](https://docs.cloudogu.com/de/docs/system-components/cesapp/operations/restore/) can be used for this.
 
