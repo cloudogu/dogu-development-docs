@@ -1213,7 +1213,7 @@ If no `/config/${dogu}/logging/root` key exists, then `doguctl` will automatical
 
 #### Validation and default values
 
-`doguctl` supports dogu developers in robustly defining a log level for a dogu. This leaves only the mapping of a found log level to the respective logging framework in the dogu.
+`doguctl` supports dogu developers defining a log level for a dogu in a sturdy way. This leaves only the mapping of a found log level to the respective logging framework in the dogu.
 
 In the `dogu.json` a log level configuration value can be set, which both can be validated and also provides a default value on the Dogu.
 
