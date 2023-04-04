@@ -498,7 +498,7 @@ In order to dynamically respond to these conditions, Cloudogu has adopted the pr
       - perform one-time installation processes
       - generate a temporary admin account
       - apply the current dogu log level to the dogu application
-      - register the Cloudogu EcoSystem's TLS certificates in the software/target system
+      - customize the registration the Cloudogu EcoSystem's TLS certificates in the container
       - Prepare system changes to the registry with API accesses to prepare the software
          - Replication of LDAP groups/permissions
       - Configure the software (log level, other configuration, e.g. by `doguctl template`)
