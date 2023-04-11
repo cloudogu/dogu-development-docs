@@ -109,9 +109,11 @@ Es besitzt unter anderem folgende Funktionalitäten:
 - Templating von Dateien
 - ...
 
-Wo anwendbar, soll immer Doguctl in Bash-Skripten wie der `startup.sh` verwendet werden.
+Wo anwendbar, soll immer Doguctl in Bash-Skripten wie der `startup.sh` verwendet werden.  
+Für die sinnvolle Benutzung kann das [Startup-Skript vom Nexus][doguctl-example] als Beispiel genommen werden.
 
 [doguctl]: https://github.com/cloudogu/doguctl
+[doguctl-example]: https://github.com/cloudogu/nexus/blob/4d2de3733eca684df1363179c527363a4d31526e/resources/startup.sh
 
 ### Dogu-Startskript: startup.sh
 

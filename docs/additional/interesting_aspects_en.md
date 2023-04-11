@@ -109,9 +109,11 @@ It has the following functionalities among others:
 - Templating of files
 - ...
 
-Where applicable, always use doguctl in bash scripts like `startup.sh`.
+Where applicable, always use doguctl in bash scripts like `startup.sh`.  
+Examples of reasonable usage can be found in the [Nexus startup script][doguctl-example].
 
 [doguctl]: https://github.com/cloudogu/doguctl
+[doguctl-example]: https://github.com/cloudogu/nexus/blob/4d2de3733eca684df1363179c527363a4d31526e/resources/startup.sh
 
 ### Dogu startup script: startup.sh
 
