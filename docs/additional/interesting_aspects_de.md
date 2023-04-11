@@ -34,13 +34,24 @@ Die 12 Faktoren sind Folgende:
 
 Beim Image-Bau sollte auf die folgenden Aspekte betrachtet werden:
 - möglichst root-less Container aufbauen
+- Wenn möglich aktuelle Version aller eingesetzten [Tools][container-tools] / [base-Images][base-images] oder Commits nutzen
+  - Achtung: Neue alpine-Software-Version durch Erhöhung des base-Image möglich!
+  - Aktualisierung der Tools aus dem base-Image
+    - bspw. `apk update && apk upgrade`
 - möglichst wenige Statements im Dockerfile
+  - nur **ein** [COPY-Statement][copy-statement] für Dateisystemstruktur im Container
 - LABELs für Metadaten verwenden
-  - `LABEL maintainer="hello@cloudogu.com"`
+  - `LABEL maintainer="hello@cloudogu.com"` statt `MAINTAINER`-Statement
   - `NAME="namespace/dogu-name"` rein
   - `VERSION ="w.x.y-z"`, wird vom automatischen Release-Prozess übernommen
-- Dockerfile enthält einen Healthcheck
+- Dockerfile enthält einen [Healthcheck][healthcheck]
+  - z.B.: `HEALTHCHECK CMD doguctl healthy nexus || exit 1`
 - Downloads (mit curl/wget o. Ä.) werden mit Check-Summen/Hashes geprüft
+
+[container-tools]: https://github.com/cloudogu/base/blob/3466b5e95c25a6c5ac569069167e513c71815797/Dockerfile#L10
+[base-images]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L1
+[healthcheck]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L3
+[copy-statement]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L33
 
 ## Resources-Ordner & Dogu-Skripte
 
