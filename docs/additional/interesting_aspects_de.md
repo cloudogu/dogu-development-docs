@@ -98,6 +98,21 @@ Solch eine Methode macht das komplette Skript lesbarer und bremst den Neustart-L
 
 Für alle Skripte sollten jederzeit Unix-basierte Line-Endings benutzt werden.
 
+#### Doguctl verwenden
+
+[Doguctl][doguctl] ist ein Kommandozeilentool, um die Konfiguration eines Dogus zu vereinfachen.  
+Es besitzt unter anderem folgende Funktionalitäten:
+- Konfigurationswerte lesen, schreiben, ver- und entschlüsseln
+- Health-Checks abfragen
+- Zustand eines Dogus setzen, z.B. ready, installing, ...
+- Random Strings für Passwörter generieren.
+- Templating von Dateien
+- ...
+
+Wo anwendbar, soll immer Doguctl in Bash-Skripten wie der `startup.sh` verwendet werden.
+
+[doguctl]: https://github.com/cloudogu/doguctl
+
 ### Dogu-Startskript: startup.sh
 
 Das [Dogu-Start-Skript][startup-sh] ist der Einstiegspunkt eines Dogu-Containers und verwaltet alle Schritte, die für einen reibungslosen Start des Dogus notwendig sind.

@@ -96,7 +96,22 @@ Such a method makes the whole script more readable and slows down the restart lo
 
 #### Line-Endings
 
-Unix-based line endings should be used for all scripts at all times.
+Unix-based line endings should be used for all scripts at all times.#### Use doguctl
+
+#### Use doguctl
+
+[Doguctl][doguctl] is a command line tool to simplify the configuration of a dogu.  
+It has the following functionalities among others:
+- read, write, encrypt and decrypt configuration values
+- query health checks
+- Set the state of a Dogus, e.g. ready, installing, ...
+- Generate random strings for passwords
+- Templating of files
+- ...
+
+Where applicable, always use doguctl in bash scripts like `startup.sh`.
+
+[doguctl]: https://github.com/cloudogu/doguctl
 
 ### Dogu startup script: startup.sh
 
