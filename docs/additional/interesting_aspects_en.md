@@ -112,13 +112,12 @@ Unix-based line endings should be used for all scripts at all times.#### Use dog
 
 #### Use doguctl
 
-[Doguctl][doguctl] is a command line tool to simplify the configuration of a dogu.  
+Doguctl is a command line tool to simplify the configuration of a dogu.  
 Info on its functionalities can be found in ["Usage of doguctl"][doguctl-usage].
 
 Where applicable, always use doguctl in bash scripts like `startup.sh`.  
 Examples of reasonable usage can be found in the [Nexus startup script][doguctl-example].
 
-[doguctl]: https://github.com/cloudogu/doguctl
 [doguctl-usage]: ../important/relevant_functionalities_en.md#usage-of-doguctl
 [doguctl-example]: https://github.com/cloudogu/nexus/blob/4d2de3733eca684df1363179c527363a4d31526e/resources/startup.sh
 
