@@ -1040,6 +1040,21 @@ Dies ist normalerweise der Hauptprozess des Dogus und führt dazu, dass der Cont
 Wird kein Wert bei der Memory-Limitierung gesetzt, findet diese auch nicht statt.
 Bei der Swap-Limitierung ist `0b` der Standardwert und stellt somit keinen Swap zur Verfügung.
 
+#### Vorbereitung der Speicherlimits im Host
+
+Damit der CES-Host die Limitierung des Speichers **und** Swaps vornehmen kann, müssen vorher folgende Einstellungen vorgenommen werden:
+1. die Datei `/etc/default/grub` öffnen
+2. Zur Variable `GRUB_CMDLINE_LINUX_DEFAULT` muss folgender Wert hinzugefügt werden:  
+   `cgroup_enable=memory swapaccount=1`
+3. die Änderungen speichern 
+4. den Befehl `sudo update-grub` bzw. `sudo update-bootloader --refresh` ausführen 
+5. die Maschine neu starten
+
+**Achtung!**  
+Die obige Aktivierung mit `cgroup_enable=memory swapaccount=1` führt voraussichtlich zu einem Speicher-Overhead von 1 % und einer Performanz-Einbuße von 10 %, selbst wenn Docker nicht läuft.
+
+#### Limitierung im Dogu
+
 Um eine Limitierung vornehmen zu können, muss die `dogu.json` des Dogus folgende Einträge enthalten:
 
 ```json
@@ -1078,6 +1093,12 @@ Das Setzen der Werte kann über folgende Wege erfolgen:
 
 Um die Limitierungen zu übernehmen, muss das Dogu neu erstellt (`cesapp recreate <doguname>`) und anschließend neu gestartet (`cesapp start <doguname>`) werden.
 
+#### Überprüfen der Limitierung
+
+Die Limitierung des Speichers (nur RAM, kein Swap) kann mithilfe von `docker stats <doguname>` überprüft werden. Die Zeile `MEM USAGE / LIMIT` sollte das gesetzte Speicherlimit korrekt anzeigen.
+
+#### Limitierung in Java-Dogus
+
 Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dogu einen Java-Prozess, können folgende zusätzliche Einträge in die `dogu.json` eingebaut werden:
 
 ```json
@@ -1105,7 +1126,10 @@ Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dog
 }
 ```
 
-Die damit konfigurierbaren Werte müssen in den Start-Skripten des Dogus dem entsprechenden Java-Prozess als Parameter mitgegeben werden. Eine Referenzimplementierung findet sich im [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
+**Hinweise:**
+- Die Prozente beziehen sich immer auf den limitierten Speicher eines Containers. Sind keine Limitierung gesetzt, werden die Prozente ebenfalls ignoriert.
+- Ein Java-Prozess sollte nicht einen zu großen Anteil des Speichers zugewiesen bekommen. Man sollte immer etwaige andere Prozesse beachten, die ebenfalls Speicher benötigen. Falls dies nicht passiert, kann es zu Abstürzen des eigentlichen Programmes kommen.
+- Die damit konfigurierbaren Werte müssen in den Start-Skripten des Dogus dem entsprechenden Java-Prozess als Parameter mitgegeben werden. Eine Referenzimplementierung findet sich im [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
 
 ### Backup & Restore-Fähigkeit
 
@@ -1125,7 +1149,7 @@ Zusätzlich kann die Admin-Gruppe im Nachhinein geändert werden. Das Dogu muss 
 
 ### Änderbarkeit der FQDN
 
-Die FQDN des Cloudogu EcoSystems ist global in der Registry gespeichert und kann von den Dogus mittels [`doguctl`](#die-nutzung-von-doguctl) ausgelesen werden. Falls nötig, kann sie in die Dogu-Konfiguration integriert werden (siehe auch [Erstellung einer exemplarischen Anwendung](../core/basics_de.md#5-erstellung-einer-exemplarischen-anwendung). Zusätzlich muss bei der Dogu-Entwicklung darauf geachtet werden, dass die FQDN änderbar ist. Das Dogu sollte also in der Lage sein (ggf. nach einem Neustart), eine neue FQDN auszulesen und seine Konfiguration an diese neue FQDN anzupassen.
+Die FQDN des Cloudogu EcoSystems ist global in der Registry gespeichert und kann von den Dogus mittels [`doguctl`](#die-nutzung-von-doguctl) ausgelesen werden. Falls nötig, kann sie in die Dogu-Konfiguration integriert werden (siehe auch [Erstellung einer exemplarischen Anwendung](../core/basics_de.md#5--erstellung-einer-exemplarischen-anwendung). Zusätzlich muss bei der Dogu-Entwicklung darauf geachtet werden, dass die FQDN änderbar ist. Das Dogu sollte also in der Lage sein (ggf. nach einem Neustart), eine neue FQDN auszulesen und seine Konfiguration an diese neue FQDN anzupassen.
 
 ### Logging-Verhalten steuern
 

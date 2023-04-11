@@ -1047,7 +1047,22 @@ If a Dogu exceeds its memory limit, the largest process in the container is kill
 
 If no value is set for memory limiting, it will not take place. For swap limiting `0b` is the default value and thus does not provide swap.
 
-To be able to limit, the `dogu.json` of the Dogus must contain the following entries:
+#### Preparation of the memory limits in the host
+
+In order for the CES host to limit memory **and** swap, the following settings must be done beforehand:
+1. open the file `/etc/default/grub`
+2. add the following value to the variable `GRUB_CMDLINE_LINUX_DEFAULT`:  
+   `cgroup_enable=memory swapaccount=1`.
+3. save the changes
+4. execute the command `sudo update-grub` or `sudo update-bootloader --refresh`.
+5. reboot the machine
+
+**Warning!**  
+Enabling the above with `cgroup_enable=memory swapaccount=1` is expected to result in a memory overhead of 1% and a performance penalty of 10% even if Docker is not running.
+
+#### Limit in Dogu
+
+To be able to limit memory, the `dogu.json` of the Dogus must contain the following entries:
 
 ```json
 {
@@ -1083,6 +1098,12 @@ Setting the values can be done in the following ways:
 
 To apply the limits, the dogu must be recreated (`cesapp recreate <dogu name>`) and then restarted (`cesapp start <dogu name>`).
 
+#### Checking the limitation
+
+The memory limit (RAM only, no swap) can be checked using `docker stats <doguname>`. The line `MEM USAGE / LIMIT` should correctly show the memory limit set.
+
+#### Limit in Java Dogus
+
 A special case is the limiting of a Java process. If a Dogu contains a Java process, the following additional entries can be added to `dogu.json`:
 
 ```json
@@ -1110,7 +1131,10 @@ A special case is the limiting of a Java process. If a Dogu contains a Java proc
 }
 ```
 
-The values configurable with it must be given in the start scripts of the Dogus to the appropriate Java process as parameters. A reference implementation can be found in the [Nexus Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
+**Notes:**
+- The percentages always refer to the limited memory of a container. If no limit is set, the percentages are also ignored.
+- A Java process should not be allocated too large a share of the memory. One should always consider any other processes that also need memory. If this does not happen, the actual program may crash.
+- The values that can be configured with this must be given as parameters to the corresponding Java process in the start scripts of the Dogus. A reference implementation can be found in the [Nexus Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
 
 ### Backup & restore capability
 
@@ -1130,7 +1154,7 @@ Additionally, the admin group can be changed afterwards. The Dogu must then reac
 
 ### Changeability of the FQDN
 
-The Fully Qualified Domain Name (FQDN) of the Cloudogu EcoSystem is stored globally in the registry and can be read by the Dogus using [`doguctl`](#usage-of-doguctl). If necessary, it can be integrated into the Dogu configuration (see also [Creating an exemplary application](../core/basics_en.md#5-creating-an-exemplary-application). In addition, care must be taken during Dogu development to ensure that the FQDN is changeable. So the Dogu should be able (after a restart if necessary) to read a new FQDN and adapt its configuration to this new FQDN.
+The Fully Qualified Domain Name (FQDN) of the Cloudogu EcoSystem is stored globally in the registry and can be read by the Dogus using [`doguctl`](#usage-of-doguctl). If necessary, it can be integrated into the Dogu configuration (see also [Creating an exemplary application](../core/basics_en.md#5--creating-an-exemplary-application). In addition, care must be taken during Dogu development to ensure that the FQDN is changeable. So the Dogu should be able (after a restart if necessary) to read a new FQDN and adapt its configuration to this new FQDN.
 
 ### Controlling the logging behavior
 
