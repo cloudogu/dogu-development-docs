@@ -1159,11 +1159,28 @@ Mit diesen abstrakten Log-Leveln soll der Administrator unterstützt werden. Er 
 
 Dogu-Entwickler müssen darauf achten, dass diese vier Log-Level sinnvoll auf die Log-Level der Software im Dogu gemappt werden, welche ggf. andere Namen haben können (bspw. `TRACE` oder `FATAL`).
 
+#### Hintergründe zum Log-Level
+
+Niemand liest Logs. Wenn sie jemand liest, dann nicht gerne, und zwar aus zwei Gründen:
+1. Standard-Logs enthalten für den Betrachter überwiegend unwichtige Information
+2. Logs werden nur dann gelesen, wenn ein Problem auftritt
+
+Die Log-Level-Steuerung begegnet diesen Umständen.
+
+Wenn ein Dogu standardmäßig und dauerhaft zu viele Zeilen loggt, dann wird Administrierenden oder Supportleistenden das Leben schwerer gemacht als nötig.
+Denn sie müssen sich durch einen Berg Zeilen arbeiten und die Logs in relevante und irrelevante Informationen trennen.
+Zudem kann es passieren, dass bei übertriebenen Logging (z. B. lange Stacktraces verbunden mit Container Crash Loops) zu so viel Daten führen kann, dass die Festplatte voll läuft und keine Log-Rotation mehr möglich ist.
+
 #### Log-Level und deren Spielräume
 
 Die Log-Level sind nach Detailgrad von grob nach fein sortiert und enthalten den jeweils darüber liegenden. Bspw. enthalten Log-Ausgaben des Levels `WARN` also auch Log-Ausgaben der Levels `ERROR`.
 
 Der Entwickler hat damit starke Freiheiten, welche Logs bei welchem Log-Level ausgegeben werden.
+
+Um zwischen relevant und irrelevant zu unterscheiden, gibt es natürlich Interpretationsspielraum.
+Cloudogu als Dogu-Anbieter unterstützt den Kunden darin, für seine Produktivsysteme das Logging so gering und so prägnant wie möglich zu gestalten.
+Das bedeutet, aufgrund unserer Erfahrung sowohl als Softwareentwicklende als auch als Dogu-Benutzende entscheiden wir für den Kunden,
+welche Log-Quellen, Log-Zeilen, Log-Levels usw. je Dogu und Log-Level angemessen sind.
 
 ##### `ERROR`
 
@@ -1183,7 +1200,7 @@ Beispiele:
 
 ##### `WARN`
 
-Log-Level analog zu `WARN` finden sich auch häufig auf Produktionssystemen.
+Log-Level analog zu `WARN` finden sich häufig auf Produktions- oder Staging-Systemen.
 
 Logausgaben dieses Levels sind sehr ähnlich zu denen von `ERROR`. Im Unterschied zu diesen enthalten sie jedoch Ausgaben, die auf bevorstehende Fehler hinweisen.
 
@@ -1275,3 +1292,8 @@ Der eingestellte bzw. Default-Wert aus der `dogu.json` lässt sich wie gewohnt a
 rootLogLevel=$(doguctl config logging/root)
 ```
 
+#### Erweiterbarkeit
+
+Sollte der Bedarf für weitere, Dogu-spezifische Log-Levels bestehen, so ist denkbar, dass die dazugehörigen Keys ebenfalls unter `/config/<doguname>/logging/` abgelegt werden können.
+Solche Log-Levels sind von ihrer Natur sehr spezifisch.
+Daher können andere Regeln für die Verwendung von solch spezifischen Keys gelten.

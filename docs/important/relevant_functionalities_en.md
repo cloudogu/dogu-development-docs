@@ -1164,11 +1164,28 @@ These abstract log levels help the administrator as he does not need to know wha
 
 Dogu developers must take care that these four log levels are mapped meaningfully to the log levels of the software in the Dogu, which may have different names (e.g. `TRACE` or `FATAL`).
 
+#### Log level backgrounds
+
+Nobody reads logs. If someone reads them, it is not with pleasure, for two reasons:
+1. standard logs contain mostly unimportant information for the viewer
+2. logs are only read when a problem occurs.
+
+Log level control addresses these circumstances.
+
+If a dogu logs too many lines by default and permanently, then administrators or support staff have their lives made harder than necessary.
+This is because they have to work through a mountain of lines and separate the logs into relevant and irrelevant information.
+In addition, excessive logging (e.g. long stack traces combined with container crash loops) can lead to so much data that the hard disk fills up and log rotation is no longer possible.
+
 #### Log levels and their margins
 
 The log levels are sorted by level of detail from coarse to fine and contain the respective level above. For example, log outputs of the level `WARN` thus also contain log outputs of the level `ERROR`.
 
 This gives the developer a great deal of freedom as to which logs are output at which log level.
+
+To distinguish between relevant and irrelevant, there is of course room for interpretation.
+Cloudogu as a Dogu provider supports the customer in making logging as low and as concise as possible for their productive systems.
+This means, based on our experience as both software developers and Dogu users, we decide for the customer,
+which log sources, log lines, log levels etc. are appropriate per Dogu and log level.
 
 ##### `ERROR`
 
@@ -1188,7 +1205,7 @@ Examples:
 
 ##### `WARN`
 
-Log levels analogous to `WARN` are also frequently found on production systems.
+Log levels analogous to `WARN` are frequently found on production or staging systems.
 
 Log outputs of this level are very similar to those of `ERROR`. Unlike these, however, they contain output indicating imminent errors.
 
@@ -1279,3 +1296,9 @@ The set or default value from `dogu.json` can be retrieved as usual. `doguctl` t
 ```
 rootLogLevel=$(doguctl config logging/root)
 ```
+
+#### Extensibility
+
+If there is a need for additional, Dogu-specific log levels, it is conceivable that the associated keys can also be stored under `/config/<doguname>/logging/`.
+Such log levels are very specific by their nature.
+Therefore, different rules may apply to the use of such specific keys.
