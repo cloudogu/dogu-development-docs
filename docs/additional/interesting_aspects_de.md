@@ -34,10 +34,11 @@ Die 12 Faktoren sind Folgende:
 
 Beim Image-Bau sollte auf die folgenden Aspekte betrachtet werden:
 - möglichst root-less Container aufbauen
-- Wenn möglich aktuelle Version aller eingesetzten [Tools][container-tools] / [base-Images][base-images] oder Commits nutzen
+- wenn möglich aktuelle Version aller eingesetzten [Tools][container-tools] / [base-Images][base-images] oder Commits nutzen
   - Achtung: Neue alpine-Software-Version durch Erhöhung des base-Image möglich!
   - Aktualisierung der Tools aus dem base-Image
     - bspw. `apk update && apk upgrade`
+- wenn sinnvoll auf eine möglichst geringe Imagegröße achten
 - möglichst wenige Statements im Dockerfile
   - nur **ein** [COPY-Statement][copy-statement] für Dateisystemstruktur im Container
 - LABELs für Metadaten verwenden
