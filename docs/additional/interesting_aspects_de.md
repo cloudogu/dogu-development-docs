@@ -113,18 +113,13 @@ Für alle Skripte sollten jederzeit Unix-basierte Line-Endings benutzt werden.
 #### Doguctl verwenden
 
 [Doguctl][doguctl] ist ein Kommandozeilentool, um die Konfiguration eines Dogus zu vereinfachen.  
-Es besitzt unter anderem folgende Funktionalitäten:
-- Konfigurationswerte lesen, schreiben, ver- und entschlüsseln
-- Health-Checks abfragen
-- Zustand eines Dogus setzen, z.B. ready, installing, ...
-- Random Strings für Passwörter generieren.
-- Templating von Dateien
-- ...
+Informationen über die Benutzung finden sich in ["Die Nutzung von doguctl"][doguctl-usage].
 
 Wo anwendbar, soll immer Doguctl in Bash-Skripten wie der `startup.sh` verwendet werden.  
 Für die sinnvolle Benutzung kann das [Startup-Skript vom Nexus][doguctl-example] als Beispiel genommen werden.
 
 [doguctl]: https://github.com/cloudogu/doguctl
+[doguctl-usage]: ../important/relevant_functionalities_de.md#die-nutzung-von-doguctl
 [doguctl-example]: https://github.com/cloudogu/nexus/blob/4d2de3733eca684df1363179c527363a4d31526e/resources/startup.sh
 
 ### Dogu-Startskript: startup.sh
