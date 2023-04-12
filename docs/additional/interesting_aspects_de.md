@@ -231,3 +231,18 @@ Handelt es sich außerdem um komplexere Vorgänge, ist zusätzlich ein Verweis z
 
 Die Systemanforderungen eines Dogus (CPU, RAM, Speicher) können entweder in der Dokumentation des Dogus festgehalten werden
 oder sollten Cloudogu auf andere Weise direkt mitgeteilt werden (z.B. im Falle eines privaten Repositories).
+
+## Release eines Dogus
+
+### Cloudogu-Account und Berechtigungen
+
+Zunächst müssen Sie einen Account auf https://account.cloudogu.com erstellen.  
+Danach schicken Sie uns einfach eine Anfrage mit Ihrem Account-Namen / Ihrer E-Mail-Adresse und dem gewünschten Dogu-Namespace (z.B. _yourcompany_).
+Wir erstellen den Namespace und erteilen Ihrem Account die Berechtigung, auf den Namespace zu pushen.
+
+### Release-Prozess
+
+Nun können Sie sich über `cesapp login` mit Ihrem Cloudogu-Account einloggen.  
+Das Dogu kann dann einfach mit `cesapp push` in die Dogu-Registry gepusht werden.
+
+Wir empfehlen, diese Schritte automatisch im CI/CD-Prozess für Ihren Production-Release-Branch auszuführen.
