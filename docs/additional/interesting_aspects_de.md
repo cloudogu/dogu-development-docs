@@ -226,3 +226,8 @@ Bei einem neuen Release wandern diese Änderungen in eine neue Sektion, die die 
 
 Bei allen Änderungen sollten Verweise auf die Vorgänge des verwendeten Issue-Trackers hinzugefügt werden.  
 Handelt es sich außerdem um komplexere Vorgänge, ist zusätzlich ein Verweis zu einer Dokumentation sinnvoll.
+
+### Systemanforderungen
+
+Die Systemanforderungen eines Dogus (CPU, RAM, Speicher) können entweder in der Dokumentation des Dogus festgehalten werden
+oder sollten Cloudogu auf andere Weise direkt mitgeteilt werden (z.B. im Falle eines privaten Repositories).

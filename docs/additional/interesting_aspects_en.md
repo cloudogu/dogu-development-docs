@@ -197,6 +197,7 @@ By default, the docs include the following:
 - Installation of the Dogu
 - Configuration of the Dogu
 - Development on the Dogu
+- System requirements of the Dogu (nice to have)
 - Readme
 - Changelog
 
@@ -226,3 +227,8 @@ When a new release is made, these changes move to a new section containing the c
 
 For all changes, references to the operations of the issue tracker used should be added.  
 In addition, if more complex procedures are involved, a reference to documentation is useful.
+
+### System requirements
+
+The system requirements of a Dogu (CPU, RAM, storage) can either be recorded in the Dogu's documentation
+or should be otherwise communicated to Cloudogu directly (e.g. in case of a private repository).
