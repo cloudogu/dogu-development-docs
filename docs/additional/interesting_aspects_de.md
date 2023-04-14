@@ -133,13 +133,6 @@ Für die sinnvolle Benutzung kann das [Startup-Skript vom Nexus][doguctl-example
 [doguctl-usage]: ../important/relevant_functionalities_de.md#die-nutzung-von-doguctl
 [doguctl-example]: https://github.com/cloudogu/nexus/blob/4d2de3733eca684df1363179c527363a4d31526e/resources/startup.sh
 
-### Dogu-Startskript: startup.sh
-
-Das [Dogu-Start-Skript][startup-sh] ist der Einstiegspunkt eines Dogu-Containers und verwaltet alle Schritte, die für einen reibungslosen Start des Dogus notwendig sind.
-Konventionell wird das Startup-Skript mit dem Namen `startup.sh` in dem `resources`-Ordner des Dogus angelegt.
-
-[startup-sh]: ../important/relevant_functionalities_de.md#aufbau-und-best-practices-von-startupsh
-
 ## Schnelle Feedback-Zyklen durch Tool-Entwicklung ohne CES
 
 In der Entwicklung ist eine rasche Erkenntnis wichtig, ob der richtige Entwicklungspfad beschritten wurde.
