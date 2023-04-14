@@ -33,7 +33,9 @@ Die 12 Faktoren sind Folgende:
 ### Container-Images
 
 Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
-- möglichst root-less Container aufbauen
+- möglichst [root-less Container](rootless-container) aufbauen
+   - die Verweigerung von root-Rechten trägt zur Sicherheit des Containers und des Host-Systems bei
+[rootless-container]: https://docs.docker.com/engine/security/rootless/
 - wenn möglich aktuelle Version aller eingesetzten [Tools][container-tools] / [base-Images][base-images] oder Commits nutzen
   - Achtung: Neue alpine-Software-Version durch Erhöhung des base-Image möglich!
   - Aktualisierung der Tools aus dem base-Image
