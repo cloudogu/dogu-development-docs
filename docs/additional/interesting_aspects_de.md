@@ -161,7 +161,7 @@ Für ein Beispiel [siehe CAS][local-cas-example].
 
 ## Qualitätssicherung für Dogus
 
-### Container Validation (GOSS)
+### Container Validation
 
 Die Container-Validation versichert die richtige Konfiguration des Containers, die für eine reibungslose Ausführung der Software notwendig ist.
 
