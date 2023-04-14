@@ -218,9 +218,9 @@ Sie ist sowohl für eigene Entwicklungen als auch im Partnerkontext mit externen
 Bei öffentlichen Repositories sollte jedoch ein höherer Maßstab an einer Readme angelegt werden.
 
 Eine Readme-Datei liegt im Repository-Root und beschreibt knapp Hinweise zum generellen Zweck des Dogus.
-Dies kann in Form eines Quickstart-Guides sein, indem zum Beispiel beschrieben ist wie man eine lokale Entwicklungsumgebung einrichtet.
-Es sollte außerdem ein Verweis auf den Dokumentationsordner beinhalten und kann darüber hinaus auch auf spezielle Seiten der Dokumentation verweisen.
-Zum Schluss ist es zu empfehlen benötigte Ressourcen für den Gebrauch und einen Verantwortlichen des Dogus anzugeben.
+Für Anwender kann dies in Form eines Quickstart-Guides sein, wie man das Dogu verwendet oder Auflistungen von Features.
+Für Dogu-Entwickler könnte die Readme Hinweise auf Kollaboration eingehen oder auf die verwendete Urheberlizenz hinweisen.
+Verlinkung auf weitere Dokumentation stellt zudem ein Mittel dar, um sowohl Übersicht zu wahren als auch weitere Informationen anzubieten.
 
 ### Changelog
 
