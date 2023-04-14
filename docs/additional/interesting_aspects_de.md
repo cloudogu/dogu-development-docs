@@ -1,6 +1,6 @@
 # Interessantes für Entwickelnde
 
-Dieses Kapitel beschreibt all das, das über die allgemeine oder spezielle Dogu-Entwicklung hinausgeht, aber neuen Entwicklern auf die (Dogu-)Sprünge hilft oder Ideen für Horizonterweiterung gibt.
+Dieses Kapitel bietet Informationen, die über die allgemeine oder spezielle Dogu-Entwicklung hinausgehen, aber neuen Entwicklern auf die (Dogu-)Sprünge hilft oder Ideen für Horizonterweiterung gibt.
 
 ## Containers
 
@@ -221,6 +221,8 @@ Eine Readme-Datei liegt im Repository-Root und beschreibt knapp Hinweise zum gen
 Für Anwender kann dies in Form eines Quickstart-Guides sein, wie man das Dogu verwendet oder Auflistungen von Features.
 Für Dogu-Entwickler könnte die Readme Hinweise auf Kollaboration eingehen oder auf die verwendete Urheberlizenz hinweisen.
 Verlinkung auf weitere Dokumentation stellt zudem ein Mittel dar, um sowohl Übersicht zu wahren als auch weitere Informationen anzubieten.
+Für Administrierende ist es hilfreich, wenn die Readme angibt, wie viele Ressourcen das Dogu benötigt.
+Die Readme sollte abschließend klären, wer für das Dogu verantwortlich ist.
 
 ### Changelog
 
@@ -237,15 +239,17 @@ Handelt es sich außerdem um komplexere Vorgänge, ist zusätzlich ein Verweis z
 ### Systemanforderungen
 
 Die Systemanforderungen eines Dogus (CPU, RAM, Speicher) können entweder in der Dokumentation des Dogus festgehalten werden
-oder sollten Cloudogu auf andere Weise direkt mitgeteilt werden (z.B. im Falle eines privaten Repositories).
+oder sollten Cloudogu auf andere Weise direkt mitgeteilt werden (z. B. im Falle eines privaten Repositories).
 
 ## Release eines Dogus
 
 ### Cloudogu-Account und Berechtigungen
 
 Zunächst müssen Sie einen Account auf https://account.cloudogu.com erstellen.
-Danach schicken Sie uns einfach eine Anfrage mit Ihrem Account-Namen / Ihrer E-Mail-Adresse und dem gewünschten Dogu-Namespace (z.B. _yourcompany_).
+Danach schicken Sie uns einfach eine Anfrage mit Ihrem Account-Namen / Ihrer E-Mail-Adresse und dem gewünschten Dogu-Namespace (z. B. _yourcompany_).
 Wir erstellen den Namespace und erteilen Ihrem Account die Berechtigung, auf den Namespace zu pushen.
+
+Dieser Schritt ist nur einmal pro Account nötig.
 
 ### Release-Prozess
 
