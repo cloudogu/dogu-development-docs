@@ -55,7 +55,8 @@ Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
   - `VERSION ="w.x.y-z"`, wird vom automatischen Release-Prozess übernommen
 - Dockerfile enthält einen [Healthcheck][healthcheck]
   - z.B.: `HEALTHCHECK CMD doguctl healthy nexus || exit 1`
-- Downloads (mit curl/wget o. Ä.) werden mit Check-Summen/Hashes geprüft
+- Downloads von externen Dateien (z. B. mit curl/wget) werden mit Prüfsummen/Hashes sichergestellt
+   - dies erhöht die Sicherheit von späteren Builds, wenn eine Datei durch Angreifer durch eine andere Datei ausgetauscht wird
 
 [container-tools]: https://github.com/cloudogu/base/blob/3466b5e95c25a6c5ac569069167e513c71815797/Dockerfile#L10
 [base-images]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L1
