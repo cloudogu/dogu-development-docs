@@ -33,9 +33,8 @@ Die 12 Faktoren sind Folgende:
 ### Container-Images
 
 Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
-- möglichst [root-less Container](rootless-container) aufbauen
+- möglichst [root-less Container][rootless-container] aufbauen
    - die Verweigerung von root-Rechten trägt zur Sicherheit des Containers und des Host-Systems bei
-[rootless-container]: https://docs.docker.com/engine/security/rootless/
 - wenn möglich aktuelle Version aller eingesetzten [Tools][container-tools] / [base-Images][base-images] oder Commits nutzen
   - Achtung: Neue alpine-Software-Version durch Erhöhung des base-Image möglich!
   - Aktualisierung der Tools aus dem base-Image
@@ -44,11 +43,9 @@ Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
    - große Images benötigen mehr Zeit zum Transfer und verlängern damit die Zeit von Deployments im Vergleich zu kleinen Images
    - es ist hilfreich, unbenötigte Dateien oder Pakete zu entfernen oder gar nicht erst zu installieren
 - auf schnelle Build-Zeit fokussieren
-   - möglichst [wenige Statements](minimize-number-of-layers) im Dockerfile
+   - möglichst [wenige Statements][minimize-number-of-layers] im Dockerfile
   - nur **ein** [COPY-Statement][copy-statement] für Dateisystemstruktur im Container
-  - [Multi-Stage-Builds](multistage-build) können helfen, die Anzahl von Image-Layern zu verringern
-[minimize-number-of-layers]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#minimize-the-number-of-layers
-[multistage-build]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#use-multi-stage-builds
+  - [Multi-Stage-Builds][multistage-build] können helfen, die Anzahl von Image-Layern zu verringern
 - LABELs für Metadaten verwenden
   - `LABEL maintainer="hello@cloudogu.com"` statt `MAINTAINER`-Statement
   - `NAME="namespace/dogu-name"` rein
@@ -58,6 +55,9 @@ Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
 - Downloads von externen Dateien (z. B. mit curl/wget) werden mit Prüfsummen/Hashes sichergestellt
    - dies erhöht die Sicherheit von späteren Builds, wenn eine Datei durch Angreifer durch eine andere Datei ausgetauscht wird
 
+[rootless-container]: https://docs.docker.com/engine/security/rootless/
+[minimize-number-of-layers]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#minimize-the-number-of-layers
+[multistage-build]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#use-multi-stage-builds
 [container-tools]: https://github.com/cloudogu/base/blob/3466b5e95c25a6c5ac569069167e513c71815797/Dockerfile#L10
 [base-images]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L1
 [healthcheck]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L3
