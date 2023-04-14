@@ -6,7 +6,7 @@ This chapter describes everything that goes beyond general or specific Dogu deve
 
 Building container images is central to Dogu development.
 The following sections address common best practices.
-These best practices come from both general container and Dogu development.
+These best practices come both from general container and Dogu development.
 
 ### 12-Factor App
 
