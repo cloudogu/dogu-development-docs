@@ -209,6 +209,7 @@ Standardmäßig umfasst die Doku folgende Dinge:
 
 Die Nutzungslizenz des Dogus sollte deutlich hervorgehen.
 Diese kann zum Beispiel in der Readme angegeben werden.
+Im Falle eines öffentlichen Repositories sollte die Lizenz als Datei im Repository-Root liegen.
 
 ### Readme
 
