@@ -93,7 +93,7 @@ Beispiel:
 ### Bash-Skripte
 
 Das Anlegen von Bash-Skripten in einem Dogu ist notwendig, um verschiedene Abläufe zu steuern.
-Darunter fällt das Starten und Upgraden des Dogus, sowie das Erstellen eines Service Accounts.
+Darunter fällt das Starten und Upgraden des Dogus, sowie das [Erstellen eines Service Accounts][create-service-account].
 
 Generell sollten alle Skripte folgende Konventionen erfüllen:
 
