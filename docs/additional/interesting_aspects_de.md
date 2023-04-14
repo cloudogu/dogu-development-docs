@@ -69,23 +69,26 @@ Für die Dogu-Entwicklung bei Cloudogu verwenden wir einen Resources-Ordner.
 Wir empfehlen auch anderen Dogu-Entwicklungsteams, diese Struktur zu verwenden.
 Diese Entscheidung ist aber dem Team selbst überlassen.
 
-Dieser enthält alle wichtigen Ressourcen, die ein Dogu zur Laufzeit benötigt.
-Der Ordner wird mit derselben Struktur wie das Container-Dateisystem aufgebaut.
+Dieser Ordner enthält alle wichtigen Ressourcen, die ein Dogu zur Laufzeit benötigt.
+
+Der komplette Ordner wird im Dockerfile in das Root-Verzeichnis des Dogu-Containers kopiert.
+Dadurch ist die Struktur von resources-Ordner und Container-Dateisystem identisch.
 
 Beispiel:
 - `resources/`
-  - `create-sa.sh` (optional)
-  - `remove-sa.sh` (optional)
-  - `post-upgrade.sh` (optional)
-  - `pre-upgrade.sh` (optional)
-  - `upgrade-notification.sh` (optional)
-  - `startup.sh` (empfohlen)
+  - [`create-sa.sh` (optional)][create-service-account]
+  - [`remove-sa.sh` (optional)][delete-service-account]
+  - [`post-upgrade.sh` (optional)][post-upgrade]
+  - [`pre-upgrade.sh` (optional)][pre-upgrade]
+  - [`upgrade-notification.sh` (optional)][upgrade-notification]
+  - [`startup.sh` (empfohlen)][startup-sh]
 
-Das Beispiel zeigt den Inhalt eines resource-Ordners eines Dogus.
-
-Der komplette Ordner wird im Dockerfile in das Root-Verzeichnis des Dogu-Containers kopiert.  
-Damit würde eine vorhandene Konfiguration der App im Pfad `/etc/your_app/config.json` überschrieben werden.  
-Durch diesen Ansatz ist es möglich alle Dateien des Containers anzupassen.
+[create-service-account]: ../important/relevant_functionalities_de.md#service-account-anlegen
+[delete-service-account]: ../important/relevant_functionalities_de.md#service-account-löschen
+[post-upgrade]: ../important/relevant_functionalities_de.md#post-upgrade---führt-alle-aktionen-nach-dem-upgrade-des-dogus-durch
+[pre-upgrade]: ../important/relevant_functionalities_de.md#pre-upgrade---führt-alle-aktionen-vor-dem-upgrade-des-dogus-durch
+[upgrade-notification]: ../important/relevant_functionalities_de.md#upgrade-notification---zeigt-eine-benachrichtigung-vor-der-upgradebestätigung-eines-dogus
+[startup-sh]: ../important/relevant_functionalities_de.md#aufbau-und-best-practices-von-startupsh
 
 ### Bash-Skripte
 
