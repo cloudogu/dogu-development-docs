@@ -43,8 +43,12 @@ Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
 - auf eine geringe Imagegröße achten
    - große Images benötigen mehr Zeit zum Transfer und verlängern damit die Zeit von Deployments im Vergleich zu kleinen Images
    - es ist hilfreich, unbenötigte Dateien oder Pakete zu entfernen oder gar nicht erst zu installieren
-- möglichst wenige Statements im Dockerfile
+- auf schnelle Build-Zeit fokussieren
+   - möglichst [wenige Statements](minimize-number-of-layers) im Dockerfile
   - nur **ein** [COPY-Statement][copy-statement] für Dateisystemstruktur im Container
+  - [Multi-Stage-Builds](multistage-build) können helfen, die Anzahl von Image-Layern zu verringern
+[minimize-number-of-layers]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#minimize-the-number-of-layers
+[multistage-build]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#use-multi-stage-builds
 - LABELs für Metadaten verwenden
   - `LABEL maintainer="hello@cloudogu.com"` statt `MAINTAINER`-Statement
   - `NAME="namespace/dogu-name"` rein
