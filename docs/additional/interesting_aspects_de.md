@@ -32,7 +32,7 @@ Die 12 Faktoren sind Folgende:
 
 ### Container-Images
 
-Beim Image-Bau sollte auf die folgenden Aspekte betrachtet werden:
+Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
 - möglichst root-less Container aufbauen
 - wenn möglich aktuelle Version aller eingesetzten [Tools][container-tools] / [base-Images][base-images] oder Commits nutzen
   - Achtung: Neue alpine-Software-Version durch Erhöhung des base-Image möglich!
