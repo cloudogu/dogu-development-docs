@@ -40,7 +40,9 @@ Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
   - Achtung: Neue alpine-Software-Version durch Erhöhung des base-Image möglich!
   - Aktualisierung der Tools aus dem base-Image
     - bspw. `apk update && apk upgrade`
-- wenn sinnvoll auf eine möglichst geringe Imagegröße achten
+- auf eine geringe Imagegröße achten
+   - große Images benötigen mehr Zeit zum Transfer und verlängern damit die Zeit von Deployments im Vergleich zu kleinen Images
+   - es ist hilfreich, unbenötigte Dateien oder Pakete zu entfernen oder gar nicht erst zu installieren
 - möglichst wenige Statements im Dockerfile
   - nur **ein** [COPY-Statement][copy-statement] für Dateisystemstruktur im Container
 - LABELs für Metadaten verwenden
