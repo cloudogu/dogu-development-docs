@@ -133,7 +133,7 @@ Für die sinnvolle Benutzung kann das [Startup-Skript vom Nexus][doguctl-example
 [doguctl-usage]: ../important/relevant_functionalities_de.md#die-nutzung-von-doguctl
 [doguctl-example]: https://github.com/cloudogu/nexus/blob/4d2de3733eca684df1363179c527363a4d31526e/resources/startup.sh
 
-## Schnelle Feedback-Zyklen durch Tool-Entwicklung ohne CES
+## Schnelle Feedback-Zyklen
 
 In der Entwicklung ist eine rasche Erkenntnis wichtig, ob der richtige Entwicklungspfad beschritten wurde.
 Ein schnelles Feedback ist umso wichtiger, je komplexer die Umgebung wird.
