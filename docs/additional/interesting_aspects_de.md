@@ -213,7 +213,8 @@ Im Falle eines öffentlichen Repositories sollte die Lizenz als Datei im Reposit
 
 ### Readme
 
-Eine Readme ist sowohl für eigene Entwicklungen als auch im Partnerkontext mit externen Entwicklern sinnvoll.
+Eine Readme ist eine Datei, die diverse, oft wichtige Informationen über die mitgelieferte Software enthält.
+Sie ist sowohl für eigene Entwicklungen als auch im Partnerkontext mit externen Entwicklern sinnvoll.
 Bei öffentlichen Repositories sollte jedoch ein höherer Maßstab an einer Readme angelegt werden.
 
 Eine Readme-Datei liegt im Repository-Root und beschreibt knapp Hinweise zum generellen Zweck des Dogus.
