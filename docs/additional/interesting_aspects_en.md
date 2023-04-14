@@ -33,14 +33,18 @@ The 12 factors are as follows:
 ### Container images
 
 When building images, the following aspects should be considered:
-- build root-less containers if possible
+- build [root-less containers][rootless-container] if possible
 - if possible use current version of all used [tools][container-tools] / [base-images][base-images] or commits
   - Attention: New alpine software version possible by increasing the base image version!
   - Update the tools of the base-image
     - e.g. `apk update && apk upgrade`
-- if reasonable keep the image size small
-- as few statements as possible in the Dockerfile
+- keep the image size small
+  - compared to smaller images, large images consume more time during the image download and container instantiation and impede the time of deployment
+  - it's a good idea to remove unnecessary files or packages, or even avoid their installiation in the first place
+- focus on fast (re-)build times
+  - as [few statements][minimize-number-of-layers] as possible in the Dockerfile
   - **one** [COPY statement][copy-statement] for container file system only
+  - [Multi-Stage-Builds][multistage-build] may help to reduce the number of image layers
 - use LABELs for metadata
   - `LABEL maintainer="hello@cloudogu.com"` instead of `MAINTAINER` statement
   - `NAME="namespace/dogu-name"` pure
@@ -48,7 +52,11 @@ When building images, the following aspects should be considered:
 - the Dockerfile contains a [healthcheck][healthcheck]
   - e.g.: `HEALTHCHECK CMD doguctl healthy nexus || exit 1`
 - downloads (with curl/wget or similar) are checked with checksums/hashes
+  - verifying downloaded artifacts increases the security of later builds in case an attacker replaced a file with malware
 
+[rootless-container]: https://docs.docker.com/engine/security/rootless/
+[minimize-number-of-layers]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#minimize-the-number-of-layers
+[multistage-build]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#use-multi-stage-builds
 [container-tools]: https://github.com/cloudogu/base/blob/3466b5e95c25a6c5ac569069167e513c71815797/Dockerfile#L10
 [base-images]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L1
 [healthcheck]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L3
@@ -61,27 +69,30 @@ We also recommend other Dogu development teams to use this structure.
 However, this decision is up to the team itself.
 
 This contains all the important resources that a Dogu needs at runtime.
-The folder is built using the same structure as the container file system.
+
+The complete folder is copied to the root directory of the dogu container in the Dockerfile.
+Therefore, the structure of the resources folder and the container file system is identical.
 
 Example:
 - `resources/`
-  - `create-sa.sh` (optional)
-  - `remove-sa.sh` (optional)
-  - `post-upgrade.sh` (optional)
-  - `pre-upgrade.sh` (optional)
-  - `upgrade-notification.sh` (optional)
-  - `startup.sh` (encouraged)
+  - [`create-sa.sh` (optional)][create-service-account]
+  - [`remove-sa.sh` (optional)][delete-service-account]
+  - [`post-upgrade.sh` (optional)][post-upgrade]
+  - [`pre-upgrade.sh` (optional)][pre-upgrade]
+  - [`upgrade-notification.sh` (optional)][upgrade-notification]
+  - [`startup.sh` (encouraged)][startup-sh]
 
-This example shows the contents of a resource folder of a Dogu.
-
-The complete folder is copied to the root directory of the dogu container in the Dockerfile.
-This would overwrite an existing configuration of the app in the path `/etc/your_app/config.json`.
-Using this approach, it is possible to customize all files of the container.
+[create-service-account]: ../important/relevant_functionalities_de.md#service-account-anlegen
+[delete-service-account]: ../important/relevant_functionalities_de.md#service-account-löschen
+[post-upgrade]: ../important/relevant_functionalities_de.md#post-upgrade---führt-alle-aktionen-nach-dem-upgrade-des-dogus-durch
+[pre-upgrade]: ../important/relevant_functionalities_de.md#pre-upgrade---führt-alle-aktionen-vor-dem-upgrade-des-dogus-durch
+[upgrade-notification]: ../important/relevant_functionalities_de.md#upgrade-notification---zeigt-eine-benachrichtigung-vor-der-upgradebestätigung-eines-dogus
+[startup-sh]: ../important/relevant_functionalities_de.md#aufbau-und-best-practices-von-startupsh
 
 ### Bash scripts
 
 The creation of bash scripts in a dogu is necessary to control various processes.
-This includes starting and upgrading the dogu, as well as creating a service account.
+This includes starting and upgrading the dogu, as well as [creating a service account][create-service-account].
 
 In general, all scripts should conform to the following conventions:
 
@@ -106,9 +117,9 @@ Such a method makes the whole script more readable and slows down the restart lo
 
 [strict-mode]: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 
-#### Line-Endings
+#### Line Breaks
 
-Unix-based line endings should be used for all scripts at all times.#### Use doguctl
+Unix-based line breaks should be used for all scripts at all times (`\n`).
 
 #### Use doguctl
 
@@ -121,14 +132,7 @@ Examples of reasonable usage can be found in the [Nexus startup script][doguctl-
 [doguctl-usage]: ../important/relevant_functionalities_en.md#usage-of-doguctl
 [doguctl-example]: https://github.com/cloudogu/nexus/blob/4d2de3733eca684df1363179c527363a4d31526e/resources/startup.sh
 
-### Dogu startup script: startup.sh
-
-The [dogu-startup-script][startup-sh] is the entry point of a dogu container and manages all the steps necessary to start the dogu smoothly.
-Conventionally, the startup script is created with the name `startup.sh` in the `resources` folder of the Dogu.
-
-[startup-sh]: ../important/relevant_functionalities_en.md#structure-and-best-practices-of-startupsh-
-
-## Fast feedback cycles through tool development without CES.
+## Fast feedback cycles
 
 In development, rapid insight into whether the right development path has been followed is important.
 Fast feedback is even more important the more complex the environment becomes.
@@ -156,7 +160,7 @@ For an example [see CAS][local-cas-example].
 
 ## Quality Assurance for Dogus
 
-### Container Validation (GOSS)
+### Container Validation
 
 Container validation assures the correct configuration of the container, which is necessary for the smooth execution of the software.
 
@@ -208,13 +212,17 @@ This can be specified in the Readme, for example.
 
 ### Readme
 
-A Readme is useful both for your own developments and in a partner context with external developers.
+A Readme is a file consisting of diverse and often important information about the given software.
+It is useful both for your own developments and in a partner context with external developers.
 In the case of public repositories, however, a higher standard should be applied to a Readme.
 
 A Readme file is located in the repository root and concisely describes notes on the general purpose of the Dogu.
-This can be in the form of a quickstart guide, for example, describing how to set up a local development environment.
-It should also include a reference to the documentation folder and can also refer to specific pages of the documentation.
-Finally, it is recommended to specify required resources for use and a person responsible for the Dogu.
+For users this can be some sorts of quickstart guide of how to use the Dogu, or even a feature list.
+For Dogu developers the readme may provide insights of how collaboration is possible or which copyright license was chosen.
+Additional docs can be linked to provide further information for both users and developers.
+
+Administrators may want to find information about the resource consumption of this dogu.
+Finally, the readme should clarify who is responsible for this Dogu.
 
 ### Changelog
 
@@ -240,6 +248,8 @@ or should be otherwise communicated to Cloudogu directly (e.g. in case of a priv
 First, you need to create an account on https://account.cloudogu.com.
 After that, just send us a request with your account name / email address and the Dogu namespace you want (e.g. _yourcompany_).
 We will create the namespace and grant your account permission to push to the namespace.
+
+This step is necessary only once per account.
 
 ### Release process
 

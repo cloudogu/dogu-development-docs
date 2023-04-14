@@ -118,9 +118,9 @@ Solch eine Methode macht das komplette Skript lesbarer und bremst den Neustart-L
 
 [strict-mode]: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 
-#### Line-Endings
+#### Line-Breaks
 
-Für alle Skripte sollten jederzeit Unix-basierte Line-Endings benutzt werden.
+Für alle Skripte sollten jederzeit Unix-basierte Line-Breaks benutzt werden (`\n`).
 
 #### Doguctl verwenden
 
@@ -221,6 +221,7 @@ Eine Readme-Datei liegt im Repository-Root und beschreibt knapp Hinweise zum gen
 Für Anwender kann dies in Form eines Quickstart-Guides sein, wie man das Dogu verwendet oder Auflistungen von Features.
 Für Dogu-Entwickler könnte die Readme Hinweise auf Kollaboration eingehen oder auf die verwendete Urheberlizenz hinweisen.
 Verlinkung auf weitere Dokumentation stellt zudem ein Mittel dar, um sowohl Übersicht zu wahren als auch weitere Informationen anzubieten.
+
 Für Administrierende ist es hilfreich, wenn die Readme angibt, wie viele Ressourcen das Dogu benötigt.
 Die Readme sollte abschließend klären, wer für das Dogu verantwortlich ist.
 
