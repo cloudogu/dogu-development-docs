@@ -4,8 +4,8 @@ Dieses Kapitel beschreibt all das, das über die allgemeine oder spezielle Dogu-
 
 ## Containers
 
-Der Bau von Container-Images ist zentraler Gegenstand der Dogu-Entwicklung.  
-Die folgenden Abschnitte gehen auf übliche Best Practices ein.  
+Der Bau von Container-Images ist zentraler Gegenstand der Dogu-Entwicklung.
+Die folgenden Abschnitte gehen auf übliche Best Practices ein.
 Diese Best Practices stammen sowohl aus der allgemeinen Container- als auch aus der Dogu-Entwicklung.
 
 ### 12-Factor-App
@@ -92,16 +92,16 @@ Beispiel:
 
 ### Bash-Skripte
 
-Das Anlegen von Bash-Skripten in einem Dogu ist notwendig, um verschiedene Abläufe zu steuern.  
+Das Anlegen von Bash-Skripten in einem Dogu ist notwendig, um verschiedene Abläufe zu steuern.
 Darunter fällt das Starten und Upgraden des Dogus, sowie das Erstellen eines Service Accounts.
 
 Generell sollten alle Skripte folgende Konventionen erfüllen:
 
 #### Bash-Strict-Mode
 
-Bei Bash-Skripten soll immer der [Bash-Strict-Mode][strict-mode] verwendet werden.  
+Bei Bash-Skripten soll immer der [Bash-Strict-Mode][strict-mode] verwendet werden.
 Dieser verhindert bei einem Fehlverhalten die weitere Ausführung des Skripts.
-Generell ist es sinnvoll, alle potenziellen Fehler im Startskript abzufangen und mit einer eigenen Fehlermethode zu berichten.  
+Generell ist es sinnvoll, alle potenziellen Fehler im Startskript abzufangen und mit einer eigenen Fehlermethode zu berichten.
 Diese könnte folgendermaßen aussehen:
 
 ```shell
@@ -124,10 +124,10 @@ Für alle Skripte sollten jederzeit Unix-basierte Line-Endings benutzt werden.
 
 #### Doguctl verwenden
 
-Doguctl ist ein Kommandozeilentool, um die Konfiguration eines Dogus zu vereinfachen.  
+Doguctl ist ein Kommandozeilentool, um die Konfiguration eines Dogus zu vereinfachen.
 Informationen über die Benutzung finden sich in ["Die Nutzung von doguctl"][doguctl-usage].
 
-Wo anwendbar, soll immer Doguctl in Bash-Skripten wie der `startup.sh` verwendet werden.  
+Wo anwendbar, soll immer Doguctl in Bash-Skripten wie der `startup.sh` verwendet werden.
 Für die sinnvolle Benutzung kann das [Startup-Skript vom Nexus][doguctl-example] als Beispiel genommen werden.
 
 [doguctl-usage]: ../important/relevant_functionalities_de.md#die-nutzung-von-doguctl
@@ -142,7 +142,7 @@ Konventionell wird das Startup-Skript mit dem Namen `startup.sh` in dem `resourc
 
 ## Schnelle Feedback-Zyklen durch Tool-Entwicklung ohne CES
 
-In der Entwicklung ist eine rasche Erkenntnis wichtig, ob der richtige Entwicklungspfad beschritten wurde.  
+In der Entwicklung ist eine rasche Erkenntnis wichtig, ob der richtige Entwicklungspfad beschritten wurde.
 Ein schnelles Feedback ist umso wichtiger, je komplexer die Umgebung wird.
 
 In der Dogu-Entwicklung lässt sich schnelles Feedback auf unterschiedliche Weise erreichen:
@@ -157,11 +157,11 @@ Mehr Information zu Multi-Stage-Build gibt es auf der [offiziellen Website von D
 
 ### CES-freie Entwicklungsumgebung
 
-Das Bauen des Dogus und das Ausliefern ins lokale EcoSystem fordert nicht nur viel Zeit, sondern nimmt auch die Möglichkeit die Software effektiv zu debuggen.  
+Das Bauen des Dogus und das Ausliefern ins lokale EcoSystem fordert nicht nur viel Zeit, sondern nimmt auch die Möglichkeit die Software effektiv zu debuggen.
 Daher ist es sinnvoll eine lokale Entwicklungsumgebung unabhängig vom CES aufzubauen, um die Dogu-Software effektiv auszuführen, zu testen und zu debuggen.
 
 Die lokale Entwicklungsumgebung muss alle abhängigen CES-Dienste durch lokal gestartete Alternativen zu Verfügung stellen.
-Wir empfehlen, dass eine lokale Entwicklungsumgebung in Form einer `docker-compose.yml`-Datei definiert ist und jederzeit einfach mit `docker-compose up` gestartet und mit `docker-compose down` heruntergefahren werden kann.  
+Wir empfehlen, dass eine lokale Entwicklungsumgebung in Form einer `docker-compose.yml`-Datei definiert ist und jederzeit einfach mit `docker-compose up` gestartet und mit `docker-compose down` heruntergefahren werden kann.
 Für ein Beispiel [siehe CAS][local-cas-example].
 
 [local-cas-example]: https://github.com/cloudogu/cas/blob/develop/app/docker-compose.yml
@@ -170,22 +170,22 @@ Für ein Beispiel [siehe CAS][local-cas-example].
 
 ### Container Validation (GOSS)
 
-Die Container-Validation versichert die richtige Konfiguration des Containers, die für eine reibungslose Ausführung der Software notwendig ist.  
+Die Container-Validation versichert die richtige Konfiguration des Containers, die für eine reibungslose Ausführung der Software notwendig ist.
 
-Dafür verwenden wir in unseren Dogus das Server-Validation Programm [goss][goss].  
+Dafür verwenden wir in unseren Dogus das Server-Validation Programm [goss][goss].
 Die eigentlichen goss-Tests werden in der folgenden Datenstruktur im Dogu angelegt:
 - `<Root-Verzeichnis des Dogus>/`
   - `spec/`
     - `goss/`
       - `goss.yml` (enthält alle goss-Tests)
 
-Die goss-Tests sollten am besten alle wichtigen Aspekte für den reibungslosen Start eines Dogus überprüfen.  
+Die goss-Tests sollten am besten alle wichtigen Aspekte für den reibungslosen Start eines Dogus überprüfen.
 Darunter fallen Aspekte wie:
 - Überprüfen der Berechtigung für Skripte (startup.sh), Volumes
 - Überprüfen der UID & GID für Dateien (startup.sh, resources, Volumes, Schreib-abhängige Pfade)
 - Erreichbarkeit der Software: TCP-Health-Checks
 
-Für die Integration in eine Pipeline empfehlen wir den Einsatz der `ecoSystem.verify()` Methode aus der [dogu-build-lib][dogu-build-lib].  
+Für die Integration in eine Pipeline empfehlen wir den Einsatz der `ecoSystem.verify()` Methode aus der [dogu-build-lib][dogu-build-lib].
 Ein beispielhafter Aufruf sieht in einem Jenkinsfile wie folgt aus:
 
 ```groovy
@@ -219,7 +219,7 @@ Diese kann zum Beispiel in der Readme angegeben werden.
 
 ### Readme
 
-Eine Readme ist sowohl für eigene Entwicklungen als auch im Partnerkontext mit externen Entwicklern sinnvoll.  
+Eine Readme ist sowohl für eigene Entwicklungen als auch im Partnerkontext mit externen Entwicklern sinnvoll.
 Bei öffentlichen Repositories sollte jedoch ein höherer Maßstab an einer Readme angelegt werden.
 
 Eine Readme-Datei liegt im Repository-Root und beschreibt knapp Hinweise zum generellen Zweck des Dogus.
@@ -233,10 +233,10 @@ Changelogs werden für Menschen geschrieben, die Neuigkeiten in neueren Releases
 
 Das Format des Changelogs sollte nach **[keep a changelog](https://keepachangelog.com)** angelegt sein.
 
-Neue Änderungen werden stets in die oberste Sektion `## [Unreleased]` hinzugefügt.  
+Neue Änderungen werden stets in die oberste Sektion `## [Unreleased]` hinzugefügt.
 Bei einem neuen Release wandern diese Änderungen in eine neue Sektion, die die entsprechende Versionsnummer enthält.
 
-Bei allen Änderungen sollten Verweise auf die Vorgänge des verwendeten Issue-Trackers hinzugefügt werden.  
+Bei allen Änderungen sollten Verweise auf die Vorgänge des verwendeten Issue-Trackers hinzugefügt werden.
 Handelt es sich außerdem um komplexere Vorgänge, ist zusätzlich ein Verweis zu einer Dokumentation sinnvoll.
 
 ### Systemanforderungen
@@ -248,13 +248,13 @@ oder sollten Cloudogu auf andere Weise direkt mitgeteilt werden (z.B. im Falle e
 
 ### Cloudogu-Account und Berechtigungen
 
-Zunächst müssen Sie einen Account auf https://account.cloudogu.com erstellen.  
+Zunächst müssen Sie einen Account auf https://account.cloudogu.com erstellen.
 Danach schicken Sie uns einfach eine Anfrage mit Ihrem Account-Namen / Ihrer E-Mail-Adresse und dem gewünschten Dogu-Namespace (z.B. _yourcompany_).
 Wir erstellen den Namespace und erteilen Ihrem Account die Berechtigung, auf den Namespace zu pushen.
 
 ### Release-Prozess
 
-Nun können Sie sich über `cesapp login` mit Ihrem Cloudogu-Account einloggen.  
+Nun können Sie sich über `cesapp login` mit Ihrem Cloudogu-Account einloggen.
 Das Dogu kann dann einfach mit `cesapp push` in die Dogu-Registry gepusht werden.
 
 Wir empfehlen, diese Schritte automatisch im CI/CD-Prozess für Ihren Production-Release-Branch auszuführen.

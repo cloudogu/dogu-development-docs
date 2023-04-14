@@ -4,8 +4,8 @@ This chapter describes everything that goes beyond general or specific Dogu deve
 
 ## Containers
 
-Building container images is central to Dogu development.  
-The following sections address common best practices.  
+Building container images is central to Dogu development.
+The following sections address common best practices.
 These best practices come from both general container and Dogu development.
 
 ### 12-Factor App
@@ -74,22 +74,22 @@ Example:
 
 This example shows the contents of a resource folder of a Dogu.
 
-The complete folder is copied to the root directory of the dogu container in the Dockerfile.  
-This would overwrite an existing configuration of the app in the path `/etc/your_app/config.json`.  
+The complete folder is copied to the root directory of the dogu container in the Dockerfile.
+This would overwrite an existing configuration of the app in the path `/etc/your_app/config.json`.
 Using this approach, it is possible to customize all files of the container.
 
 ### Bash scripts
 
-The creation of bash scripts in a dogu is necessary to control various processes.  
+The creation of bash scripts in a dogu is necessary to control various processes.
 This includes starting and upgrading the dogu, as well as creating a service account.
 
 In general, all scripts should conform to the following conventions:
 
 #### bash-strict-mode
 
-Bash scripts should always use [bash-strict-mode][strict-mode].  
+Bash scripts should always use [bash-strict-mode][strict-mode].
 This prevents further execution of the script in the event of a misbehavior.
-In general, it makes sense to catch all potential errors in the startup script and report them with a separate error method.  
+In general, it makes sense to catch all potential errors in the startup script and report them with a separate error method.
 This could look like this:
 
 ```shell
@@ -112,10 +112,10 @@ Unix-based line endings should be used for all scripts at all times.#### Use dog
 
 #### Use doguctl
 
-Doguctl is a command line tool to simplify the configuration of a dogu.  
+Doguctl is a command line tool to simplify the configuration of a dogu.
 Info on its functionalities can be found in ["Usage of doguctl"][doguctl-usage].
 
-Where applicable, always use doguctl in bash scripts like `startup.sh`.  
+Where applicable, always use doguctl in bash scripts like `startup.sh`.
 Examples of reasonable usage can be found in the [Nexus startup script][doguctl-example].
 
 [doguctl-usage]: ../important/relevant_functionalities_en.md#usage-of-doguctl
@@ -130,7 +130,7 @@ Conventionally, the startup script is created with the name `startup.sh` in the 
 
 ## Fast feedback cycles through tool development without CES.
 
-In development, rapid insight into whether the right development path has been followed is important.  
+In development, rapid insight into whether the right development path has been followed is important.
 Fast feedback is even more important the more complex the environment becomes.
 
 In Dogu development, rapid feedback can be achieved in a number of ways:
@@ -145,11 +145,11 @@ More information on multi-stage build is available on the [official Docker websi
 
 ### CES-free development environment.
 
-Building the Dogu and delivering it to the local EcoSystem not only takes a lot of time, but also takes away the ability to debug the software effectively.  
+Building the Dogu and delivering it to the local EcoSystem not only takes a lot of time, but also takes away the ability to debug the software effectively.
 Therefore, it makes sense to build a local development environment independent of the CES to effectively run, test and debug the Dogu software.
 
 The local development environment must provide all dependent CES services through locally started alternatives.
-We recommend that a local development environment is defined in the form of a `docker-compose.yml` file and can be easily started at any time with `docker-compose up` and shut down with `docker-compose down`.  
+We recommend that a local development environment is defined in the form of a `docker-compose.yml` file and can be easily started at any time with `docker-compose up` and shut down with `docker-compose down`.
 For an example [see CAS][local-cas-example].
 
 [local-cas-example]: https://github.com/cloudogu/cas/blob/develop/app/docker-compose.yml
@@ -158,22 +158,22 @@ For an example [see CAS][local-cas-example].
 
 ### Container Validation (GOSS)
 
-Container validation assures the correct configuration of the container, which is necessary for the smooth execution of the software.  
+Container validation assures the correct configuration of the container, which is necessary for the smooth execution of the software.
 
-For this purpose, we use the server validation program [goss][goss] in our Dogus.  
+For this purpose, we use the server validation program [goss][goss] in our Dogus.
 The actual goss tests are created in the following data structure in the dogu:
 - `<root directory of the Dogu>/`
   - `spec/`
     - `goss/`
       - `goss.yml` (contains all goss tests)
 
-The goss tests should ideally check all important aspects for the smooth start of a dogu.  
+The goss tests should ideally check all important aspects for the smooth start of a dogu.
 This includes aspects like:
 - Checking permission for scripts (startup.sh), volumes.
 - Checking the UID & GID for files (startup.sh, resources, volumes, write-dependent paths)
 - Accessibility of the software: TCP health checks
 
-For pipeline integration, we recommend using the `ecoSystem.verify()` method from the [dogu-build-lib][dogu-build-lib].  
+For pipeline integration, we recommend using the `ecoSystem.verify()` method from the [dogu-build-lib][dogu-build-lib].
 An example call looks like the following in a Jenkinsfile:
 
 ```groovy
@@ -208,7 +208,7 @@ This can be specified in the Readme, for example.
 
 ### Readme
 
-A Readme is useful both for your own developments and in a partner context with external developers.  
+A Readme is useful both for your own developments and in a partner context with external developers.
 In the case of public repositories, however, a higher standard should be applied to a Readme.
 
 A Readme file is located in the repository root and concisely describes notes on the general purpose of the Dogu.
@@ -222,10 +222,10 @@ Changelogs are written for people who want to understand what's new in releases.
 
 The format of the changelog should follow **[keep a changelog](https://keepachangelog.com)**.
 
-New changes are always added to the top section `## [Unreleased]`.  
+New changes are always added to the top section `## [Unreleased]`.
 When a new release is made, these changes move to a new section containing the corresponding version number.
 
-For all changes, references to the operations of the issue tracker used should be added.  
+For all changes, references to the operations of the issue tracker used should be added.
 In addition, if more complex procedures are involved, a reference to documentation is useful.
 
 ### System requirements
@@ -237,13 +237,13 @@ or should be otherwise communicated to Cloudogu directly (e.g. in case of a priv
 
 ### Cloudogu account and permissions
 
-First, you need to create an account on https://account.cloudogu.com.  
+First, you need to create an account on https://account.cloudogu.com.
 After that, just send us a request with your account name / email address and the Dogu namespace you want (e.g. _yourcompany_).
 We will create the namespace and grant your account permission to push to the namespace.
 
 ### Release process
 
-Now you can log in with your Cloudogu account via `cesapp login`.  
+Now you can log in with your Cloudogu account via `cesapp login`.
 The Dogu can then be easily pushed to the Dogu registry using `cesapp push`.
 
 We recommend to perform these steps automatically in the CI/CD process for your production release branch.
