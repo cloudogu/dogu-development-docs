@@ -246,7 +246,7 @@ The logout endpoint is used to invalidate the long term token from CAS.
 
 ### OpenID Connect protocol
 
-CAS provides OAuth/OpenID Connect (OIDC) as a protocol for authentication including SSO/SLO. The following describes the specification of the OpenID Connect protocol in CAS. 
+CAS provides OAuth/OpenID Connect (OIDC) as a protocol for authentication including SSO/SLO. The following describes the specification of the OpenID Connect protocol in CAS.
 
 #### Creating an OIDC Service Account for a dogu
 
@@ -468,7 +468,7 @@ The global configuration is located in the registry path `/config/_global/` and 
       - the current name of the LDAP group whose members administer the Cloudogu EcoSystem instance in the UI.
       - This value may change during operation. See also the section on [admin group changeability](#changeability-of-the-admin-group).
 - Dogu states `/state/<dogu>`
-   - if the dogu defines a [HealthCheck](../core/compendium_en.md#healthchecks) of type `state`, then it allows 
+   - if the dogu defines a [HealthCheck](../core/compendium_en.md#healthchecks) of type `state`, then it allows
      administrators and other dogus to get health hints on the dogu.
    - In your own dogu e.g. set `doguctl state installing` when a longer installation routine is started. Just before the main process is started then use `doguctl state ready` to indicate a proper operating state.
    - In the EcoSystem host this can be checked with `cesapp healthy <dogu>`.
@@ -513,7 +513,7 @@ scripts [e.g. in the Redmine dogu](https://github.com/cloudogu/redmine/blob/deve
 
 ### Script interpreter
 
-In order to run a script in a dogu, a script interpreter must exist in the container image. This can be an official package (like `bash`), but there is nothing against using your own script interpreter. 
+In order to run a script in a dogu, a script interpreter must exist in the container image. This can be an official package (like `bash`), but there is nothing against using your own script interpreter.
 
 There is a broad landscape of available scripting languages. While interpreters like Python, Ruby, Groovy, or Kotlin provide a certain developer experience, they also bring a larger binary size to the table. Since the [Bash interpreter](https://www.gnu.org/software/bash/) is widely used in the Linux community and because of its small footprint regarding the container image size, Bash syntax is used here.
 
@@ -525,7 +525,7 @@ The first thing to do is to set the following options
 
 ```bash
 #!/bin/bash
-set -o errexit # terminate the whole script (and thus the container) on an uncaught error 
+set -o errexit # terminate the whole script (and thus the container) on an uncaught error
 set -o nounset # find uninitialized variables
 set -o pipefail # don't ignore errors on pipe usage
 ```
@@ -561,8 +561,8 @@ Bash functions help here:
 function setDoguLogLevel() {
   echo "Mapping dogu specific log level..."
   currentLogLevel=$(doguctl config --default "WARN" "logging/root")
-  
-  # map here the log level to the log configuration of the dogu 
+
+  # map here the log level to the log configuration of the dogu
 }
 ```
 
@@ -1051,13 +1051,13 @@ If no value is set for memory limiting, it will not take place. For swap limitin
 
 In order for the Cloudogu EcoSystem host to limit memory **and** swap, the following settings must be done beforehand:
 1. open the file `/etc/default/grub`
-2. add the following value to the variable `GRUB_CMDLINE_LINUX_DEFAULT`:  
+2. add the following value to the variable `GRUB_CMDLINE_LINUX_DEFAULT`:
    `cgroup_enable=memory swapaccount=1`.
 3. save the changes
 4. execute the command `sudo update-grub` or `sudo update-bootloader --refresh`.
 5. reboot the machine
 
-**Warning!**  
+**Warning!**
 Enabling the above with `cgroup_enable=memory swapaccount=1` is expected to result in a memory overhead of 1% and a performance penalty of 10% even if Docker is not running.
 
 #### Limit in Dogu
