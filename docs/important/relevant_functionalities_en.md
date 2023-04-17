@@ -246,7 +246,7 @@ The logout endpoint is used to invalidate the long term token from CAS.
 
 ### OpenID Connect protocol
 
-CAS provides OAuth/OpenID Connect (OIDC) as a protocol for authentication including SSO/SLO. The following describes the specification of the OpenID Connect protocol in CAS. 
+CAS provides OAuth/OpenID Connect (OIDC) as a protocol for authentication including SSO/SLO. The following describes the specification of the OpenID Connect protocol in CAS.
 
 #### Creating an OIDC Service Account for a dogu
 
@@ -468,7 +468,7 @@ The global configuration is located in the registry path `/config/_global/` and 
       - the current name of the LDAP group whose members administer the Cloudogu EcoSystem instance in the UI.
       - This value may change during operation. See also the section on [admin group changeability](#changeability-of-the-admin-group).
 - Dogu states `/state/<dogu>`
-   - if the dogu defines a [HealthCheck](../core/compendium_en.md#healthchecks) of type `state`, then it allows 
+   - if the dogu defines a [HealthCheck](../core/compendium_en.md#healthchecks) of type `state`, then it allows
      administrators and other dogus to get health hints on the dogu.
    - In your own dogu e.g. set `doguctl state installing` when a longer installation routine is started. Just before the main process is started then use `doguctl state ready` to indicate a proper operating state.
    - In the EcoSystem host this can be checked with `cesapp healthy <dogu>`.
@@ -513,7 +513,7 @@ scripts [e.g. in the Redmine dogu](https://github.com/cloudogu/redmine/blob/deve
 
 ### Script interpreter
 
-In order to run a script in a dogu, a script interpreter must exist in the container image. This can be an official package (like `bash`), but there is nothing against using your own script interpreter. 
+In order to run a script in a dogu, a script interpreter must exist in the container image. This can be an official package (like `bash`), but there is nothing against using your own script interpreter.
 
 There is a broad landscape of available scripting languages. While interpreters like Python, Ruby, Groovy, or Kotlin provide a certain developer experience, they also bring a larger binary size to the table. Since the [Bash interpreter](https://www.gnu.org/software/bash/) is widely used in the Linux community and because of its small footprint regarding the container image size, Bash syntax is used here.
 
@@ -525,7 +525,7 @@ The first thing to do is to set the following options
 
 ```bash
 #!/bin/bash
-set -o errexit # terminate the whole script (and thus the container) on an uncaught error 
+set -o errexit # terminate the whole script (and thus the container) on an uncaught error
 set -o nounset # find uninitialized variables
 set -o pipefail # don't ignore errors on pipe usage
 ```
@@ -561,8 +561,8 @@ Bash functions help here:
 function setDoguLogLevel() {
   echo "Mapping dogu specific log level..."
   currentLogLevel=$(doguctl config --default "WARN" "logging/root")
-  
-  # map here the log level to the log configuration of the dogu 
+
+  # map here the log level to the log configuration of the dogu
 }
 ```
 
@@ -1047,7 +1047,22 @@ If a Dogu exceeds its memory limit, the largest process in the container is kill
 
 If no value is set for memory limiting, it will not take place. For swap limiting `0b` is the default value and thus does not provide swap.
 
-To be able to limit, the `dogu.json` of the Dogus must contain the following entries:
+#### Preparation of the memory limits in the host
+
+In order for the Cloudogu EcoSystem host to limit memory **and** swap, the following settings must be done beforehand:
+1. open the file `/etc/default/grub`
+2. add the following value to the variable `GRUB_CMDLINE_LINUX_DEFAULT`:
+   `cgroup_enable=memory swapaccount=1`
+3. save the changes
+4. execute the command `sudo update-grub` or `sudo update-bootloader --refresh`
+5. reboot the machine
+
+**Warning!**
+Enabling the above with `cgroup_enable=memory swapaccount=1` is expected to result in a memory overhead of 1% and a performance penalty of 10% even if Docker is not running.
+
+#### Limit in Dogu
+
+To be able to limit memory, the `dogu.json` of the Dogus must contain the following entries:
 
 ```json
 {
@@ -1083,6 +1098,13 @@ Setting the values can be done in the following ways:
 
 To apply the limits, the dogu must be recreated (`cesapp recreate <dogu name>`) and then restarted (`cesapp start <dogu name>`).
 
+#### Checking the limitation
+
+The memory limit (RAM only, no swap) can be checked using `docker stats <doguname>`.
+The column `MEM USAGE / LIMIT` should correctly show the memory limit set.
+
+#### Limit in Java Dogus
+
 A special case is the limiting of a Java process. If a Dogu contains a Java process, the following additional entries can be added to `dogu.json`:
 
 ```json
@@ -1110,7 +1132,10 @@ A special case is the limiting of a Java process. If a Dogu contains a Java proc
 }
 ```
 
-The values configurable with it must be given in the start scripts of the Dogus to the appropriate Java process as parameters. A reference implementation can be found in the [Nexus Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
+**Notes:**
+- The percentages always refer to the limited memory of a container. If no limit is set, the percentages are also ignored.
+- A Java process should not be allocated too large a share of the memory. One should always consider any other processes that also need memory. If this does not happen, the actual program may crash.
+- The values that can be configured with this must be given as parameters to the corresponding Java process in the start scripts of the Dogus. A reference implementation can be found in the [Nexus Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
 
 ### Backup & restore capability
 
@@ -1140,11 +1165,28 @@ These abstract log levels help the administrator as he does not need to know wha
 
 Dogu developers must take care that these four log levels are mapped meaningfully to the log levels of the software in the Dogu, which may have different names (e.g. `TRACE` or `FATAL`).
 
+#### Log level backgrounds
+
+Nobody reads logs. If someone reads them, it is not with pleasure, for two reasons:
+1. standard logs contain mostly unimportant information for the viewer
+2. logs are only read when a problem occurs.
+
+Log level control addresses these circumstances.
+
+If a dogu logs too many lines by default and permanently, then administrators or support staff have their lives made harder than necessary.
+This is because they have to work through a mountain of lines and separate the logs into relevant and irrelevant information.
+In addition, excessive logging (e.g. long stack traces combined with container crash loops) can lead to so much data that the hard disk fills up and log rotation is no longer possible.
+
 #### Log levels and their margins
 
 The log levels are sorted by level of detail from coarse to fine and contain the respective level above. For example, log outputs of the level `WARN` thus also contain log outputs of the level `ERROR`.
 
 This gives the developer a great deal of freedom as to which logs are output at which log level.
+
+To distinguish between relevant and irrelevant, there is of course room for interpretation.
+Cloudogu as a Dogu provider supports the customer in making logging as low and as concise as possible for their productive systems.
+This means, based on our experience as both software developers and Dogu users, we decide for the customer,
+which log sources, log lines etc. are appropriate per Dogu and log level.
 
 ##### `ERROR`
 
@@ -1164,7 +1206,7 @@ Examples:
 
 ##### `WARN`
 
-Log levels analogous to `WARN` are also frequently found on production systems.
+Log levels analogous to `WARN` are frequently found on production or staging systems.
 
 Log outputs of this level are very similar to those of `ERROR`. Unlike these, however, they contain output indicating imminent errors.
 
@@ -1255,3 +1297,9 @@ The set or default value from `dogu.json` can be retrieved as usual. `doguctl` t
 ```
 rootLogLevel=$(doguctl config logging/root)
 ```
+
+#### Extensibility
+
+If there is a need for additional Dogu-specific log levels, the Dogu log levels can be supplemented with additional keys (also under `/config/<doguname>/logging/`).
+Such log levels are very specific by their nature.
+Therefore, different rules may apply to the use of such specific keys.

@@ -1,5 +1,5 @@
 # Relevante Funktionalitäten
-Dieses Kapitel beschreibt die Features und mögliche Implementierungsideen/-Lösungen derer Funktionalitäten, die überhaupt ein echtes Dogu ausmachen und wiederkehrende Probleme lösen. 
+Dieses Kapitel beschreibt die Features und mögliche Implementierungsideen/-Lösungen derer Funktionalitäten, die überhaupt ein echtes Dogu ausmachen und wiederkehrende Probleme lösen.
 
 Die folgenden Abschnitte beschäftigen sich daher mit wiederkehrenden Funktionen, wie ein Dogu sich in die Landschaft des Cloudogu EcoSystem einbetten kann.
 
@@ -160,7 +160,7 @@ https://local.cloudogu.com/cas/oauth2.0/accessToken?grant_type=authorization_cod
     "expires_in": "7196",
     "token_type": "Bearer"
 }
-``` 
+```
 
 ##### Nicht-Erfolgreiche Antwort
 
@@ -218,7 +218,7 @@ authorization: Bearer TGT-1-m2gUNJwEqXyV7aAEXekihcVnFc5iI4mpfdZGOTSiiHzEbwr1cr-c
     ]
   }
 }
-``` 
+```
 
 ##### Nicht-Erfolgreiche Antwort
 
@@ -243,7 +243,7 @@ Der Logout-Endpunkt wird benutzt, um den Langzeit-Token vom CAS zu invalidieren.
 
 ### OpenID Connect-Protokoll
 
-CAS bietet OAuth/OpenID Connect (OIDC) als Protokoll zur Authentifizierung samt SSO/SLO an. Im Folgenden wird die Spezifikation des OpenID Connect-Protokolls in CAS beschrieben. 
+CAS bietet OAuth/OpenID Connect (OIDC) als Protokoll zur Authentifizierung samt SSO/SLO an. Im Folgenden wird die Spezifikation des OpenID Connect-Protokolls in CAS beschrieben.
 
 #### OIDC Service Account für Dogu erstellen
 
@@ -354,7 +354,7 @@ https://local.cloudogu.com/cas/oidc/accessToken?grant_type=authorization_code&co
     "expires_in": "7196",
     "token_type": "Bearer"
 }
-``` 
+```
 
 ##### Nicht-Erfolgreiche Antwort
 
@@ -472,11 +472,11 @@ Die globale Konfiguration liegt im Registry-Pfad `/config/_global/` und kann mit
     - Mit dem Schalter `--timeout <Sekunden>` kann man so auf Dogus warten, von denen das eigene Dogu abhängt.
     - Ein Exit-Code ungleich Null (0) deutet darauf hin, dass entweder das Dogu nicht rechtzeitig seinen Startvorgang beendet hat oder die Registry-Kommunikation fehlschlug.
 
-## Aufbau und Best Practices von `startup.sh` 
+## Aufbau und Best Practices von `startup.sh`
 
-Ein einfaches Dogu benötigt eigentlich nur eine `dogu.json` und ein Container-Image. Doch was geschieht, wenn sich die Wirklichkeit im Dauerbetrieb von den Annahmen während der Dogu-Entwicklung unterscheiden? 
+Ein einfaches Dogu benötigt eigentlich nur eine `dogu.json` und ein Container-Image. Doch was geschieht, wenn sich die Wirklichkeit im Dauerbetrieb von den Annahmen während der Dogu-Entwicklung unterscheiden?
 
-Bei Cloudogu haben wir schnell festgestellt, dass es im Betrieb geschickter ist, auf solche Änderungen eingehen zu können. Das Spektrum ist hierbei breit. Dabei kann es sich um Wartezeiten gegenüber anderen Dogus handeln, oder um die Änderung von ursprünglich fixen Bezeichnern bis hin zu Störungen in der Container-Engine. 
+Bei Cloudogu haben wir schnell festgestellt, dass es im Betrieb geschickter ist, auf solche Änderungen eingehen zu können. Das Spektrum ist hierbei breit. Dabei kann es sich um Wartezeiten gegenüber anderen Dogus handeln, oder um die Änderung von ursprünglich fixen Bezeichnern bis hin zu Störungen in der Container-Engine.
 
 Wiederkehrende Aufgaben beim Container-Start befinden sich im Abschnitt "Typische Dogu-Features" in den Abschnitten:
 - [Änderbarkeit der Admingruppe](#änderbarkeit-der-admin-gruppe)
@@ -501,7 +501,7 @@ Um dynamisch auf diese Gegebenheiten zu reagieren, hat es sich bei Cloudogu eing
    3. den Dogu-State auf `ready` setzen (geeigneter [HealthCheck](../core/compendium_de.md#healthchecks) vorausgesetzt)
    4. startet den Hauptprozess
 
-Dieser Abschnitt geht daher auf Erkenntnisse und _Best Practices_ ein, die sich auf solche Startskripte beziehen: Die `startup.sh`. 
+Dieser Abschnitt geht daher auf Erkenntnisse und _Best Practices_ ein, die sich auf solche Startskripte beziehen: Die `startup.sh`.
 
 Übrigens: Fleißige Entwickler:innen können Inspiration in den Cloudogu-eigenen Startskripten [z. B. im Redmine-Dogu](https://github.com/cloudogu/redmine/blob/develop/resources/startup.sh) sammeln.
 
@@ -553,7 +553,7 @@ Hierbei helfen Bash-Funktionen:
 function setDoguLogLevel() {
   echo "Mapping dogu specific log level..."
   currentLogLevel=$(doguctl config --default "WARN" "logging/root")
-  
+
   # bilde hier das Loglevel auf die Logkonfiguration des Dogus ab 
 }
 ```
@@ -605,7 +605,7 @@ Analysewerkzeuge wie [Shellcheck](https://www.shellcheck.net/) können Fehler in
 
 Der Abschnitt [über Registry-Zugriff](#registry-zugriff-vom-dogu-heraus) hat das Thema `doguctl` bereits angeschnitten. `doguctl` ist ein Kommandozeilenwerkzeug, das wiederkehrende Interaktionen mit der Cloudogu EcoSystem-Registry bündelt und vereinfacht. Dieser Abschnitt beschreibt mögliche Aufrufe.
 
-Mit `--help` gibt jedes Unterkommando von `doguctl` eine Hilfeseite aus.  
+Mit `--help` gibt jedes Unterkommando von `doguctl` eine Hilfeseite aus.
 
 #### doguctl config
 
@@ -751,7 +751,7 @@ admin.username = {{ .Env.Get "ADMIN_USERNAME" }}
 funny.name = {{ .Config.Get "something_funny" }}
 log.level = {{ .Config.GetOrDefault "log_level" "WARN" }}
 url.jdbc = jdbc:postgresql://postgresql:5432/{{ .Config.GetAndDecrypt "sa-postgresql/database" }}
-url.fqdn = https://{{ .GlobalConfig.Get "fqdn" }}/my-dogu 
+url.fqdn = https://{{ .GlobalConfig.Get "fqdn" }}/my-dogu
 
 {{ if .Config.Exists "notification" }}
 notification = mail
@@ -787,15 +787,15 @@ fi
 
 ## Service Accounts
 
-Service Accounts bilden einen Mechanismus für Zugangskonten ab, die Dogus zur Absicherung oder Speicherung ihrer Daten benötigen, diese Funktionalität aber nicht selbst bereitstellen möchten. Dogus können sich als Produzent und/oder als Konsument von Service Accounts darstellen. Bei beiden handelt es sich um ein jeweils optionales Feature eines Dogus. 
+Service Accounts bilden einen Mechanismus für Zugangskonten ab, die Dogus zur Absicherung oder Speicherung ihrer Daten benötigen, diese Funktionalität aber nicht selbst bereitstellen möchten. Dogus können sich als Produzent und/oder als Konsument von Service Accounts darstellen. Bei beiden handelt es sich um ein jeweils optionales Feature eines Dogus.
 
 In der Regel diktiert die Natur der Applikation im Dogu selbst, ob bzw. welches von beiden am sinnvollsten ist. So wäre ein Datenbankmanagement-Dogu wie PostgreSQL nicht hilfreich, das anderen Dogus keine Zugänge zu seiner Datenbasis anbietet. Andererseits wäre es für ein Dogu wie Redmine fatal, kein Dogu zu haben, in das es per SQL seine Daten ablegen kann.
 
 Dogus wie PostgreSQL, die anderen Dogus gegenüber Zugangskonten bereitstellen können, nennt man auch _Service-Account-Produzenten_. Dogus wie Redmine, die ein Zugangskonto bei einem anderen Dogu benötigen, nennt man _Service-Account-Konsumenten_.
 
-### Service Accounts produzieren 
+### Service Accounts produzieren
 
-Service Accounts werden nicht von einem Service-Account-Konsumenten selbst angefragt, weil ein Dogu sich nicht um diese Form der Orchestrierung kümmern sollte. Dies ist stattdessen die Aufgabe von einem Client wie `cesapp` oder `k8s-dogu-operator` während der Installation des Service-Account-Konsumenten. Der `ExposedCommand` hierfür lautet `service-account-create`. 
+Service Accounts werden nicht von einem Service-Account-Konsumenten selbst angefragt, weil ein Dogu sich nicht um diese Form der Orchestrierung kümmern sollte. Dies ist stattdessen die Aufgabe von einem Client wie `cesapp` oder `k8s-dogu-operator` während der Installation des Service-Account-Konsumenten. Der `ExposedCommand` hierfür lautet `service-account-create`.
 
 Ähnlich hierzu sieht die Löschung von Service Accounts aus, denn ebenfalls kümmert sich ein Client wie `cesapp` oder `k8s-dogu-operator` während der Deinstallation eines Dogus darum, dass dessen angeforderte Service Accounts wieder gelöscht werden. Der `ExposedCommand` hierfür lautet `service-account-remove`.
 
@@ -859,7 +859,7 @@ echo "password: ${PASSWORD}"
 
 In Schritt 1 werden Zugangsdaten zufällig generiert. Der Name des Konsumenten-Dogus kann in die Zugangsdaten eingearbeitet werden, allerdings ist dies keine Pflicht.
 
-In Schritt 2 muss ein Account mit den generierten Informationen in der Dogu-Software erstellt werden. 
+In Schritt 2 muss ein Account mit den generierten Informationen in der Dogu-Software erstellt werden.
 
 In Schritt 3 werden die Zugangsdaten mit dem Format `echo "<registrykey>: <registryvalue>"` ausgegeben. `registrykey` und `registryvalue` müssen durch einen Doppelpunkt und einem Leerzeichen getrennt sein. Die gesamte Zeile muss durch einen Zeilenumbruch beendet werden.
 
@@ -867,7 +867,7 @@ Diese Zugangsdaten werden vom verarbeitenden Client automatisch eingelesen und i
 Nach dem obigen Beispiel würde das Konsumenten-Dogu je einen Registry-Eintrag für Username und Passwort erzeugen:
 
 - `/config/<konsument>/sa-<produzent>/username`
-- `/config/<konsument>/sa-<produzent>/password` 
+- `/config/<konsument>/sa-<produzent>/password`
 
 Das Verbaucher-Dogu kann diese nun z. B. durch `doguctl config -e sa-<produzentdogu>/username` auslesen und entschlüsseln.
 
@@ -1025,7 +1025,6 @@ Das Upgrade-Notification-Skript kann als [Exposed Command](../core/compendium_de
 
 Dieses Skript wird vor dem Upgrade-Vorgang ausgeführt und sollte ausschließlich Informationen (per `echo`) ausgeben, die für den Administrator vor dem Upgrade relevant sein können. Beispielsweise kann hier auf Breaking Changes hingewiesen werden oder darauf, dass man vor dem Upgrade ein Backup anlegen sollte.
 
-
 ## Typische Dogu-Features
 
 Dieses Kapitel beschreibt Funktionen, die Dogus tiefer in das Cloudogu EcoSystem integrieren und sie einheitlich administrierbar machen.
@@ -1039,6 +1038,21 @@ Dies ist normalerweise der Hauptprozess des Dogus und führt dazu, dass der Cont
 
 Wird kein Wert bei der Memory-Limitierung gesetzt, findet diese auch nicht statt.
 Bei der Swap-Limitierung ist `0b` der Standardwert und stellt somit keinen Swap zur Verfügung.
+
+#### Vorbereitung der Speicherlimits im Host
+
+Damit der Cloudogu EcoSystem-Host die Limitierung des Speichers **und** Swaps vornehmen kann, müssen vorher folgende Einstellungen vorgenommen werden:
+1. die Datei `/etc/default/grub` öffnen
+2. Zur Variable `GRUB_CMDLINE_LINUX_DEFAULT` muss folgender Wert hinzugefügt werden:
+   `cgroup_enable=memory swapaccount=1`
+3. die Änderungen speichern 
+4. den Befehl `sudo update-grub` bzw. `sudo update-bootloader --refresh` ausführen 
+5. die Maschine neu starten
+
+**Achtung!**
+Die obige Aktivierung mit `cgroup_enable=memory swapaccount=1` führt voraussichtlich zu einem Speicher-Overhead von 1 % und einer Performanz-Einbuße von 10 %, selbst wenn Docker nicht läuft.
+
+#### Limitierung im Dogu
 
 Um eine Limitierung vornehmen zu können, muss die `dogu.json` des Dogus folgende Einträge enthalten:
 
@@ -1078,6 +1092,13 @@ Das Setzen der Werte kann über folgende Wege erfolgen:
 
 Um die Limitierungen zu übernehmen, muss das Dogu neu erstellt (`cesapp recreate <doguname>`) und anschließend neu gestartet (`cesapp start <doguname>`) werden.
 
+#### Überprüfen der Limitierung
+
+Die Limitierung des Speichers (nur RAM, kein Swap) kann mithilfe von `docker stats <doguname>` überprüft werden.
+Die Spalte `MEM USAGE / LIMIT` sollte das gesetzte Speicherlimit korrekt anzeigen.
+
+#### Limitierung in Java-Dogus
+
 Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dogu einen Java-Prozess, können folgende zusätzliche Einträge in die `dogu.json` eingebaut werden:
 
 ```json
@@ -1105,7 +1126,10 @@ Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dog
 }
 ```
 
-Die damit konfigurierbaren Werte müssen in den Start-Skripten des Dogus dem entsprechenden Java-Prozess als Parameter mitgegeben werden. Eine Referenzimplementierung findet sich im [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
+**Hinweise:**
+- Die Prozente beziehen sich immer auf den limitierten Speicher eines Containers. Sind keine Limitierung gesetzt, werden die Prozente ebenfalls ignoriert.
+- Ein Java-Prozess sollte nicht einen zu großen Anteil des Speichers zugewiesen bekommen. Man sollte immer etwaige andere Prozesse beachten, die ebenfalls Speicher benötigen. Falls dies nicht passiert, kann es zu Abstürzen des eigentlichen Programmes kommen.
+- Die so konfigurierten Werte müssen in den Start-Skripten des Dogus dem entsprechenden Java-Prozess als Parameter mitgegeben werden. Eine Referenzimplementierung findet sich im [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
 
 ### Backup & Restore-Fähigkeit
 
@@ -1135,11 +1159,28 @@ Mit diesen abstrakten Log-Leveln soll der Administrator unterstützt werden. Er 
 
 Dogu-Entwickler müssen darauf achten, dass diese vier Log-Level sinnvoll auf die Log-Level der Software im Dogu gemappt werden, welche ggf. andere Namen haben können (bspw. `TRACE` oder `FATAL`).
 
+#### Hintergründe zum Log-Level
+
+Niemand liest Logs. Wenn sie jemand liest, dann nicht gerne, und zwar aus zwei Gründen:
+1. Standard-Logs enthalten für den Betrachter überwiegend unwichtige Information
+2. Logs werden nur dann gelesen, wenn ein Problem auftritt
+
+Die Log-Level-Steuerung begegnet diesen Umständen.
+
+Wenn ein Dogu standardmäßig und dauerhaft zu viele Zeilen loggt, dann wird Administrierenden oder Supportleistenden das Leben schwerer gemacht als nötig.
+Denn sie müssen sich durch einen Berg Zeilen arbeiten und die Logs in relevante und irrelevante Informationen trennen.
+Zudem kann es passieren, dass bei übertriebenen Logging (z. B. lange Stacktraces verbunden mit Container Crash Loops) zu so viel Daten führen kann, dass die Festplatte voll läuft und keine Log-Rotation mehr möglich ist.
+
 #### Log-Level und deren Spielräume
 
 Die Log-Level sind nach Detailgrad von grob nach fein sortiert und enthalten den jeweils darüber liegenden. Bspw. enthalten Log-Ausgaben des Levels `WARN` also auch Log-Ausgaben der Levels `ERROR`.
 
 Der Entwickler hat damit starke Freiheiten, welche Logs bei welchem Log-Level ausgegeben werden.
+
+Um zwischen relevant und irrelevant zu unterscheiden, gibt es natürlich Interpretationsspielraum.
+Cloudogu als Dogu-Anbieter unterstützt den Kunden darin, für seine Produktivsysteme das Logging so gering und so prägnant wie möglich zu gestalten.
+Das bedeutet, aufgrund unserer Erfahrung sowohl als Softwareentwicklende als auch als Dogu-Benutzende entscheiden wir für den Kunden,
+welche Log-Quellen, Log-Zeilen usw. je Dogu und Log-Level angemessen sind.
 
 ##### `ERROR`
 
@@ -1159,7 +1200,7 @@ Beispiele:
 
 ##### `WARN`
 
-Log-Level analog zu `WARN` finden sich auch häufig auf Produktionssystemen.
+Log-Level analog zu `WARN` finden sich häufig auf Produktions- oder Staging-Systemen.
 
 Logausgaben dieses Levels sind sehr ähnlich zu denen von `ERROR`. Im Unterschied zu diesen enthalten sie jedoch Ausgaben, die auf bevorstehende Fehler hinweisen.
 
@@ -1251,3 +1292,8 @@ Der eingestellte bzw. Default-Wert aus der `dogu.json` lässt sich wie gewohnt a
 rootLogLevel=$(doguctl config logging/root)
 ```
 
+#### Erweiterbarkeit
+
+Sollte der Bedarf für weitere, Dogu-spezifische Log-Levels bestehen, können diese mit zusätzlichen Schlüsseln erweitert werden (ebenfalls unter `/config/<doguname>/logging/`).
+Solche Log-Levels sind von ihrer Natur sehr spezifisch.
+Daher können andere Regeln für die Verwendung von solch spezifischen Keys gelten.

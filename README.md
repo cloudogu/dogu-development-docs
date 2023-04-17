@@ -10,7 +10,7 @@ It has 3 main topics:
   - [relevant functionalities](docs/important/relevant_functionalities_en.md)
   - [ces context](TODO)
 - Additional knowledge
-  - [interesting aspects](TODO)
+  - [interesting aspects](docs/additional/interesting_aspects_en.md)
 
 ---
 
