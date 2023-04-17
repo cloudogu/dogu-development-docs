@@ -1129,7 +1129,7 @@ Ein Sonderfall stellt die Limitierung eines Java-Prozesses dar. Enthält ein Dog
 **Hinweise:**
 - Die Prozente beziehen sich immer auf den limitierten Speicher eines Containers. Sind keine Limitierung gesetzt, werden die Prozente ebenfalls ignoriert.
 - Ein Java-Prozess sollte nicht einen zu großen Anteil des Speichers zugewiesen bekommen. Man sollte immer etwaige andere Prozesse beachten, die ebenfalls Speicher benötigen. Falls dies nicht passiert, kann es zu Abstürzen des eigentlichen Programmes kommen.
-- Die damit konfigurierbaren Werte müssen in den Start-Skripten des Dogus dem entsprechenden Java-Prozess als Parameter mitgegeben werden. Eine Referenzimplementierung findet sich im [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
+- Die so konfigurierten Werte müssen in den Start-Skripten des Dogus dem entsprechenden Java-Prozess als Parameter mitgegeben werden. Eine Referenzimplementierung findet sich im [Nexus-Dogu](https://github.com/cloudogu/nexus/blob/77bdcfdbe0787c85d2d9b168dc38ff04b225706d/resources/util.sh#L52).
 
 ### Backup & Restore-Fähigkeit
 
