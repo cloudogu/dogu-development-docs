@@ -147,7 +147,7 @@ More information on multi-stage build is available on the [official Docker websi
 
 [docker-multi-stage]: https://docs.docker.com/develop/develop-images/multistage-build/
 
-### CES-free development environment.
+### Development environment without a Cloudogu EcoSystem
 
 Building the Dogu and delivering it to the local EcoSystem not only takes a lot of time, but also takes away the ability to debug the software effectively.
 Therefore, it makes sense to build a local development environment independent of the CES to effectively run, test and debug the Dogu software.
