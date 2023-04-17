@@ -1149,7 +1149,7 @@ Zusätzlich kann die Admin-Gruppe im Nachhinein geändert werden. Das Dogu muss 
 
 ### Änderbarkeit der FQDN
 
-Die FQDN des Cloudogu EcoSystems ist global in der Registry gespeichert und kann von den Dogus mittels [`doguctl`](#die-nutzung-von-doguctl) ausgelesen werden. Falls nötig, kann sie in die Dogu-Konfiguration integriert werden (siehe auch [Erstellung einer exemplarischen Anwendung](../core/basics_de.md#5--erstellung-einer-exemplarischen-anwendung). Zusätzlich muss bei der Dogu-Entwicklung darauf geachtet werden, dass die FQDN änderbar ist. Das Dogu sollte also in der Lage sein (ggf. nach einem Neustart), eine neue FQDN auszulesen und seine Konfiguration an diese neue FQDN anzupassen.
+Die FQDN des Cloudogu EcoSystems ist global in der Registry gespeichert und kann von den Dogus mittels [`doguctl`](#die-nutzung-von-doguctl) ausgelesen werden. Falls nötig, kann sie in die Dogu-Konfiguration integriert werden (siehe auch [Erstellung einer exemplarischen Anwendung](../core/basics_de.md#5-erstellung-einer-exemplarischen-anwendung). Zusätzlich muss bei der Dogu-Entwicklung darauf geachtet werden, dass die FQDN änderbar ist. Das Dogu sollte also in der Lage sein (ggf. nach einem Neustart), eine neue FQDN auszulesen und seine Konfiguration an diese neue FQDN anzupassen.
 
 ### Logging-Verhalten steuern
 

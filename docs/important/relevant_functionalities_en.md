@@ -1155,7 +1155,7 @@ Additionally, the admin group can be changed afterwards. The Dogu must then reac
 
 ### Changeability of the FQDN
 
-The Fully Qualified Domain Name (FQDN) of the Cloudogu EcoSystem is stored globally in the registry and can be read by the Dogus using [`doguctl`](#usage-of-doguctl). If necessary, it can be integrated into the Dogu configuration (see also [Creating an exemplary application](../core/basics_en.md#5--creating-an-exemplary-application). In addition, care must be taken during Dogu development to ensure that the FQDN is changeable. So the Dogu should be able (after a restart if necessary) to read a new FQDN and adapt its configuration to this new FQDN.
+The Fully Qualified Domain Name (FQDN) of the Cloudogu EcoSystem is stored globally in the registry and can be read by the Dogus using [`doguctl`](#usage-of-doguctl). If necessary, it can be integrated into the Dogu configuration (see also [Creating an exemplary application](../core/basics_en.md#5-creating-an-exemplary-application). In addition, care must be taken during Dogu development to ensure that the FQDN is changeable. So the Dogu should be able (after a restart if necessary) to read a new FQDN and adapt its configuration to this new FQDN.
 
 ### Controlling the logging behavior
 
