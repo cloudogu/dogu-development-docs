@@ -175,7 +175,7 @@ The goss tests should ideally check all important aspects for the smooth start o
 This includes aspects like:
 - Checking permission for scripts (startup.sh), volumes.
 - Checking the UID & GID for files (startup.sh, resources, volumes, write-dependent paths)
-- Accessibility of the software: TCP health checks
+- Readiness of the software: TCP health checks
 
 For pipeline integration, we recommend using the `ecoSystem.verify()` method from the [dogu-build-lib][dogu-build-lib].
 An example call looks like the following in a Jenkinsfile:
