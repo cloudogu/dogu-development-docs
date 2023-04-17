@@ -1294,6 +1294,6 @@ rootLogLevel=$(doguctl config logging/root)
 
 #### Erweiterbarkeit
 
-Sollte der Bedarf für weitere, Dogu-spezifische Log-Levels bestehen, so ist denkbar, dass die dazugehörigen Keys ebenfalls unter `/config/<doguname>/logging/` abgelegt werden können.
+Sollte der Bedarf für weitere, Dogu-spezifische Log-Levels bestehen, können diese mit zusätzlichen Schlüsseln erweitert werden (ebenfalls unter `/config/<doguname>/logging/`).
 Solche Log-Levels sind von ihrer Natur sehr spezifisch.
 Daher können andere Regeln für die Verwendung von solch spezifischen Keys gelten.
