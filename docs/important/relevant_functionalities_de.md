@@ -1094,7 +1094,8 @@ Um die Limitierungen zu übernehmen, muss das Dogu neu erstellt (`cesapp recreat
 
 #### Überprüfen der Limitierung
 
-Die Limitierung des Speichers (nur RAM, kein Swap) kann mithilfe von `docker stats <doguname>` überprüft werden. Die Zeile `MEM USAGE / LIMIT` sollte das gesetzte Speicherlimit korrekt anzeigen.
+Die Limitierung des Speichers (nur RAM, kein Swap) kann mithilfe von `docker stats <doguname>` überprüft werden.
+Die Spalte `MEM USAGE / LIMIT` sollte das gesetzte Speicherlimit korrekt anzeigen.
 
 #### Limitierung in Java-Dogus
 

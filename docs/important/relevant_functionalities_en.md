@@ -1100,7 +1100,8 @@ To apply the limits, the dogu must be recreated (`cesapp recreate <dogu name>`) 
 
 #### Checking the limitation
 
-The memory limit (RAM only, no swap) can be checked using `docker stats <doguname>`. The line `MEM USAGE / LIMIT` should correctly show the memory limit set.
+The memory limit (RAM only, no swap) can be checked using `docker stats <doguname>`.
+The column `MEM USAGE / LIMIT` should correctly show the memory limit set.
 
 #### Limit in Java Dogus
 
