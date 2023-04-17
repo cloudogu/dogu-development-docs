@@ -1186,7 +1186,7 @@ This gives the developer a great deal of freedom as to which logs are output at 
 To distinguish between relevant and irrelevant, there is of course room for interpretation.
 Cloudogu as a Dogu provider supports the customer in making logging as low and as concise as possible for their productive systems.
 This means, based on our experience as both software developers and Dogu users, we decide for the customer,
-which log sources, log lines, log levels etc. are appropriate per Dogu and log level.
+which log sources, log lines etc. are appropriate per Dogu and log level.
 
 ##### `ERROR`
 

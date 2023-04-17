@@ -1180,7 +1180,7 @@ Der Entwickler hat damit starke Freiheiten, welche Logs bei welchem Log-Level au
 Um zwischen relevant und irrelevant zu unterscheiden, gibt es natürlich Interpretationsspielraum.
 Cloudogu als Dogu-Anbieter unterstützt den Kunden darin, für seine Produktivsysteme das Logging so gering und so prägnant wie möglich zu gestalten.
 Das bedeutet, aufgrund unserer Erfahrung sowohl als Softwareentwicklende als auch als Dogu-Benutzende entscheiden wir für den Kunden,
-welche Log-Quellen, Log-Zeilen, Log-Levels usw. je Dogu und Log-Level angemessen sind.
+welche Log-Quellen, Log-Zeilen usw. je Dogu und Log-Level angemessen sind.
 
 ##### `ERROR`
 
