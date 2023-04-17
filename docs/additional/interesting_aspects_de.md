@@ -195,7 +195,7 @@ Dieser ruft intern den Befehl `cesapp verify` auf, welcher die Goss-Tests ausfü
 ## Dokumentation
 
 Jedes Tool sollte eine sinnvolle Dokumentation über verwendete Features besitzen, die während der Benutzung oder Support unterstützt.
-Um eine einfache Integration in unsere vorhandene Dokumentations-Infrastruktur zu ermöglichen, sollte die Dokumentation in einem im Repository-Root befindlichen Order `/docs` abgelegt werden.
+Um eine einfache Integration in unsere vorhandene Dokumentations-Infrastruktur zu ermöglichen, sollte die Dokumentation (abgesehen von Readme und Changelog) in einem im Repository-Root befindlichen Order `/docs` abgelegt werden.
 
 Standardmäßig umfasst die Doku folgende Dinge:
 - Features von dem Dogu

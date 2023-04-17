@@ -194,7 +194,7 @@ This internally calls the `cesapp verify` command, which runs the goss tests.
 ## Documentation
 
 Every tool should have a reasonable documentation about used features, which supports usage or support.
-To allow easy integration into our existing documentation infrastructure, the documentation should be placed in a `/docs` folder located in the repository root.
+To allow easy integration into our existing documentation infrastructure, the documentation (except Readme and changelog) should be placed in a `/docs` folder located in the repository root.
 
 By default, the docs include the following:
 - Features of the Dogu
