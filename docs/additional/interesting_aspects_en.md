@@ -209,6 +209,7 @@ By default, the docs include the following:
 
 The license for using the Dogu should be clearly stated.
 This can be specified in the Readme, for example.
+In case of a public repo, the license file should be included in the repository root.
 
 ### Readme
 
