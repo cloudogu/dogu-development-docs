@@ -1049,7 +1049,7 @@ If no value is set for memory limiting, it will not take place. For swap limitin
 
 #### Preparation of the memory limits in the host
 
-In order for the CES host to limit memory **and** swap, the following settings must be done beforehand:
+In order for the Cloudogu EcoSystem host to limit memory **and** swap, the following settings must be done beforehand:
 1. open the file `/etc/default/grub`
 2. add the following value to the variable `GRUB_CMDLINE_LINUX_DEFAULT`:  
    `cgroup_enable=memory swapaccount=1`.

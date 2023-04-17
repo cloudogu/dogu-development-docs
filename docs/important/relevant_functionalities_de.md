@@ -1042,7 +1042,7 @@ Bei der Swap-Limitierung ist `0b` der Standardwert und stellt somit keinen Swap 
 
 #### Vorbereitung der Speicherlimits im Host
 
-Damit der CES-Host die Limitierung des Speichers **und** Swaps vornehmen kann, müssen vorher folgende Einstellungen vorgenommen werden:
+Damit der Cloudogu EcoSystem-Host die Limitierung des Speichers **und** Swaps vornehmen kann, müssen vorher folgende Einstellungen vorgenommen werden:
 1. die Datei `/etc/default/grub` öffnen
 2. Zur Variable `GRUB_CMDLINE_LINUX_DEFAULT` muss folgender Wert hinzugefügt werden:  
    `cgroup_enable=memory swapaccount=1`
