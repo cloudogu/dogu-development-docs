@@ -1300,6 +1300,6 @@ rootLogLevel=$(doguctl config logging/root)
 
 #### Extensibility
 
-If there is a need for additional, Dogu-specific log levels, the dogu log levels can be supplemented with additional keys (also under `/config/<doguname>/logging/`).
+If there is a need for additional Dogu-specific log levels, the Dogu log levels can be supplemented with additional keys (also under `/config/<doguname>/logging/`).
 Such log levels are very specific by their nature.
 Therefore, different rules may apply to the use of such specific keys.
