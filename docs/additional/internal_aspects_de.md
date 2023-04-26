@@ -1,16 +1,20 @@
 # Interne Aspekte
 
 Dieser Abschnitt beschreibt Aspekte, die von internen Entwicklern der Cloudogu GmbH beachten werden müssen.
-Sie enthalten Anforderungen zur Qualitätssicherung oder zum Beispiel grundlegende Definitionen zu einem fertigen, finalen Dogu.
-Somit ergibt sich, dass diese Informationen für externe Entwickler nicht zwingend relevant sind. 
+Sie enthalten Anforderungen zur Qualitätssicherung oder zum Beispiel grundlegende Definitionen zu einem fertigen,
+finalen Dogu.
+Somit ergibt sich, dass diese Informationen für externe Entwickler nicht zwingend relevant sind.
 Allerdings können die Aspekte genutzt werden, um Qualitätsstandards zu definieren oder zu verbessern.
 
 ## Qualitätssicherung
 
 Dogus können sowohl aus selbst entwickelter Software als auch aus gekapselter Fremdsoftware bestehen.
-Im Falle einer Selbstentwicklung sollten übliche Maßstäbe für Qualitätssicherung gelten, die in den folgenden Abschnitten genannt werden.
-Wenn ein Dogu Software von Drittanbietern einfängt, ist es häufig nicht sinnvoll, sämtliche Features des eigentlichen Tools zu testen.
-Der Testfokus wird dann auf die hinzugefügten Dogu-Features abgegrenzt, die typischerweise den Mehrwert eines Dogus darstellen.
+Im Falle einer Selbstentwicklung sollten übliche Maßstäbe für Qualitätssicherung gelten, die in den folgenden
+Abschnitten genannt werden.
+Wenn ein Dogu Software von Drittanbietern einfängt, ist es häufig nicht sinnvoll, sämtliche Features des eigentlichen
+Tools zu testen.
+Der Testfokus wird dann auf die hinzugefügten Dogu-Features abgegrenzt, die typischerweise den Mehrwert eines Dogus
+darstellen.
 
 ### Qualitätssicherung des Tools
 
@@ -32,7 +36,7 @@ Dafür werden die Dogus in zwei verschiedene Phasen getestet.
 
 #### Automatisierung durch Makefiles
 
-Mithilfe der Makefiles können Prozesse vereinheitlicht werden. Als Unterstützung bieten wir eine Sammlung von 
+Mithilfe der Makefiles können Prozesse vereinheitlicht werden. Als Unterstützung bieten wir eine Sammlung von
 [Makefiles][makefiles] an.
 
 [makefiles]: https://github.com/cloudogu/makefiles
@@ -43,10 +47,15 @@ Ein Großteil der zu testenden Features sollte automatisch in einer Build-Pipeli
 Das erfolgreiche Durchlaufen aller CI/CD-Test sind die Voraussetzung für ein Release.
 Als Unterstützung bieten wir hier unsere [ces-build-lib][ces-build-lib] und [dogu-build-lib][dogu-build-lib] an.
 Beide Bibliotheken werden effektiv in allen CI/CD Pipelines unserer Dogus eingesetzt.
+Zu beachten ist, dass die `dogu-build-lib` von der Google-Cloud abhängig ist.
+Sie ist in der Lage Instanzen des Cloudogu EcoSystems in der Cloud zu provisionieren, damit diese für
+Integrationstest genutzt werden können.
+
 Im Folgenden werden die verschiedenen Methoden, die in einer Pipeline zum Testen verwendet werden können, beschrieben.
 Dabei gehen wir speziell auf die Unterstützung unserer Bibliotheken ein.
 
 [ces-build-lib]: https://github.com/cloudogu/ces-build-lib
+
 [dogu-build-lib]: https://github.com/cloudogu/dogu-build-lib
 
 ##### Shell-Tests & Linting
@@ -96,7 +105,7 @@ Dabei bezieht man sich zum Beispiel auf die Integration des CAS-Dogus:
 - Back-Channel-Login
 - Front-Channel-Logout
 - Back-Channel-Logout
-- Änderung der Admin-Gruppe 
+- Änderung der Admin-Gruppe
 
 Die `dogu-build-lib` bietet hierbei verschiedene Methoden zur Ausführung.
 Ein Aufruf im Jenkins-File sieht wie folgt aus:
@@ -108,7 +117,7 @@ stage('Integration tests') {
 ```
 
 Die Tests selbst müssen sich unter dem Startverzeichnis des Dogus im Ordner `integrationTests` befinden.
-Es existiert außerdem eine [Bibliothek][dogu-integration-lib], die zur 
+Es existiert außerdem eine [Bibliothek][dogu-integration-lib], die zur
 Unterstützung bei der Implementierung der Tests dient.
 
 [dogu-integration-lib]: https://github.com/cloudogu/dogu-integration-test-library
@@ -117,11 +126,11 @@ Unterstützung bei der Implementierung der Tests dient.
 
 Es ist wichtig die Sicherheitslücken in einem Docker-Image, bzw. dem Zielsystem zu identifizieren und zu beheben.
 Dafür bietet sich der Scanner Trivy an, welcher Sicherheitslücken im System identifiziert und priorisiert.
-Die `dogu-build-lib` bietet dafür eine [Komponente][trivy] an, die wie folgt verwendet werden kann, um das Image eines 
+Die `dogu-build-lib` bietet dafür eine [Komponente][trivy] an, die wie folgt verwendet werden kann, um das Image eines
 Dogus zu scannen.
 
 ```groovy
-EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
+EcoSystem ecoSystem = new EcoSystem(this, "gcloud-credentials-id", "ssh-credentials-id")
 Trivy trivy = new Trivy(this, ecoSystem)
 
 stage('Trivy scan') {
@@ -160,8 +169,8 @@ Anforderung für das Dockerfile sind [hier](interesting_aspects_de.md#container-
 ### Dogu.json
 
 - Muss konfigurierbare Schlüssel enthalten:
-  -  `container_config/memory_limit`
-  -  `container_config/swap_limit`
+    - `container_config/memory_limit`
+    - `container_config/swap_limit`
 
 ### Dogu-Scripting
 
@@ -171,30 +180,34 @@ Anforderungen für Shell-Scripting sind [hier](interesting_aspects_de.md#bash-sk
 
 - Backup & Restore-Fähigkeit betrachten
 - Upgrade-Fähigkeit betrachten
-  - Upgrade-Skripte müssen so gestaltet sein, dass aus allen alten Versionen des Dogus ein Upgrade möglich ist 
-  (sofern das die im Dogu eingesetzte Software nicht verhindert)
-  - Ein Upgrade des Dogus von früherer Version ist zu testen
+    - Upgrade-Skripte müssen so gestaltet sein, dass aus allen alten Versionen des Dogus ein Upgrade möglich ist
+      (sofern das die im Dogu eingesetzte Software nicht verhindert)
+    - Ein Upgrade des Dogus von früherer Version ist zu testen
 - Admin-Gruppe
-  - Admin-Gruppe muss änderbar sein
-  - Admin-Gruppe aus dem `etcd` wird verwendet und bei einem Wechsel der Admin-Gruppe reagiert das Dogu entsprechend
-  darauf, dann wird der alten Admin-Gruppe das Admin-Recht entzogen. Siehe z.B. SonarQube und Nexus Repository Manager.
+    - Admin-Gruppe muss änderbar sein
+    - Admin-Gruppe aus dem `etcd` wird verwendet und bei einem Wechsel der Admin-Gruppe reagiert das Dogu entsprechend
+      darauf, dann wird der alten Admin-Gruppe das Admin-Recht entzogen. Siehe z.B. SonarQube und Nexus Repository
+      Manager.
 - Logging
-  - Log-Output des Dogus auf Fehler checken
+    - Log-Output des Dogus auf Fehler checken
 - Übernahme einer Änderung der CES-FQDN
-  - Eine FQDN-Änderung muss in einem Dogu sinnvoll verarbeitet werden.
-  - Das Dogu muss nach einem Restart ordnungsgemäß starten.
+    - Eine FQDN-Änderung muss in einem Dogu sinnvoll verarbeitet werden.
+    - Das Dogu muss nach einem Restart ordnungsgemäß starten.
 - Single Sign-on & Single Sign-out betrachten
 
 ### Dokumentation
 
-- Dogu-Dokumentation aktualisieren und prüfen, ob diese dem [Dokumentationsregelwerk](#cloudogu-dokumentationsregelwerk) entspricht.
-  - Bei Abweichungen die Struktur entsprechend aufarbeiten. Dabei bestehende Strukturen bestehen lassen, aus den dort abgelegten Dateien auf den neuen `docs`-Ordner verlinken.
-  - Die alten Strukturen werden nach einer angemessenen Zeit (1 Jahr) gelöscht.
+- Dogu-Dokumentation aktualisieren und prüfen, ob diese dem [Dokumentationsregelwerk](#cloudogu-dokumentationsregelwerk)
+  entspricht.
+    - Bei Abweichungen die Struktur entsprechend aufarbeiten. Dabei bestehende Strukturen bestehen lassen, aus den dort
+      abgelegten Dateien auf den neuen `docs`-Ordner verlinken.
+    - Die alten Strukturen werden nach einer angemessenen Zeit (1 Jahr) gelöscht.
 
 ## Cloudogu Dokumentationsregelwerk
 
-Das Regelwerk soll die Dokumentation für Cloudogu vereinheitlichen und Entscheidungen festhalten, wie bestimmte Themen 
-zu behandeln sind. Die folgenden Punkte bilden eine Basis und können durch weitere Aspekte wie z.B. Produktschreibweisen,
+Das Regelwerk soll die Dokumentation für Cloudogu vereinheitlichen und Entscheidungen festhalten, wie bestimmte Themen
+zu behandeln sind. Die folgenden Punkte bilden eine Basis und können durch weitere Aspekte wie z.B.
+Produktschreibweisen,
 einem Dokumentationsplan oder einem Styleguide erweitert werden.
 
 ### Aufbau einer Dokumentation
@@ -244,7 +257,7 @@ Der `docs`-Ordner ist nach diesem beispielhaften Schema aufgebaut:
   └── how_to_build_a_plugin.md
 ```
 
-(Die Namen sind beispielhaft gewählt und keine Vorgabe). 
+(Die Namen sind beispielhaft gewählt und keine Vorgabe).
 Das Namensschema ist Name des Features plus ein Suffix mit der Sprachversion (de, en).
 Einzelne Worte im Namen werden mit Unterstrichen verbunden (z.B. name_des_features_de oder name_des_features_en).
 
@@ -252,6 +265,7 @@ Einzelne Worte im Namen werden mit Unterstrichen verbunden (z.B. name_des_featur
 
 Der Ordner „operations“ ist der Kern der Dokumentation. Jedes einzelne Feature, jede Funktion, jeder Befehl wird in drei
 Abschnitten beschrieben:
+
 - Was? Welches Feature beschreibt der Abschnitt? Was ist der generelle Zweck?
 - Wie? Detaillierte Beschreibung aller Optionen, Flags oder Einstellungen.
 - Warum? Hintergründe, Einordnung im Gesamtsystem, Einschränkungen der Umsetzung.
@@ -266,24 +280,35 @@ Der Aufbau der Beschreibungen ist äquivalent zu `operations`.
 
 #### development-Ordner
 
-Der Ordner `development` ist optional für Repositories, die weitere Hinweise für die Entwicklung, z. B. von Plugins, 
+Der Ordner `development` ist optional für Repositories, die weitere Hinweise für die Entwicklung, z. B. von Plugins,
 benötigen.
 Die Beschreibungen in diesem Ordner werden nur auf Englisch verfasst.
 
 #### getting_started-Dateien
 
-Im `docs`-Ordner beschreiben die Dateien `getting_started_de.md` und `getting_started_en.md` die notwendigen Schritte, 
+Im `docs`-Ordner beschreiben die Dateien `getting_started_de.md` und `getting_started_en.md` die notwendigen Schritte,
 um ein Repository lokal bereit zum Entwickeln zu machen.
 
 #### Sprachversionen
 
-Zielzustand ist, alle Bestandteile der Dokumentation (von `CHANGELOG`, `README` und development abgesehen) auf Deutsch 
+Zielzustand ist, alle Bestandteile der Dokumentation (von `CHANGELOG`, `README` und development abgesehen) auf Deutsch
 und Englisch zur Verfügung zu stellen. `CHANGELOG`, `README` und development werden nur in Englisch verfasst.
 
 #### Bilder
 
 Wenn Bilder in der Dokumentation verwendet werden, so sind diese in einem neuen Unterordner `figures` abzulegen.
 Für `operations`, `gui` und `development` sollte jeweils ein eigener `figures`-Ordner erstellt werden.
-Um Namenskonflikte für Bilder zu minimieren, sollte im `figures`-Ordner ein weiterer Unterordner angelegt werden, 
+Um Namenskonflikte für Bilder zu minimieren, sollte im `figures`-Ordner ein weiterer Unterordner angelegt werden,
 welcher denselben Namen hat, wie die Markdown-Datei, für welche die Bilder verwendet werden sollen.
 Dort können dann die Bilder abgelegt werden.
+
+### Produktschreibweisen Cloudogu
+
+| Thema           | Schreibweise                      | Kommentar                            |
+|-----------------|-----------------------------------|--------------------------------------|
+| CES             | Cloudogu EcoSystem                | -                                    |
+| Dōgu            | Dogu                              | -                                    |
+| SCM-Manager     | SCM-Manager                       | Mit Bindestrich                      |
+| User Management | User Management                   | Nicht zusammengeschrieben.           |
+| Warp Menü       | Warp Menü (de) und Warp Menu (en) | Das CES Ausklappmenü am rechten Rand |
+
