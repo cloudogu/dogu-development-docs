@@ -264,7 +264,7 @@ Der Ordner `gui` ist optional für Repositories, die ein grafisches Nutzerinterf
 In diesem werden alle Elemente des grafischen Interface erklärt.
 Der Aufbau der Beschreibungen ist äquivalent zu `operations`.
 
-#### development
+#### development-Ordner
 
 Der Ordner `development` ist optional für Repositories, die weitere Hinweise für die Entwicklung, z. B. von Plugins, 
 benötigen.
