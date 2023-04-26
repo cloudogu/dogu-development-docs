@@ -258,7 +258,7 @@ Abschnitten beschrieben:
 
 Alle Inhalte im Ordner `operations` liegen in Deutsch und Englisch vor. Die Übersetzung kann automatisiert erfolgen.
 
-#### gui
+#### gui-Ordner
 
 Der Ordner `gui` ist optional für Repositories, die ein grafisches Nutzerinterface mitbringen.
 In diesem werden alle Elemente des grafischen Interface erklärt.
