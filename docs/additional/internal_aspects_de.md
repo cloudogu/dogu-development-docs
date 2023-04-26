@@ -17,7 +17,7 @@ Der Testfokus wird dann auf die hinzugefügten Dogu-Features abgegrenzt, die typ
 Die Qualitätssicherung liegt in der Verantwortung des Inhabers.
 Für unsere Software setzen wir die folgenden Aspekte für die Qualitätssicherung um:
 
-- Unit-Tests (80 % Zeilenabdeckung)
+- Unit-Tests (80 % Code-Abdeckung)
 - Integrations-Tests
 - End-to-End-Tests
 - Werkzeuge für statische Analyse z. B. Reviewdog, Linter (Style, Smells)
