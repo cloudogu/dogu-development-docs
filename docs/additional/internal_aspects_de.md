@@ -248,7 +248,7 @@ Der `docs`-Ordner ist nach diesem beispielhaften Schema aufgebaut:
 Das Namensschema ist Name des Features plus ein Suffix mit der Sprachversion (de, en).
 Einzelne Worte im Namen werden mit Unterstrichen verbunden (z.B. name_des_features_de oder name_des_features_en).
 
-#### operations
+#### operations-Ordner
 
 Der Ordner „operations“ ist der Kern der Dokumentation. Jedes einzelne Feature, jede Funktion, jeder Befehl wird in drei
 Abschnitten beschrieben:
