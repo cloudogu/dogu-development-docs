@@ -270,7 +270,7 @@ Der Ordner `development` ist optional für Repositories, die weitere Hinweise f�
 benötigen.
 Die Beschreibungen in diesem Ordner werden nur auf Englisch verfasst.
 
-#### getting_started
+#### getting_started-Dateien
 
 Im `docs`-Ordner beschreiben die Dateien `getting_started_de.md` und `getting_started_en.md` die notwendigen Schritte, 
 um ein Repository lokal bereit zum Entwickeln zu machen.
