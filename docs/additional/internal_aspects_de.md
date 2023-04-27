@@ -159,7 +159,7 @@ Folgende Punkte beschreiben grundlegende Anforderungen, die als Basis einer Defi
 
 - Für jede Änderung existiert ein Issue in einem Ticketsystem.
 - Es beschreibt das zu entwickelnde Produktinkrement.
-- Tickets in öffentlichen Ticketsystem werden in internen Systemen verlinkt.
+- Tickets aus öffentlichen Ticketsystem werden in internen Systemen verlinkt.
 
 ### Dockerfile
 
