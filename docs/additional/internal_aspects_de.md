@@ -44,7 +44,7 @@ Mithilfe der Makefiles können Prozesse vereinheitlicht werden. Als Unterstützu
 #### Automatisierung durch CI/CD
 
 Ein Großteil der zu testenden Features sollte automatisch in einer Build-Pipeline getestet werden.
-Das erfolgreiche Durchlaufen aller CI/CD-Test sind die Voraussetzung für ein Release.
+Das erfolgreiche Durchlaufen aller CI/CD-Test ist die Voraussetzung für ein Release.
 Als Unterstützung bieten wir hier unsere [ces-build-lib][ces-build-lib] und [dogu-build-lib][dogu-build-lib] an.
 Beide Bibliotheken werden effektiv in allen CI/CD Pipelines unserer Dogus eingesetzt.
 Zu beachten ist, dass die `dogu-build-lib` von der Google-Cloud abhängig ist.
