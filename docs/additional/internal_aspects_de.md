@@ -97,7 +97,7 @@ stage('Lint') {
 
 ##### End-to-End-Tests (UI, API, CAS-Plugin)
 
-Die Absicht der End-to-End Tests liegt darin den Mehrwert des Dogus zu testen.
+Die Absicht der End-to-End Tests liegt darin, den Mehrwert des Dogus im Cloudogu EcoSystem zu testen.
 Dabei bezieht man sich zum Beispiel auf die Integration des CAS-Dogus:
 
 - Front-Channel-Login
