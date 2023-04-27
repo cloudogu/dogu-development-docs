@@ -25,7 +25,7 @@ Für unsere Software setzen wir die folgenden Aspekte für die Qualitätssicheru
 - Integrations-Tests
 - End-to-End-Tests
 - Werkzeuge für statische Analyse z. B. Reviewdog, Linter (Style, Smells)
-- SonarQube (Test coverage, Smells, Bugs, Sicherheitslücken)
+- SonarQube (Code-Abdeckung, Smells, Bugs, Sicherheitslücken)
 - Reviews nach 4-Augen-Prinzip
 
 ### Qualitätssicherung des Dogus
@@ -55,7 +55,6 @@ Im Folgenden werden die verschiedenen Methoden, die in einer Pipeline zum Testen
 Dabei gehen wir speziell auf die Unterstützung unserer Bibliotheken ein.
 
 [ces-build-lib]: https://github.com/cloudogu/ces-build-lib
-
 [dogu-build-lib]: https://github.com/cloudogu/dogu-build-lib
 
 ##### Shell-Tests & Linting
@@ -145,7 +144,7 @@ stage('Trivy scan') {
 In der manuellen Testphase sollte das Dogu auf einer Test-Stage getestet werden.
 Dabei sollte die Test-Stage eine möglichst reale Umgebung abbilden.
 Das Dogu soll mit dem Befehl `cesapp install` installiert werden.
-Das Dogu sollte systematisch im Browser manuell getestet und als funktionstauglich eingestuft werden.
+Zusätzlich sollte es systematisch im Browser manuell getestet und als funktionstauglich eingestuft werden.
 Dabei sollte der Fokus auf den Features liegen, welche in Produktion die größte Relevanz haben.
 
 ## Definition of Done
@@ -307,7 +306,7 @@ Dort können dann die Bilder abgelegt werden.
 | Thema           | Schreibweise                      | Kommentar                            |
 |-----------------|-----------------------------------|--------------------------------------|
 | CES             | Cloudogu EcoSystem                | -                                    |
-| Dōgu            | Dogu                              | -                                    |
+| Dōgu            | Dogu                              | Ohne übergesetztes Makron            |
 | SCM-Manager     | SCM-Manager                       | Mit Bindestrich                      |
 | User Management | User Management                   | Nicht zusammengeschrieben.           |
 | Warp Menü       | Warp Menü (de) und Warp Menu (en) | Das CES Ausklappmenü am rechten Rand |
