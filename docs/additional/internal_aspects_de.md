@@ -48,7 +48,7 @@ Das erfolgreiche Durchlaufen aller CI/CD-Test ist die Voraussetzung für ein Rel
 Als Unterstützung bieten wir hier unsere [ces-build-lib][ces-build-lib] und [dogu-build-lib][dogu-build-lib] an.
 Beide Bibliotheken werden effektiv in allen CI/CD Pipelines unserer Dogus eingesetzt.
 Zu beachten ist, dass die `dogu-build-lib` von der Google-Cloud abhängig ist.
-Sie ist in der Lage Instanzen des Cloudogu EcoSystems in der Cloud zu provisionieren, damit diese für
+Sie ist in der Lage, Instanzen des Cloudogu EcoSystems in der Cloud zu provisionieren, damit diese für
 Integrationstests genutzt werden können.
 
 Im Folgenden werden die verschiedenen Methoden, die in einer Pipeline zum Testen verwendet werden können, beschrieben.
