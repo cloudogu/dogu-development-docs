@@ -150,7 +150,7 @@ Dabei sollte der Fokus auf den Features liegen, welche in Produktion die größt
 ## Definition of Done
 
 Dieser Abschnitt beschreibt mögliche Voraussetzungen für einen finalen Zustand einer Entwicklung.
-Er schafft ein gemeinsames Verständnis für Entwickler wann ein Feature fertig ist und kann verschiedenste Anforderungen
+Er schafft ein gemeinsames Verständnis für Entwickler, wann ein Feature fertig ist und kann verschiedenste Anforderungen
 beinhalten.
 
 Folgende Punkte beschreiben grundlegende Anforderungen, die als Basis einer Definition of Done dienen können.
