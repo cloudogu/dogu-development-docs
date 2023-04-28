@@ -185,7 +185,7 @@ Anforderungen für Shell-Scripting sind [hier](interesting_aspects_de.md#bash-sk
 - Admin-Gruppe
     - Admin-Gruppe muss änderbar sein
     - Admin-Gruppe aus dem `etcd` wird verwendet und bei einem Wechsel der Admin-Gruppe reagiert das Dogu entsprechend
-      darauf, dann wird der alten Admin-Gruppe das Admin-Recht entzogen. Siehe z.B. SonarQube und Nexus Repository
+      darauf, dann wird der alten Admin-Gruppe das Admin-Recht entzogen. Siehe z. B. SonarQube und Nexus Repository
       Manager.
 - Logging
     - Log-Ausgabe des Dogus auf Fehler checken
@@ -205,7 +205,7 @@ abgelegten Dateien auf den neuen `docs`-Ordner verlinken.
 ## Cloudogu Dokumentationsregelwerk
 
 Das Regelwerk soll die Dokumentation für Cloudogu vereinheitlichen und Entscheidungen festhalten, wie bestimmte Themen
-zu behandeln sind. Die folgenden Punkte bilden eine Basis und können durch weitere Aspekte wie z.B.
+zu behandeln sind. Die folgenden Punkte bilden eine Basis und können durch weitere Aspekte wie z. B.
 Produktschreibweisen,
 einem Dokumentationsplan oder einem Styleguide erweitert werden.
 
@@ -258,7 +258,7 @@ Der `docs`-Ordner ist nach diesem beispielhaften Schema aufgebaut:
 
 (Die Dateinamen sind beispielhaft gewählt und keine Vorgabe).
 Das Namensschema ist Name des Features plus ein Suffix mit der Sprachversion (de, en).
-Einzelne Worte im Namen werden mit Unterstrichen verbunden (z.B. name_des_features_de oder name_des_features_en).
+Einzelne Worte im Namen werden mit Unterstrichen verbunden (z. B. name_des_features_de oder name_des_features_en).
 
 #### operations-Ordner
 
