@@ -167,9 +167,9 @@ Anforderung für das Dockerfile sind [hier](interesting_aspects_de.md#container-
 
 ### Dogu.json
 
-- Muss konfigurierbare Schlüssel enthalten:
-    - `container_config/memory_limit`
-    - `container_config/swap_limit`
+Die Dogu.json muss folgende konfigurierbare Schlüssel enthalten:
+- `container_config/memory_limit`
+- `container_config/swap_limit`
 
 ### Dogu-Scripting
 
