@@ -1,23 +1,21 @@
 # Internal aspects
 
-This section describes aspects that must be observed by internal developers of Cloudogu GmbH.
-They contain requirements for quality assurance or, for example, basic definitions to a finished, final Dogu.
-Thus, it results that this information is not necessarily relevant for external developers.
+This section describes aspects that must be adhered to by internal developers of Cloudogu GmbH.
+They contain requirements for quality assurance or, for example, basic definitions for a finished, final Dogu.
+Thus, this information is not necessarily relevant for external developers.
 However, the aspects can be used to define or improve quality standards.
 
 ## Quality assurance
 
-Dogus can consist both of self-developed software and of encapsulated foreign software.
+Dogus can consist both of self-developed software and of encapsulated third-party applications.
 In the case of self-development, common quality assurance standards should apply, which are mentioned in the following
 sections below.
-When a Dogu captures third-party software, it is often not practical to test all features of the actual
-tool to be tested.
-The test focus is then delineated to the added Dogu features, which typically represent the added benefit of a Dogu's
-represent.
+When a Dogu encapsulates a third-party application, it is often not practical to test all of its features.
+The tests should then focus on the Dogu's added features, which typically represent the added benefit of a Dogu.
 
 ### Quality assurance of the tool
 
-Quality assurance is the responsibility of the owner.
+Quality assurance is in the responsibility of the owner of the software.
 For our software, we implement the following aspects for quality assurance:
 
 - Unit tests (80% code coverage)
@@ -25,17 +23,17 @@ For our software, we implement the following aspects for quality assurance:
 - End-to-end tests
 - Tools for static analysis e.g. Reviewdog, Linter (style, smells)
 - SonarQube (code coverage, smells, bugs, security vulnerabilities)
-- Reviews according to 4-eyes principle
+- Reviews according to the 4-eyes principle
 
 ### Quality assurance of the Dogus
 
 In order to ensure a flawless integration of the Dogus into the Cloudogu EcoSystem, the quality of the Dogus should be 
-guaranteed through be ensured by various methods.
+assured through various methods.
 For this purpose, the Dogus are tested in two different phases.
 
 #### Automation through Makefiles
 
-With the help of Makefiles, processes can be standardized. As support, we offer a collection of
+With the help of Makefiles, processes can be standardized. For support, we offer a collection of
 [makefiles][makefiles].
 
 [makefiles]: https://github.com/cloudogu/makefiles
@@ -43,8 +41,8 @@ With the help of Makefiles, processes can be standardized. As support, we offer 
 #### Automation through CI/CD
 
 The majority of features under test should be tested automatically in a build pipeline.
-Successfully passing all CI/CD tests are a prerequisite for a release.
-As support, we offer our [ces-build-lib][ces-build-lib] and [dogu-build-lib][dogu-build-lib].
+Successfully passing all CI/CD tests is a prerequisite for a release.
+For support with CI/CD, we offer our [ces-build-lib][ces-build-lib] and [dogu-build-lib][dogu-build-lib].
 Both libraries are effectively used in all CI/CD pipelines of our Dogus.
 It should be noted that the `dogu-build-lib` is dependent on the Google Cloud.
 It is able to provision instances of the Cloudogu EcoSystem in the cloud so that they can be used for testing.
@@ -95,7 +93,7 @@ stage('lint') {
 
 ##### End-to-End Tests (UI, API, CAS Plugin)
 
-The intent of end-to-end testing is to test the added value of the Dogus.
+The intent of end-to-end testing is to test the added value of the Dogus in the Cloudogu EcoSystem.
 For example, one refers to the integration of the CAS Dogus:
 
 - Front-channel login
@@ -114,7 +112,7 @@ stage('Integration tests') {
 ```
 
 The tests themselves must be located under the Dogu directory in the `integrationTests` folder.
-There is also a [library][dogu-integration-lib] which is used to support the implementation of the tests.
+There is also a [library][dogu-integration-lib] which is used to ease the implementation of the tests.
 
 [dogu-integration-lib]: https://github.com/cloudogu/dogu-integration-test-library
 
@@ -155,7 +153,7 @@ The following points describe basic requirements that can serve as the basis for
 
 - An issue exists in a ticket system for every change.
 - It describes the product increment to be developed.
-- Tickets in public ticket systems are linked in internal systems.
+- Tickets from public ticket systems are linked in internal systems.
 
 ### Dockerfile
 
@@ -163,9 +161,9 @@ Requirements for the Dockerfile can be found [here](interesting_aspects_en.md#co
 
 ### Dogu.json
 
-- Must contain configurable keys:
-    - `container_config/memory_limit`
-    - `container_config/swap_limit`
+The dogu.json must contain the following configurable keys:
+- `container_config/memory_limit`
+- `container_config/swap_limit`
 
 ### Dogu scripting
 
@@ -250,7 +248,7 @@ The `docs` folder is structured according to this exemplary scheme:
 └── how_to_build_a_plugin.md
 ```
 
-(The names are chosen as examples and are not defaults).
+(The file names are chosen as examples and are not defaults).
 The naming scheme is the name of the feature plus a suffix with the language version (de, en).
 Single words in the name are connected with underscores (e.g. name_of_feature_en or name_of_feature_de).
 
@@ -301,5 +299,5 @@ The images can then be placed there.
 | CES             | Cloudogu EcoSystem                | -                                          |
 | Dōgu            | Dogu                              | Without superimposed macron                |
 | SCM-Manager     | SCM-Manager                       | Hyphenated                                 |
-| User Management | User Management                   | Not written together.                      |
+| User Management | User Management                   | Two separate words                         |
 | Warp Menu       | Warp Menu (de) and Warp Menu (en) | The CES drop-down menu in the right margin |

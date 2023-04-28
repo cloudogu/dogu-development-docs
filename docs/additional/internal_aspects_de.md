@@ -256,7 +256,7 @@ Der `docs`-Ordner ist nach diesem beispielhaften Schema aufgebaut:
   └── how_to_build_a_plugin.md
 ```
 
-(Die Namen sind beispielhaft gewählt und keine Vorgabe).
+(Die Dateinamen sind beispielhaft gewählt und keine Vorgabe).
 Das Namensschema ist Name des Features plus ein Suffix mit der Sprachversion (de, en).
 Einzelne Worte im Namen werden mit Unterstrichen verbunden (z.B. name_des_features_de oder name_des_features_en).
 
@@ -308,6 +308,6 @@ Dort können dann die Bilder abgelegt werden.
 | CES             | Cloudogu EcoSystem                | -                                    |
 | Dōgu            | Dogu                              | Ohne übergesetztes Makron            |
 | SCM-Manager     | SCM-Manager                       | Mit Bindestrich                      |
-| User Management | User Management                   | Nicht zusammengeschrieben.           |
+| User Management | User Management                   | Nicht zusammengeschrieben            |
 | Warp Menü       | Warp Menü (de) und Warp Menu (en) | Das CES Ausklappmenü am rechten Rand |
 
