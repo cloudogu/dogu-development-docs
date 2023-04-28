@@ -138,8 +138,8 @@ stage('Trivy scan') {
 
 #### Manual testing on a test stage
 
-In the manual testing phase, the Dogu should be tested on a test stage.
-The test stage should represent an environment as real as possible.
+In the manual testing phase, the Dogu should be tested in a staging environment.
+This staging environment should represent a production environment as realisitcally as possible.
 The Dogu should be installed using the `cesapp install` command.
 In addition, it should be systematically tested manually in the browser and classified as functional.
 The focus should be on the features that have the greatest relevance in production.
