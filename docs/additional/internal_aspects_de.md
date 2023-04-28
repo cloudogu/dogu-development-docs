@@ -196,11 +196,11 @@ Anforderungen für Shell-Scripting sind [hier](interesting_aspects_de.md#bash-sk
 
 ### Dokumentation
 
-- Dogu-Dokumentation aktualisieren und prüfen, ob diese dem [Dokumentationsregelwerk](#cloudogu-dokumentationsregelwerk)
-  entspricht.
-    - Bei Abweichungen die Struktur entsprechend aufarbeiten. Dabei bestehende Strukturen bestehen lassen, aus den dort
-      abgelegten Dateien auf den neuen `docs`-Ordner verlinken.
-    - Die alten Strukturen werden nach einer angemessenen Zeit (1 Jahr) gelöscht.
+Dogu-Dokumentation aktualisieren und prüfen, ob diese dem [Dokumentationsregelwerk](#cloudogu-dokumentationsregelwerk) 
+entspricht.
+- Bei Abweichungen die Struktur entsprechend aufarbeiten. Dabei bestehende Strukturen bestehen lassen, aus den dort
+abgelegten Dateien auf den neuen `docs`-Ordner verlinken.
+- Die alten Strukturen werden nach einer angemessenen Zeit (1 Jahr) gelöscht.
 
 ## Cloudogu Dokumentationsregelwerk
 

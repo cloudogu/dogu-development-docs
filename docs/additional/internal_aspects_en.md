@@ -190,10 +190,10 @@ Requirements for shell scripting can be found [here](interesting_aspects_en.md#b
 
 ### Documentation
 
-- Update Dogu documentation and check if it complies with the [documentation ruleset](#cloudogu-documentation-rulebook).
-    - If there are any discrepancies, rework the structure accordingly. Leave the existing structures in place, and use 
-    the files link to the new `docs` folder from the files stored there.
-    - The old structures will be deleted after a reasonable time (1 year).
+Update Dogu documentation and check if it complies with the [documentation ruleset](#cloudogu-documentation-rulebook).
+- If there are any discrepancies, rework the structure accordingly. Leave the existing structures in place, and use 
+the files link to the new `docs` folder from the files stored there.
+- The old structures will be deleted after a reasonable time (1 year).
 
 ## Cloudogu documentation rulebook
 
