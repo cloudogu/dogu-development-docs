@@ -186,7 +186,7 @@ Requirements for shell scripting can be found [here](interesting_aspects_en.md#b
 - Logging
     - Check log output of the Dogu for errors.
 - Accepting a change of the CES FQDN
-    - An FQDN change must be processed in a Dogu in a meaningful way.
+    - An FQDN change must be processed by a Dogu in a meaningful way.
     - The Dogu must start properly after a restart.
 - Consider single sign-on & single sign-out
 
