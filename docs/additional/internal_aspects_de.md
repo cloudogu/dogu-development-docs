@@ -173,7 +173,7 @@ Die Dogu.json muss folgende konfigurierbare Schlüssel enthalten:
 
 ### Dogu-Scripting
 
-Anforderungen für Shell-Scripting sind [hier](interesting_aspects_de.md#bash-skripte) zu finden.
+Anforderungen für Shell-Scripting beschreibt das Dokument ["Interessantes für Entwickelnde"](interesting_aspects_de.md#bash-skripte).
 
 ### Dogu-Funktionalitäten
 
@@ -189,10 +189,12 @@ Anforderungen für Shell-Scripting sind [hier](interesting_aspects_de.md#bash-sk
       Manager.
 - Logging
     - Log-Ausgabe des Dogus auf Fehler checken
-- Übernahme einer Änderung der CES-FQDN
+- Übernahme einer Änderung der FQDN
     - Eine FQDN-Änderung muss in einem Dogu sinnvoll verarbeitet werden.
     - Das Dogu muss nach einem Neustart ordnungsgemäß starten.
 - Single Sign-on & Single Sign-out betrachten
+
+Das Dokument ["Relevante Funktionalitäten"](../important/relevant_functionalities_de.md) geht auf diese Funktionalitäten tiefer ein.
 
 ### Dokumentation
 
