@@ -191,7 +191,7 @@ Anforderungen für Shell-Scripting sind [hier](interesting_aspects_de.md#bash-sk
     - Log-Output des Dogus auf Fehler checken
 - Übernahme einer Änderung der CES-FQDN
     - Eine FQDN-Änderung muss in einem Dogu sinnvoll verarbeitet werden.
-    - Das Dogu muss nach einem Restart ordnungsgemäß starten.
+    - Das Dogu muss nach einem Neustart ordnungsgemäß starten.
 - Single Sign-on & Single Sign-out betrachten
 
 ### Dokumentation
