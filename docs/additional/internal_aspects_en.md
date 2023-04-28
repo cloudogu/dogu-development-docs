@@ -273,8 +273,7 @@ The structure of the descriptions is equivalent to `operations`.
 
 #### development folder
 
-The folder `development` is optional for repositories that need further hints for the development, e.g. of plugins,
-are needed.
+The folder `development` is optional for repositories that need further hints for the development, e.g. of plugins.
 The descriptions in this folder are written in English only.
 
 #### getting_started files
