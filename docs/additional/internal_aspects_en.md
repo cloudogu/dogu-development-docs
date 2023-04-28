@@ -121,7 +121,7 @@ There is also a [library][dogu-integration-lib] which is used to support the imp
 ##### Trivy
 
 It is important to identify and fix the security vulnerabilities in a Docker image, or the target system.
-For this, the scanner Trivy is useful, which identifies and prioritizes security vulnerabilities in the system.
+For this, the Trivy scanner is useful, which identifies and prioritizes security vulnerabilities in the system.
 The `dogu-build-lib` provides a [component][trivy] for this purpose, which can be used as follows to scan the image of a
 Dogu.
 
