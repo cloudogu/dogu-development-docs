@@ -188,7 +188,7 @@ Anforderungen für Shell-Scripting sind [hier](interesting_aspects_de.md#bash-sk
       darauf, dann wird der alten Admin-Gruppe das Admin-Recht entzogen. Siehe z.B. SonarQube und Nexus Repository
       Manager.
 - Logging
-    - Log-Output des Dogus auf Fehler checken
+    - Log-Ausgabe des Dogus auf Fehler checken
 - Übernahme einer Änderung der CES-FQDN
     - Eine FQDN-Änderung muss in einem Dogu sinnvoll verarbeitet werden.
     - Das Dogu muss nach einem Neustart ordnungsgemäß starten.
