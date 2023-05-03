@@ -21,8 +21,9 @@ For our software, we implement the following aspects for quality assurance:
 - Unit tests (80% code coverage)
 - Integration tests
 - End-to-end tests
-- Tools for static analysis e.g. Reviewdog, Linter (style, smells)
-- SonarQube (code coverage, smells, bugs, security vulnerabilities)
+- Static code analysis
+    - SonarQube (code coverage, smells, bugs, security vulnerabilities)
+    - Reviewdog, Linter (style, smells)
 - Reviews according to the 4-eyes principle
 
 ### Quality assurance of the Dogus

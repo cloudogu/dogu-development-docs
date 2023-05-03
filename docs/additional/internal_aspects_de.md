@@ -24,8 +24,9 @@ Für unsere Software setzen wir die folgenden Aspekte für die Qualitätssicheru
 - Unit-Tests (80 % Code-Abdeckung)
 - Integrations-Tests
 - End-to-End-Tests
-- Werkzeuge für statische Analyse z. B. Reviewdog, Linter (Style, Smells)
-- SonarQube (Code-Abdeckung, Smells, Bugs, Sicherheitslücken)
+- Werkzeuge für statische Analyse
+    - SonarQube (Code-Abdeckung, Smells, Bugs, Sicherheitslücken)
+    - Reviewdog, Linter (Style, Smells)
 - Reviews nach 4-Augen-Prinzip
 
 ### Qualitätssicherung des Dogus
