@@ -168,7 +168,7 @@ The dogu.json must contain the following configurable keys:
 
 ### Dogu scripting
 
-Requirements for shell scripting can be found [here](interesting_aspects_en.md#bash-scripts).
+The document ["Interesting aspects for developers"](interesting_aspects_en.md#bash-scripts) describes shell scripting in more detail.
 
 ### Dogu functionalities
 
@@ -184,10 +184,12 @@ Requirements for shell scripting can be found [here](interesting_aspects_en.md#b
       manager.
 - Logging
     - Check log output of the Dogu for errors.
-- Accepting a change of the CES FQDN
+- Accepting a change of the FQDN
     - An FQDN change must be processed by a Dogu in a meaningful way.
     - The Dogu must start properly after a restart.
 - Consider single sign-on & single sign-out
+
+The documente ["Relevant Functionalities"](../important/relevant_functionalities_de.md) provides further information to the above topics.
 
 ### Documentation
 
