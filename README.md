@@ -11,6 +11,7 @@ It has 3 main topics:
   - [ces context](TODO)
 - Additional knowledge
   - [interesting aspects](docs/additional/interesting_aspects_en.md)
+  - [internal aspects](docs/additional/internal_aspects_en.md)
 
 ---
 
