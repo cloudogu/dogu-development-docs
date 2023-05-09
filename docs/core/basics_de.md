@@ -1,6 +1,6 @@
 # Einleitung & Basics
 
-Ein Dogu (aus dem Japanischen abgeleitet für „Werkzeug“) stellt eine containerisierte Anwendung im Cloudogu EcoSystem (CES) zur Verfügung.
+Ein Dogu (aus dem Japanischen abgeleitet für „Werkzeug“) stellt eine containerisierte Anwendung im [Cloudogu EcoSystem (CES)](https://docs.cloudogu.com/de/docs/introduction/) zur Verfügung.
 Dogus können unterschiedliche Nutzungsaspekte befriedigen, wie z.B. eine Projektverwaltung (gegenüber Benutzenden) oder ein Datenbankmanagementsystem (gegenüber anderen Dogus).
 Daraus schließt sich, dass Dogus mehr können müssen als mit reinen Docker-Direktiven möglich wäre. Denkt man an die obigen Dogus, ist es unter anderem sinnvoll einen ServiceAccount-Mechanismus für die Kommunikation von 
 der Projektverwaltungssoftware zu dem Datenbankmanagementsystem zu verwenden. Diese und weitere Möglichkeiten bietet das Dogu als Erweiterung zu einem reinen Containerimage.
@@ -204,6 +204,19 @@ python3 -m http.server 8080 --directory /resources/web
 <img src="./img/dogu-in-ces.svg">
 
 ### Das Dogu testen
-- Ausgaben im Log prüfen, ob Dogu korrekt gestartet wurde:
-  - `cat /var/log/docker/newdogu.log`
+
+Die Syslog-Konfiguration des Cloudogu EcoSystems sorgt dafür, dass jedes Dogu ein einzelnes Logfile unter dem Pfad
+`/var/log/docker/` schreibt, um bspw. Log-Forwarding oder Analysen zu ermöglichen.
+
+In diesem Log können nun Ausgaben geprüft werden, ob das Dogu korrekt gestartet wurde:
+- `cat /var/log/docker/newdogu.log`
+
+Alternativ kann auch der HTTP-Endpunkt des Dogus aufgerufen werden:
 - `https://192.168.56.2/newdogu` aufrufen.
+
+## Architektursicht eines integrierten Dogus
+
+Das folgende Schaubild zeigt mögliche Kommunikationswege eines integrierten Dogus (Redmine) im Cloudogu EcoSystem.
+Im Gegensatz zu dem minimalen Dogu aus dem vorherigen Kapitel besitzt Redmine andere Dogus als Abhängigkeiten, verwendet Service-Accounts und Benutzerinformationen über das CAS-Dogu und wird über den ETCD konfiguriert.
+
+<img src="./img/communication-in-ces.png">
