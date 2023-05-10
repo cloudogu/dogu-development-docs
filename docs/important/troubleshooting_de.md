@@ -1,38 +1,42 @@
 # Troubleshooting
 
-Das Kapitel Troubleshooting bietet eine Hilfestellung mögliche Fehler während der Dogu-Entwicklung zu lokalisieren.
+Das Kapitel Troubleshooting bietet eine Hilfestellung, mögliche Fehler während der Dogu-Entwicklung zu lokalisieren.
 Für bekannte Fehler werden außerdem Lösungen dargestellt.
 
 ## Wie vermeide ich Fehler aufgrund von ungültigen Konfigurationseinträgen?
 
-- Gültige ETCD-Pfade sind zu beachten
+- Gültige Registry-Pfade sind zu beachten
 - `doguctl` kann Konfigurationswerte validieren. Siehe [Validierung](relevant_functionalities_de.md#validierung-und-default-werte)
 - Übersicht aller Keys: `etcdctl ls -r config/<doguname>`
-- Aus dem Container ist es möglich verschlüsselte Werte zu überprüfen:
-  - `docker exec -it redmine bash`
-  - `doguctl config -e sa-postgresql/username`
+- Aus dem Container ist es möglich, verschlüsselte Werte zu überprüfen:
+  - `docker exec -it redmine doguctl config -e sa-postgresql/username`
 
 ## Das Dogu startet nicht und/oder befindet sich in einer Restart-Loop
 
 Besteht eine ungefähre Vermutung zur Position der fehlerhaften Stelle, reicht es oftmals das Skript mit `echo` - Ausgaben zu erweitern,
 das Dogu neu zu starten und anschließend das Log-File zu prüfen.
 
-Falls nicht, ist es notwendig den Container zu debuggen:
+Falls weiterhin die Fehlerquelle unklar bleibt, ist es notwendig die Anweisungen innerhalb des Containers einzeln auszuführen:
 - Shell in den Container: `docker exec -it <doguname> bash`
 - Bei einer Restart-Loop überschreiben sie am besten das Startskript des Dockerfiles, sodass der Container schläft:
   - `ENTRYPOINT ["tail", "-f", "/dev/null"]` anstatt `CMD ["/resources/startup.sh"]`
   - Alternativ kann an beliebiger Stelle aus ein `sleep <time>` verwendet werden
 - Anschließend kann der Container debuggt werden:
   - Prüfung des Filesystems
-  - Iterative Ausführung der Befehle in den Skripten um den Fehler zu lokalisieren
+  - Iterative Ausführung der Befehle in den Skripten, um den Fehler zu lokalisieren
+  - Defekt mittels Bordmitteln im Container reparieren
 
-## Logging-Ausgaben fehlen oder sind zu präzise oder zu unpräzise
+## Logging-Ausgaben fehlen oder haben eine falsche Granularität
 
-- Es wird ein falscher Pfad zum Auslesen des Log-Levels verwendet
+
+Es gibt viele Gründe, warum es zu vollständig/teilweise fehlenden oder den falschen Logging-Ausgaben kommt.
+
+- Wird ein falscher Pfad zum Auslesen des Log-Levels verwendet?
   - Der korrekte Pfad lautet: `config/<doguname>/logging/root`
-- Das Log-Level ist ungültig
-  - Valide Werte: `ERROR`, `WARN`, `INFO`, `DEBUG`
-- Der Wert wird beim Starten des Dogus nicht sinnvoll interpretiert. Ein korrektes Beispiel wäre:
+- Wird ein ungültiges Log-Level verwendet?
+  - Die vier validen Werte lauten: `ERROR`, `WARN`, `INFO`, `DEBUG`
+- Wird der Wert beim Starten des Dogus nicht sinnvoll interpretiert?
+   - Ein korrektes Beispiel wäre:
 ```bash
 function mapDoguLogLevel() {
   local DEFAULT_LOGGING_KEY="logging/root"
@@ -69,8 +73,9 @@ function mapDoguLogLevel() {
 Es ratsam die Größe der Volumes regelmäßig zu überprüfen.
 Diese werden unter dem Pfad `/var/lib/ces/<dogu>/volumes/` gemounted.
 
-Das Dogu sollte einen wachsenden Datenbestand außerdem auch nur in Volumes speichern, weil sonst
-die Festplatte des Systems voll laufen könnte.
+Ein Dogu sollte einen wachsenden Datenbestand ausschließlich in Docker Volumes speichern, die in der [`dogu.json`](https://github.com/cloudogu/dogu-development-docs/blob/main/docs/core/compendium_en.md#volumes) beschrieben werden. 
+
+Volumes haben neben einer besseren Geschwindigkeit weitere Vorteile: Sie gehen nicht verloren, wenn der Container beendet wird. Außerdem lässt sich die Festplattenauslastung besser überwachen.
 
 ## Wo finde ich FQDN, Zertifikat und weitere allgemeine Konfigurationen?
 
@@ -83,7 +88,7 @@ Es ist in unserem [Base-Image](https://github.com/cloudogu/base) enthalten.
 
 ## Das Dogu ist nicht über Nginx erreichbar
 
-- Umgebungsvariable im Dockerfile prüfen
+- Wurde diese Umgebungsvariable im Dockerfile gesetzt?
   - `ENV SERVICE_TAGS=webapp`
 - Konfiguration im Nginx-Container checken
   - `docker exec -it nginx bash`
