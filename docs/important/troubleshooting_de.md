@@ -47,7 +47,6 @@ docker run -ti \
 
 ## Logging-Ausgaben fehlen oder haben eine falsche Granularität
 
-
 Es gibt viele Gründe, warum es zu vollständig/teilweise fehlenden oder den falschen Logging-Ausgaben kommt.
 
 - Wird ein falscher Pfad zum Auslesen des Log-Levels verwendet?
@@ -107,7 +106,7 @@ Es ist in unserem [Base-Image](https://github.com/cloudogu/base) enthalten.
 
 ## Wie kann ein Container neu instanziiert werden?
 
-`cesapp recreate <doguname>`
+- `cesapp recreate <doguname>`
 
 ## Das Dogu ist nicht über Nginx erreichbar
 
@@ -144,9 +143,9 @@ Damit Volume-Daten eines Dogus von dem Backup & Restore Mechanismus beachtet wer
 - Entfernen von nicht mehr benötigten Docker-Images
   - `docker rmi my-image:1.2.3`
 
-## Das Filesystem ist voll obwohl `df` dies nicht zeigt
+## Das Filesystem ist voll obwohl `df` dies nicht widerspiegelt
 
-In diesem Fall kann es hilfreich sein das Btrfs-Filesystem neu zu balancieren.
+In diesem Fall kann es hilfreich sein das Btrfs-Filesystem zu balancieren.
 
 - `btrfs filesystem balance /var/lib/docker/btrfs`
 
