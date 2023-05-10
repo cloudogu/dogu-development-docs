@@ -74,17 +74,24 @@ die Festplatte des Systems voll laufen könnte.
 
 siehe: [Registryeinträge](relevant_functionalities_de.md#weitere-registryeinträge)
 
+## Wie werden Registryeinträge gelesen/geschrieben?
+
+Mittels [doguctl](https://github.com/cloudogu/doguctl).
+Es ist in unserem [Base-Image](https://github.com/cloudogu/base) enthalten.
+
 ## Das Dogu ist nicht über Nginx erreichbar
 
 - Umgebungsvariable im Dockerfile prüfen
   - `ENV SERVICE_TAGS=webapp`
 - Konfiguration im Nginx-Container checken
+  - `docker exec -it nginx bash`
+  - `cat /etc/nginx/conf.d/app.conf`
 
 ## Dogu erscheint nicht im Warp Menü
 
 - Für einen Eintrag im Warp-Menü muss das Tag `warp` und eine Kategorie in der dogu.json definiert werden.
 
-## Backup & Restore funktioniert für das Dogu nicht
+## Dogu-Volumes werden nicht von Backup & Restore beachtet
 
 Damit Volume-Daten eines Dogus von dem Backup & Restore Mechanismus beachtet werden muss das entsprechende Volume mit dem Feld `NeedsBackup` erweitert werden:
 
@@ -95,6 +102,8 @@ Damit Volume-Daten eines Dogus von dem Backup & Restore Mechanismus beachtet wer
   "NeedsBackup": true
 }
 ```
+
+
 
 
 
