@@ -105,6 +105,10 @@ siehe: [Registryeinträge](relevant_functionalities_de.md#weitere-registryeintr�
 Mittels [doguctl](relevant_functionalities_de.md#die-nutzung-von-doguctl).
 Es ist in unserem [Base-Image](https://github.com/cloudogu/base) enthalten.
 
+## Wie kann ein Container neu instanziiert werden?
+
+`cesapp recreate <doguname>`
+
 ## Das Dogu ist nicht über Nginx erreichbar
 
 - Wurde diese Umgebungsvariable im Dockerfile gesetzt?
@@ -131,7 +135,31 @@ Damit Volume-Daten eines Dogus von dem Backup & Restore Mechanismus beachtet wer
 }
 ```
 
+## Freigeben von Speicherplatz
 
+- Entfernung von nicht mehr benötigten Logs z.B. syslog
+  - `> /var/log/syslog`
+- Rotieren von Logs
+  - `logrotate --force /etc/logrotate.conf`
+- Entfernen von nicht mehr benötigten Docker-Images
+  - `docker rmi my-image:1.2.3`
 
+## Das Filesystem ist voll obwohl `df` dies nicht zeigt
 
+In diesem Fall kann es hilfreich sein das Btrfs-Filesystem neu zu balancieren.
 
+- `btrfs filesystem balance /var/lib/docker/btrfs`
+
+**Achtung**:
+- Der Prozess versetzt die Partition in einen read-only Modus, der bei einem Abbruch nicht zurückgesetzt wird.
+In dem Fall ist ein Systemneustart notwendig.
+
+## In welchen Verzeichnissen wird am meisten Speicherplatz verbraucht?
+
+- `cd <dir> && du -d 1 -h .* | sort -h`
+
+# Ubuntu Zeit neu synchronisieren
+
+Bei längeren Offline-Zeiten des Cloudogu EcoSystem kann es notwendig sein, die Systemzeit neu zu synchronisieren:
+
+- `systemctl restart systemd-timesyncd.service`
