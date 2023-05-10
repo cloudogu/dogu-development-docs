@@ -1,5 +1,31 @@
 # Troubleshooting
 
+Das Kapitel Troubleshooting bietet eine Hilfestellung mögliche Fehler während der Dogu-Entwicklung zu lokalisieren.
+Für bekannte Fehler werden außerdem Lösungen dargestellt.
+
+## Wie vermeide ich Fehler aufgrund von ungültigen Konfigurationseinträgen?
+
+- Gültige ETCD-Pfade sind zu beachten
+- `doguctl` kann Konfigurationswerte validieren. Siehe [Validierung](relevant_functionalities_de.md#validierung-und-default-werte)
+- Übersicht aller Keys: `etcdctl ls -r config/<doguname>`
+- Aus dem Container ist es möglich verschlüsselte Werte zu überprüfen:
+  - `docker exec -it redmine bash`
+  - `doguctl config -e sa-postgresql/username`
+
+## Das Dogu startet nicht und/oder befindet sich in einer Restart-Loop
+
+Besteht eine ungefähre Vermutung zur Position der fehlerhaften Stelle, reicht es oftmals das Skript mit `echo` - Ausgaben zu erweitern,
+das Dogu neu zu starten und anschließend das Log-File zu prüfen.
+
+Falls nicht, ist es notwendig den Container zu debuggen:
+- Shell in den Container: `docker exec -it <doguname> bash`
+- Bei einer Restart-Loop überschreiben sie am besten das Startskript des Dockerfiles, sodass der Container schläft:
+  - `ENTRYPOINT ["tail", "-f", "/dev/null"]` anstatt `CMD ["/resources/startup.sh"]`
+  - Alternativ kann an beliebiger Stelle aus ein `sleep <time>` verwendet werden
+- Anschließend kann der Container debuggt werden:
+  - Prüfung des Filesystems
+  - Iterative Ausführung der Befehle in den Skripten um den Fehler zu lokalisieren
+
 ## Logging-Ausgaben fehlen oder sind zu präzise oder zu unpräzise
 
 - Es wird ein falscher Pfad zum Auslesen des Log-Levels verwendet
@@ -38,34 +64,10 @@ function mapDoguLogLevel() {
 }
 ```
 
-## Wie vermeide ich Fehler aufgrund von ungültigen Konfigurationseinträgen?
-
-- Gültige ETCD-Pfade sind zu beachten
-- `doguctl` kann Konfigurationswerte validieren siehe [Validierung](relevant_functionalities_de.md#validierung-und-default-werte)
-- Übersicht aller Keys: `etcdctl ls -r config/<doguname>`
-- Aus dem Container ist es möglich verschlüsselte Werte zu überprüfen:
-  - `docker exec -it redmine bash`
-  - `doguctl config -e sa-postgresql/username`
-
-## Das Dogu startet nicht und/oder befindet sich in einer Restart-Loop
-
-Besteht eine ungefähre Vermutung zur Position der fehlerhaften Stelle, reicht es oftmals das Skript mit `echo` - Ausgaben zu erweitern,
-das Dogu neu zu starten und anschließend das Log-File zu prüfen.
-
-Falls nicht, ist es notwendig den Container zu debuggen:
-- Shell in den Container: `docker exec -it <doguname> bash`
-- Bei einer Restart-Loop überschreiben sie am besten das Startskript des Dockerfiles, sodass der Container schläft:
-  - `ENTRYPOINT ["tail", "-f", "/dev/null"]` anstatt `CMD ["/resources/startup.sh"]`
-  - Alternativ kann an beliebiger Stelle aus ein `sleep <time>` verwendet werden
-- Anschließend kann der Container debuggt werden:
-  - Prüfung des Filesystems
-  - Iterative Ausführung der Befehle in den Skripten um den Fehler zu lokalisieren
-
-
 ## Volumes
 
 Es ratsam die Größe der Volumes regelmäßig zu überprüfen.
-Diese werden unter dem Pfad `/var/lib/ces/` gemounted.
+Diese werden unter dem Pfad `/var/lib/ces/<dogu>/volumes/` gemounted.
 
 Das Dogu sollte einen wachsenden Datenbestand außerdem auch nur in Volumes speichern, weil sonst
 die Festplatte des Systems voll laufen könnte.
