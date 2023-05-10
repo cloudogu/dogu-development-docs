@@ -13,18 +13,37 @@ Für bekannte Fehler werden außerdem Lösungen dargestellt.
 
 ## Das Dogu startet nicht und/oder befindet sich in einer Restart-Loop
 
-Besteht eine ungefähre Vermutung zur Position der fehlerhaften Stelle, reicht es oftmals das Skript mit `echo` - Ausgaben zu erweitern,
-das Dogu neu zu starten und anschließend das Log-File zu prüfen.
+Besteht eine ungefähre Vermutung zur Position der fehlerhaften Stelle, können zusätzliche `echo` - Ausgaben helfen das Problem zu analysieren.
 
 Falls weiterhin die Fehlerquelle unklar bleibt, ist es notwendig die Anweisungen innerhalb des Containers einzeln auszuführen:
 - Shell in den Container: `docker exec -it <doguname> bash`
-- Bei einer Restart-Loop überschreiben sie am besten das Startskript des Dockerfiles, sodass der Container schläft:
-  - `ENTRYPOINT ["tail", "-f", "/dev/null"]` anstatt `CMD ["/resources/startup.sh"]`
-  - Alternativ kann an beliebiger Stelle aus ein `sleep <time>` verwendet werden
 - Anschließend kann der Container debuggt werden:
   - Prüfung des Filesystems
   - Iterative Ausführung der Befehle in den Skripten, um den Fehler zu lokalisieren
   - Defekt mittels Bordmitteln im Container reparieren
+
+Bei einer Restart-Loop haben sie folgende Möglichkeiten den Container in einen stabilen Zustand zu bringen:
+- Während der Entwicklung können sie am besten den Entrypoint des Containers überschreiben.
+  - `ENTRYPOINT ["tail", "-f", "/dev/null"]` anstatt `CMD ["/resources/startup.sh"]`
+  - Alternativ kann an beliebiger Stelle ein `sleep --infinite` in das Start-Skript geschrieben werden.
+- In Produktion muss ein Container in einer Restart-Loop manuell gestoppt und mit einem Commit wieder neu gestartet werden:
+```bash
+docker stop ldap
+# commit the stopped container to a local debug image
+docker commit hashFromYourStoppedContainer_cebf8699cd9d debug/ldap
+# the volume arguments can be generated with docker inspect
+docker inspect ldap -f '{{ range.Mounts}}-v {{.Source}}:{{.Destination}} {{end}}'
+# debug your dogu container
+docker run -ti \
+   --rm \
+# here goes the docker volume list from above
+   -v /etc/ces:/etc/ces \
+   -v /var/lib/ces/ldap/volumes/_private:/private \
+   -v /var/lib/ces/ldap/volumes/config:/etc/openldap/slapd.d \
+   -v /var/lib/ces/ldap/volumes/db:/var/lib/openldap \
+   --entrypoint=/bin/sh --network cesnet1 --name ldap --hostname ldap \ 
+   debug/ldap
+```
 
 ## Logging-Ausgaben fehlen oder haben eine falsche Granularität
 
@@ -83,7 +102,7 @@ siehe: [Registryeinträge](relevant_functionalities_de.md#weitere-registryeintr�
 
 ## Wie werden Registryeinträge gelesen/geschrieben?
 
-Mittels [doguctl](https://github.com/cloudogu/doguctl).
+Mittels [doguctl](relevant_functionalities_de.md#die-nutzung-von-doguctl).
 Es ist in unserem [Base-Image](https://github.com/cloudogu/base) enthalten.
 
 ## Das Dogu ist nicht über Nginx erreichbar
@@ -97,6 +116,8 @@ Es ist in unserem [Base-Image](https://github.com/cloudogu/base) enthalten.
 ## Dogu erscheint nicht im Warp Menü
 
 - Für einen Eintrag im Warp-Menü muss das Tag `warp` und eine Kategorie in der dogu.json definiert werden.
+- Das Dogu muss gültiges HTML mit einem abschließendem `<\html>`-Tag ausliefern.
+- Das Dogu wurde wegen einer fehlerhaften Installation nicht registriert.
 
 ## Dogu-Volumes werden nicht von Backup & Restore beachtet
 
