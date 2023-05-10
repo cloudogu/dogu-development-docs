@@ -211,12 +211,13 @@ The syslog configuration of the Cloudogu EcoSystem ensures that each Dogu writes
 This log can now be used to check output to see if the dogu was started correctly:
 - `cat /var/log/docker/newdogu.log`.
 
-Alternatively, the HTTP endpoint of the dogu can be visited:
-- `https://192.168.56.2/newdogu`
+Alternative checks:
+- Check the HTTP endpoint of the dogu `https://192.168.56.2/newdogu` or
+- the container status using `docker ps -a`.
 
 ## Architecture view of an integrated Dogu
 
 The following diagram shows possible communication paths of an integrated Dogu (Redmine) in the Cloudogu EcoSystem.
-Unlike the minimal Dogu from the previous chapter, Redmine has other Dogus as dependencies, uses service accounts and user information via the CAS Dogu, and is configured via the ETCD.
+Unlike the minimal Dogu from the previous chapter, Redmine has other Dogus as dependencies, uses service accounts and user information via the CAS Dogu, and is configured via the EcoSystem-Registry.
 
 <img src="./img/communication-in-ces.png">

@@ -211,12 +211,13 @@ Die Syslog-Konfiguration des Cloudogu EcoSystems sorgt dafür, dass jedes Dogu e
 In diesem Log können nun Ausgaben geprüft werden, ob das Dogu korrekt gestartet wurde:
 - `cat /var/log/docker/newdogu.log`
 
-Alternativ kann auch der HTTP-Endpunkt des Dogus aufgerufen werden:
-- `https://192.168.56.2/newdogu` aufrufen.
+Alternative Prüfungen:
+- HTTP-Endpunkt des Dogus: `https://192.168.56.2/newdogu` oder
+- den Container-Status mittels `docker ps -a` checken
 
 ## Architektursicht eines integrierten Dogus
 
 Das folgende Schaubild zeigt mögliche Kommunikationswege eines integrierten Dogus (Redmine) im Cloudogu EcoSystem.
-Im Gegensatz zu dem minimalen Dogu aus dem vorherigen Kapitel besitzt Redmine andere Dogus als Abhängigkeiten, verwendet Service-Accounts und Benutzerinformationen über das CAS-Dogu und wird über den ETCD konfiguriert.
+Im Gegensatz zu dem minimalen Dogu aus dem vorherigen Kapitel besitzt Redmine andere Dogus als Abhängigkeiten, verwendet Service-Accounts und Benutzerinformationen über das CAS-Dogu und wird über die EcoSystem-Registry konfiguriert.
 
 <img src="./img/communication-in-ces.png">
