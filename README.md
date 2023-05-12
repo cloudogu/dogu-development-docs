@@ -8,6 +8,7 @@ It has 3 main topics:
   - [compendium](docs/core/compendium_en.md)
 - Important knowledge
   - [relevant functionalities](docs/important/relevant_functionalities_en.md)
+  - [troubleshooting](docs/important/troubleshooting_en.md)
 - Additional knowledge
   - [interesting aspects](docs/additional/interesting_aspects_en.md)
   - [internal aspects](docs/additional/internal_aspects_en.md)
