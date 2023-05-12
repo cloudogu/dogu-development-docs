@@ -13,7 +13,7 @@ Für bekannte Fehler werden außerdem Lösungen dargestellt.
 
 ## Das Dogu startet nicht und/oder befindet sich in einer Restart-Loop
 
-Besteht eine ungefähre Vermutung zur Position der fehlerhaften Stelle, können zusätzliche `echo` - Ausgaben helfen das Problem zu analysieren.
+Besteht eine ungefähre Vermutung zur Position der fehlerhaften Stelle, können zusätzliche `echo` - Ausgaben helfen, das Problem zu analysieren.
 
 Falls weiterhin die Fehlerquelle unklar bleibt, ist es notwendig die Anweisungen innerhalb des Containers einzeln auszuführen:
 - Shell in den Container: `docker exec -it <doguname> bash`
@@ -22,7 +22,7 @@ Falls weiterhin die Fehlerquelle unklar bleibt, ist es notwendig die Anweisungen
   - Iterative Ausführung der Befehle in den Skripten, um den Fehler zu lokalisieren
   - Defekt mittels Bordmitteln im Container reparieren
 
-Bei einer Restart-Loop haben sie folgende Möglichkeiten den Container in einen stabilen Zustand zu bringen:
+Bei einer Restart-Loop haben sie folgende Möglichkeiten, den Container in einen stabilen Zustand zu bringen:
 - Während der Entwicklung können sie am besten den Entrypoint des Containers überschreiben.
   - `ENTRYPOINT ["tail", "-f", "/dev/null"]` anstatt `CMD ["/resources/startup.sh"]`
   - Alternativ kann an beliebiger Stelle ein `sleep --infinite` in das Start-Skript geschrieben werden.
@@ -88,7 +88,7 @@ function mapDoguLogLevel() {
 
 ## Volumes
 
-Es ratsam die Größe der Volumes regelmäßig zu überprüfen.
+Es ist ratsam, die Größe der Volumes regelmäßig zu überprüfen.
 Diese werden unter dem Pfad `/var/lib/ces/<dogu>/volumes/` gemounted.
 
 Ein Dogu sollte einen wachsenden Datenbestand ausschließlich in Docker Volumes speichern, die in der [`dogu.json`](https://github.com/cloudogu/dogu-development-docs/blob/main/docs/core/compendium_en.md#volumes) beschrieben werden. 
@@ -119,12 +119,12 @@ Es ist in unserem [Base-Image](https://github.com/cloudogu/base) enthalten.
 ## Dogu erscheint nicht im Warp Menü
 
 - Für einen Eintrag im Warp-Menü muss das Tag `warp` und eine Kategorie in der dogu.json definiert werden.
-- Das Dogu muss gültiges HTML mit einem abschließendem `<\html>`-Tag ausliefern.
+- Das Dogu muss gültiges HTML mit einem abschließenden `<\html>`-Tag ausliefern.
 - Das Dogu wurde wegen einer fehlerhaften Installation nicht registriert.
 
 ## Dogu-Volumes werden nicht von Backup & Restore beachtet
 
-Damit Volume-Daten eines Dogus von dem Backup & Restore Mechanismus beachtet werden muss das entsprechende Volume mit dem Feld `NeedsBackup` erweitert werden:
+Damit Volume-Daten eines Dogus von dem Backup & Restore Mechanismus beachtet werden, muss das entsprechende Volume mit dem Feld `NeedsBackup` erweitert werden:
 
 ```json
 {
@@ -145,7 +145,7 @@ Damit Volume-Daten eines Dogus von dem Backup & Restore Mechanismus beachtet wer
 
 ## Das Filesystem ist voll obwohl `df` dies nicht widerspiegelt
 
-In diesem Fall kann es hilfreich sein das Btrfs-Filesystem zu balancieren.
+In diesem Fall kann es hilfreich sein, das Btrfs-Filesystem zu balancieren.
 
 - `btrfs filesystem balance /var/lib/docker/btrfs`
 

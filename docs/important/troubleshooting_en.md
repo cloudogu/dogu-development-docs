@@ -47,13 +47,13 @@ debug/ldap
 
 ## Logging output is missing or has wrong granularity
 
-There are many reasons why completely/partially missing logging output or the wrong logging output occurs.
+There can be many reasons why there is completely/partially missing logging output or the wrong logging output occurs.
 
 - Is an incorrect path used to read the log level?
   - The correct path is `config/<doguname>/logging/root`.
 - Is an invalid log level being used?
   - The four valid values are: `ERROR`, `WARN`, `INFO`, `DEBUG`.
-- Is the value not interpreted in a meaningful way when starting the Dogus?
+- Is the value not interpreted in a meaningful way when starting the Dogu?
    - A correct example would be:
 ```bash
 function mapDoguLogLevel() {
