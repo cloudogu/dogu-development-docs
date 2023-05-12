@@ -1,6 +1,6 @@
 # Introduction & Basics
 
-A dogu (derived from Japanese for "tool") provides a containerized application in the Cloudogu EcoSystem (CES).
+A dogu (derived from Japanese for "tool") provides a containerized application in the [Cloudogu EcoSystem (CES)](https://docs.cloudogu.com/en/docs/introduction/).
 Dogus can satisfy different usage aspects, such as a project management (towards users) or a database management system (towards other dogus).
 It follows that dogus must be able to do more than would be possible with pure Docker directives. Thinking of the above dogus, it makes sense, among other things, to have a ServiceAccount mechanism for communication from
 the project management software to the database management system. The Dogu offers these and other possibilities as an extension to a pure container image.
@@ -205,6 +205,19 @@ Add a `containers/newdogu/resources/web/index.html`
 
 ### Test the Dogu
 
-- Check output in log if Dogu was started correctly:
-    - `cat /var/log/docker/newdogu.log`.
-- Visit: `https://192.168.56.2/newdogu`.
+The syslog configuration of the Cloudogu EcoSystem ensures that each Dogu writes a single log file under the path
+`/var/log/docker/` to enable log forwarding or analysis, for example.
+
+This log can now be used to check output to see if the dogu was started correctly:
+- `cat /var/log/docker/newdogu.log`.
+
+Alternative checks:
+- Check the HTTP endpoint of the dogu `https://192.168.56.2/newdogu` or
+- the container status using `docker ps -a`.
+
+## Architecture view of an integrated Dogu
+
+The following diagram shows possible communication paths of an integrated Dogu (Redmine) in the Cloudogu EcoSystem.
+Unlike the minimal Dogu from the previous chapter, Redmine has other Dogus as dependencies, uses service accounts and user information via the CAS Dogu, and is configured via the EcoSystem-Registry.
+
+<img src="./img/communication-in-ces.png">
