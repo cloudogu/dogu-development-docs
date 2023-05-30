@@ -64,7 +64,7 @@ A more detailed description of how to perform the setup can be found in the [Qui
 
 A directory must be created to keep the Dogu files.
 
-Example: `mkdir containers/newdogu`.
+Example: `mkdir containers/newdogu`
 
 Inside the just started VM of `vagrant` the directory can be found at `/vargrant/containers/newdogu`.
 
@@ -205,11 +205,11 @@ The syslog configuration of the Cloudogu EcoSystem ensures that each Dogu writes
 `/var/log/docker/` to enable log forwarding or analysis, for example.
 
 This log can now be used to check output to see if the dogu was started correctly:
-- `cat /var/log/docker/newdogu.log`.
+- `cat /var/log/docker/newdogu.log`
 
 Alternative checks:
 - Check the HTTP endpoint of the dogu `https://192.168.56.2/newdogu` or
-- the container status using `docker ps -a`.
+- the container status using `docker ps -a`
 
 ## Architecture view of an integrated Dogu
 
