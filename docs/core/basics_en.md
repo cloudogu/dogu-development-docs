@@ -83,7 +83,7 @@ Therefore, a container image must be created, which is then instantiated into a 
       - Go-templating
       - Health checks
 - If the Dogu is a web application, the line `ENV SERVICE_TAGS=webapp` is necessary.
-  This will cause the new dogu to appear in the warp menu.
+  This will cause the new dogu to appear in the warp menu (along with the `warp`-tag in the dogu.json).
 - Copy your resources into the Dogu if necessary.
 - The label `MAINTAINER` is used for faster communication in support cases.
 
@@ -130,7 +130,7 @@ Together with the Docker image, the two artifacts later form the release.
 
 Example:
 
-`containers/newdogu/dogu.json`
+`containers/newdogu/resources/dogu.json`
 
 ```json
 {
@@ -148,10 +148,6 @@ Example:
       "name":"nginx"
     }
   ],
-  "Volumes": [],
-  "ExposedCommands": [],
-  "ServiceAccounts": [],
-  "Configuration": [],
   "HealthChecks": [
     {
       "Type": "tcp",
@@ -173,9 +169,9 @@ Example:
 
 ```bash
 #!/bin/bash
-set -o errexit
-set -o nounset
-set -o pipefail
+set -o errexit # terminate the whole script (and thus the container) on an uncaught error
+set -o nounset # find uninitialized variables
+set -o pipefail # don't ignore errors on pipe usage
 
 FQDN=$(doguctl config --global fqdn)
 echo "Your fqdn is: ${FQDN}"
