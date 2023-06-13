@@ -303,7 +303,7 @@ type Dogu struct {
 
 Name contains the dogu's full qualified name which consists of the dogu namespace and the dogu simple name, delimited by a single forward slash "/". This field is mandatory.
 
-The dogu namespace allows to regulate access to dogus in that namespace. There are three reserved dogu namespaces: The namespaces `official` and `k8s` are open to all users without any further costs. In contrast, the `premium` namespace is open to subscription users, only.
+The dogu namespace allows to regulate access to dogus in that namespace. There are three reserved dogu namespaces: The namespaces `official` and `k8s` are open to all users without any further costs. In contrast, the `premium` namespace is open to subscription users only.
 
 The namespace syntax is encouraged to consist of:
 

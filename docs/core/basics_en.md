@@ -83,7 +83,7 @@ Therefore, a container image must be created, which is then instantiated into a 
       - Go-templating
       - Health checks
 - If the Dogu is a web application, the line `ENV SERVICE_TAGS=webapp` is necessary.
-  This will cause the new dogu to appear in the warp menu (along with the `warp`-tag in the dogu.json).
+  This causes the reverse proxy to register the routing to the dogu.
 - Copy your resources into the Dogu if necessary.
 - The label `MAINTAINER` is used for faster communication in support cases.
 
