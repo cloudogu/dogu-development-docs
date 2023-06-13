@@ -258,3 +258,50 @@ Nun können Sie sich über `cesapp login` mit Ihrem Cloudogu-Account einloggen.
 Das Dogu kann dann einfach mit `cesapp push` in die Dogu-Registry gepusht werden.
 
 Wir empfehlen, diese Schritte automatisch im CI/CD-Prozess für Ihren Production-Release-Branch auszuführen.
+
+## Dogu-Checkliste
+
+Anhand dieser Checkliste können Sie ermitteln, ob ihr Dogu alle Voraussetzungen erfüllt, um veröffentlicht zu werden.
+
+### Erforderliche Bestandteile
+
+| Bestandteil                       | Beschreibung                                                                                                        |
+|-----------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| **[dogu.json][dogujson]**         |                                                                                                                     |
+| Name                              | Die dogu.json enthält ein Name-Feld. Siehe [Name][doguname]                                                         |
+| Version                           | Die dogu.json enthält ein Name-Feld. Siehe [Version][doguversion]                                                   |
+| Image                             | Die dogu.json enthält ein Version-Feld. Siehe [Image][doguimage]                                                    |
+| DisplayName                       | Die dogu.json enthält ein DisplayName-Feld. Siehe [DisplayName][dogudisplayname]                                    |
+| Description                       | Die dogu.json enthält ein Description-Feld. Siehe [Description][dogudescription]                                    |
+| Category                          | Die dogu.json enthält ein Category-Feld. Siehe [Category][dogucategory]                                             |
+|                                   |                                                                                                                     |
+| **[Dockerfile][dockerfile]**      |                                                                                                                     |
+| Healthcheck                       | Das Dockerfile enthält einen Healthcheck. Siehe [HealthChecks][healthchecks]                                        |
+| MAINTAINER-Label                  | Das Dockerfile enthält ein Label "MAINTAINER". Siehe [Dockerfile][dockerfile]                                       |
+| startup.sh                        | Ein Skript wird zum Starten des Dogus verwendet. Siehe [startup.sh][startup_sh]                                     |
+|                                   |                                                                                                                     |
+| **Zentrale Authentifizierung**    |                                                                                                                     |
+| Single Sign-On (SSO)              | Das Dogu beherrscht die zentrale Anmeldung über SSO. Siehe [Authentifizierung][authentifizierung]                   |
+| Single Logout (SLO)               | Das Dogu beherrscht die zentrale Abmeldung über SLO. Siehe [Authentifizierung][authentifizierung]                   |
+|                                   |                                                                                                                     |
+| Replikation der CES-Admin-Gruppe  | Die Rechte der CES-Admingruppe werden in das Dogu repliziert. Siehe [Änderbarkeit der Admin-Gruppe][admingroup]     |
+| Änderbarkeit der CES-Admin-Gruppe | Wird die CES-Admin-Gruppe geändert, passt sich das Dogu daran an. Siehe [Änderbarkeit der Admin-Gruppe][admingroup] |
+| Änderbarkeit der CES-FQDN         | Wird die FQDN des CES geändert, passt sich das Dogu daran an. Siehe [Änderbarkeit der FQDN][fqdnchange]             |
+| CHANGELOG                         | Änderungen am Dogu werden im Changelog vermerkt. Siehe [CHANGELOG.md][changelog_md]                                 |
+
+### Empfohlene Bestandteile
+
+[dockerfile]: ../core/basics_de.md#3-dockerfile
+[authentifizierung]: ../important/relevant_functionalities_de.md#authentifizierung
+[startup_sh]: ../important/relevant_functionalities_de.md#aufbau-und-best-practices-von-startupsh
+[changelog_md]: ../additional/interesting_aspects_de.md#changelog
+[admingroup]: ../important/relevant_functionalities_de.md#änderbarkeit-der-admin-gruppe
+[dogujson]: ../core/basics_de.md#4-dogujson
+[doguname]: ../core/compendium_de.md#name-2
+[doguversion]: ../core/compendium_de.md#version-1
+[fqdnchange]: ../important/relevant_functionalities_de.md#änderbarkeit-der-fqdn
+[dogudisplayname]: ../core/compendium_de.md#displayname
+[doguimage]: ../core/compendium_de.md#image
+[dogudescription]: ../core/compendium_de.md#description-1
+[dogucategory]: ../core/compendium_de.md#category
+[healthchecks]: ../core/compendium_de.md#healthchecks
