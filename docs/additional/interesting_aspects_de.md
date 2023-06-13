@@ -291,6 +291,27 @@ Anhand dieser Checkliste können Sie ermitteln, ob ihr Dogu alle Voraussetzungen
 
 ### Empfohlene Bestandteile
 
+| Bestandteil                       | Beschreibung                                                                                                                   |
+|-----------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| Backup/Restore-Fähigkeit          | important/relevant_functionalities_de.md#backup--restore-fähigkeit                                                             |
+| Upgrade-Fähigkeit                 | important/relevant_functionalities_de.md#dogu-upgrades                                                                         |
+| Memory-Limits                     | important/relevant_functionalities_de.md#memory-swap-limit                                                                     |
+| Logging-Verhalten                 | important/relevant_functionalities_de.md#logging-verhalten-steuern                                                             |
+| Best-Practices für Dogu-Container | additional/interesting_aspects_de.md#container-images                                                                          |
+| Best-Practices für Skripte        | additional/interesting_aspects_de.md#resources-ordner--dogu-skripte                                                            |
+| Container-Validation              | additional/interesting_aspects_de.md#container-validation                                                                      |
+| Dokumentation                     | additional/interesting_aspects_de.md#dokumentation      und additional/internal_aspects_de.md#cloudogu-dokumentationsregelwerk |
+| Code-Qualitätssicherung, Tests    | additional/internal_aspects_de.md#qualitätssicherung                                                                           |
+| Issue-Tracking                    | additional/internal_aspects_de.md#issue-tracking                                                                               |
+|                                   |                                                                                                                                |
+|                                   |                                                                                                                                |
+|                                   |                                                                                                                                |
+|                                   |                                                                                                                                |
+|                                   |                                                                                                                                |
+|                                   |                                                                                                                                |
+|                                   |                                                                                                                                |
+
+
 [dockerfile]: ../core/basics_de.md#3-dockerfile
 [authentifizierung]: ../important/relevant_functionalities_de.md#authentifizierung
 [startup_sh]: ../important/relevant_functionalities_de.md#aufbau-und-best-practices-von-startupsh
