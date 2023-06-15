@@ -270,7 +270,7 @@ Use this checklist to determine if your Dogu meets all the requirements to be pu
 | Component                     | Description                                                                                                                               |
 |-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | **[dogu.json][dogujson]**     |                                                                                                                                           |
-| Name                          | The dogu.json contains a Name field. See [name][doguname]                                                                                 |
+| Name                          | The dogu.json contains a Name field. See [Name][doguname]                                                                                 |
 | Version                       | The dogu.json contains a Version field. See [Version][doguversion]                                                                        |
 | Image                         | The dogu.json contains an Image field. See [Image][doguimage]                                                                             |
 | DisplayName                   | The dogu.json contains a DisplayName field. See [DisplayName][dogudisplayname]                                                            |
@@ -282,7 +282,7 @@ Use this checklist to determine if your Dogu meets all the requirements to be pu
 | MAINTAINER label              | The Dockerfile contains a label "MAINTAINER". See [Dockerfile][dockerfile]                                                                |
 |                               |                                                                                                                                           |
 | **Central Authentication**    |                                                                                                                                           |
-| Single Sign-On (SSO)          | The Dogu handles centralized login via SSO. See [authentication] [authentication]                                                         |
+| Single Sign-On (SSO)          | The Dogu handles centralized login via SSO. See [authentication][authentication]                                                          |
 | Single Logout (SLO)           | The Dogu masters central logout via SLO. See [authentication][authentication]                                                             |
 |                               |                                                                                                                                           |
 | **Dogu behavior**             |                                                                                                                                           |
