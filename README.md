@@ -1,6 +1,6 @@
 # dogu-development-docs
 
-This repository is designed to help developers of external organizations to develop Dogus for the Cloudogu EcoSystem.
+This repository is designed to provide guidance on the development of Dogus for the Cloudogu EcoSystem.
 
 It has 3 main topics:
 - Core knowledge
