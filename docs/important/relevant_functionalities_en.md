@@ -919,7 +919,7 @@ In step 1, the name of the consumer dogu is read (e.g. "redmine") to identify th
 
 In step 2 the account is deleted from the producer's database including access data.
 
-### Consume service accounts
+### Consuming service accounts
 
 It is very easy to request a service account from a producer dogu, since the main work is done by the client and the producer. A consumer dogu just needs to name the desired producer dogu as [service account](../core/compendium_en.md#serviceaccounts) in its `dogu.json`:
 

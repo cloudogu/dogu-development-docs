@@ -64,7 +64,7 @@ A more detailed description of how to perform the setup can be found in the [Qui
 
 A directory must be created to keep the Dogu files.
 
-Example: `mkdir containers/newdogu`.
+Example: `mkdir containers/newdogu`
 
 Inside the just started VM of `vagrant` the directory can be found at `/vargrant/containers/newdogu`.
 
@@ -83,7 +83,7 @@ Therefore, a container image must be created, which is then instantiated into a 
       - Go-templating
       - Health checks
 - If the Dogu is a web application, the line `ENV SERVICE_TAGS=webapp` is necessary.
-  This will cause the new dogu to appear in the warp menu.
+  This causes the reverse proxy to register the routing to the dogu.
 - Copy your resources into the Dogu if necessary.
 - The label `MAINTAINER` is used for faster communication in support cases.
 
@@ -130,7 +130,7 @@ Together with the Docker image, the two artifacts later form the release.
 
 Example:
 
-`containers/newdogu/dogu.json`
+`containers/newdogu/resources/dogu.json`
 
 ```json
 {
@@ -148,10 +148,6 @@ Example:
       "name":"nginx"
     }
   ],
-  "Volumes": [],
-  "ExposedCommands": [],
-  "ServiceAccounts": [],
-  "Configuration": [],
   "HealthChecks": [
     {
       "Type": "tcp",
@@ -173,9 +169,9 @@ Example:
 
 ```bash
 #!/bin/bash
-set -o errexit
-set -o nounset
-set -o pipefail
+set -o errexit # terminate the whole script (and thus the container) on an uncaught error
+set -o nounset # find uninitialized variables
+set -o pipefail # don't ignore errors on pipe usage
 
 FQDN=$(doguctl config --global fqdn)
 echo "Your fqdn is: ${FQDN}"
@@ -209,11 +205,11 @@ The syslog configuration of the Cloudogu EcoSystem ensures that each Dogu writes
 `/var/log/docker/` to enable log forwarding or analysis, for example.
 
 This log can now be used to check output to see if the dogu was started correctly:
-- `cat /var/log/docker/newdogu.log`.
+- `cat /var/log/docker/newdogu.log`
 
 Alternative checks:
 - Check the HTTP endpoint of the dogu `https://192.168.56.2/newdogu` or
-- the container status using `docker ps -a`.
+- the container status using `docker ps -a`
 
 ## Architecture view of an integrated Dogu
 
