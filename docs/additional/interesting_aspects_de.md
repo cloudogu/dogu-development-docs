@@ -53,7 +53,10 @@ Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
 - Dockerfile enthält einen [Healthcheck][healthcheck]
   - z.B.: `HEALTHCHECK CMD doguctl healthy nexus || exit 1`
 - Downloads von externen Dateien (z. B. mit curl/wget) werden mit Prüfsummen/Hashes sichergestellt
-   - dies erhöht die Sicherheit von späteren Builds, wenn eine Datei durch Angreifer durch eine andere Datei ausgetauscht wird
+  - dies erhöht die Sicherheit von späteren Builds, wenn eine Datei durch Angreifer durch eine andere Datei ausgetauscht wird
+- Der Dogu-Start muss über ein festes Startskript (bspw. [`startup.sh`][startup-sh]) erfolgen
+  - Dogus nehmen keine externen Commands oder Parameter über die Docker-CLI entgegen
+
 
 [rootless-container]: https://docs.docker.com/engine/security/rootless/
 [minimize-number-of-layers]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#minimize-the-number-of-layers
@@ -278,7 +281,6 @@ Anhand dieser Checkliste können Sie ermitteln, ob ihr Dogu alle Voraussetzungen
 | **[Dockerfile][dockerfile]**      |                                                                                                                                                                            |
 | Healthcheck                       | Das Dockerfile enthält einen Healthcheck. Siehe [HealthChecks][healthchecks]                                                                                               |
 | MAINTAINER-Label                  | Das Dockerfile enthält ein Label "MAINTAINER". Siehe [Dockerfile][dockerfile]                                                                                              |
-| Kein ENTRYPOINT                   | Im Dockerfile sollte das Startskript ausschließlich per `CMD` gestartet werden.                                                                                            |
 |                                   |                                                                                                                                                                            |
 | **Zentrale Authentifizierung**    |                                                                                                                                                                            |
 | Single Sign-On (SSO)              | Das Dogu beherrscht die zentrale Anmeldung über SSO. Siehe [Authentifizierung][authentifizierung]                                                                          |
