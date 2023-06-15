@@ -64,7 +64,7 @@ Eine detailliertere Beschreibung wie man das Setup durchführt ist im [Quick-Sta
 
 Ein Verzeichnis muss angelegt werden, das die Dogu-Dateien aufbewahren soll.
 
-Beispiel: `mkdir containers/newdogu`.
+Beispiel: `mkdir containers/newdogu`
 
 Innerhalb der eben gestarteten VM von `vagrant` ist das Verzeichnis unter `/vargrant/containers/newdogu` zu finden.
 
@@ -83,7 +83,7 @@ Daher muss ein Container-Image erzeugt werden, das dann zu einem Container insta
     - Go-Templating
     - Health-Checks
 - Wenn das Dogu eine Web-Anwendung ist, ist die Zeile `ENV SERVICE_TAGS=webapp` notwendig.
-  Dies führt dazu, dass das neue Dogu im Warp-Menü angezeigt wird.
+  Dies führt dazu, dass der Reverse-Proxy das Routing zu dem neuen Dogu registriert.
 - Kopieren Sie Ihre Ressourcen in das Dogu, falls erforderlich.
 - Das Label `MAINTAINER` dient zur schnelleren Kommunikation bei Supportfällen.
 
@@ -130,7 +130,7 @@ Zusammen mit dem Docker-Image bilden die beiden Artefakte später das Release.
 
 Beispiel:
 
-`containers/newdogu/dogu.json`
+`containers/newdogu/resources/dogu.json`
 
 ```json
 {
@@ -148,10 +148,6 @@ Beispiel:
       "name":"nginx"
     }
   ],
-  "Volumes": [],
-  "ExposedCommands": [],
-  "ServiceAccounts": [],
-  "Configuration": [],
   "HealthChecks": [
     {
       "Type": "tcp",
@@ -173,9 +169,9 @@ Beispiel:
 
 ```bash
 #!/bin/bash
-set -o errexit
-set -o nounset
-set -o pipefail
+set -o errexit # das gesamte Skript (und damit den Container) bei einem nicht abgefangenen Fehler beenden
+set -o nounset # uninitialisierte Variablen finden
+set -o pipefail # keine Fehler bei der Verwendung von Pipes ignorieren  
 
 FQDN=$(doguctl config --global fqdn)
 echo "Your fqdn is: ${FQDN}"

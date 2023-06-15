@@ -247,8 +247,8 @@ The `docs` folder is structured according to this exemplary scheme:
 │ ├── users_endpoint_en.md  
 │ └── users_endpoint_en.md  
 └── /development  
-└── how_to_create_an_image.md  
-└── how_to_build_a_plugin.md
+  ├── how_to_create_an_image.md  
+  └── how_to_build_a_plugin.md
 ```
 
 (The file names are chosen as examples and are not defaults).
