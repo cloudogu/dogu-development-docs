@@ -272,8 +272,8 @@ Anhand dieser Checkliste können Sie ermitteln, ob ihr Dogu alle Voraussetzungen
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **[dogu.json][dogujson]**         |                                                                                                                                                                            |
 | Name                              | Die dogu.json enthält ein Name-Feld. Siehe [Name][doguname]                                                                                                                |
-| Version                           | Die dogu.json enthält ein Name-Feld. Siehe [Version][doguversion]                                                                                                          |
-| Image                             | Die dogu.json enthält ein Version-Feld. Siehe [Image][doguimage]                                                                                                           |
+| Version                           | Die dogu.json enthält ein Version-Feld. Siehe [Version][doguversion]                                                                                                       |
+| Image                             | Die dogu.json enthält ein Image-Feld. Siehe [Image][doguimage]                                                                                                             |
 | DisplayName                       | Die dogu.json enthält ein DisplayName-Feld. Siehe [DisplayName][dogudisplayname]                                                                                           |
 | Description                       | Die dogu.json enthält ein Description-Feld. Siehe [Description][dogudescription]                                                                                           |
 | Category                          | Die dogu.json enthält ein Category-Feld. Siehe [Category][dogucategory]                                                                                                    |
@@ -298,17 +298,17 @@ Anhand dieser Checkliste können Sie ermitteln, ob ihr Dogu alle Voraussetzungen
 
 ### Empfohlene Bestandteile
 
-| Bestandteil                       | Beschreibung                                                                                                                                                                 |
-|-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| startup.sh                        | Ein Skript wird zum Starten des Dogus verwendet. Siehe [startup.sh][startup_sh]                                                                                              |
-| Changelog                         | Änderungen am Dogu werden im Changelog vermerkt. Siehe [CHANGELOG.md][changelog_md]                                                                                          |
-| Best-Practices für Dogu-Container | Best-Practices beim Containerbau werden eingehalten. Siehe [Container-Images][containerimages]                                                                               |
-| Best-Practices für Skripte        | Best-Practices für Skripte werden eingehalten. Siehe [Resources-Ordner & Dogu-Skripte][resourcesdir]                                                                         |
-| Container-Validation              | Fertige Container werden mit `goss` validiert. Siehe [Container Validation][containervalidation]                                                                             |
-| Dokumentation                     | Alle Funktionen und Einstellungsmöglichkeiten des Dogus wurden dokumentiert. Siehe [Dokumentation][documentation] und [Cloudogu Dokumentationsregelwerk][documentationrules] |
-| Code-Qualitätssicherung, Tests    | Die Code-Qualität sollte durch verschiedene (automatisierte) Test-, Lint- und Review-Vorgänge sichergestellt werden. Siehe [Qualitätssicherung][qualitycontrol]              |
-| Issue-Tracking                    | Bugs und Verbesserungsvorschläge sollten eingereicht und verfolgt werden können. Siehe [Issue-Tracking][issuetracking]                                                       |
-| Telemetrie konfigurierbar         | Sammelt das Dogu Telemetriedaten, sollte diese Funktion abschaltbar sein.                                                                                                    |
+| Bestandteil                       | Beschreibung                                                                                                                                                               |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| startup.sh                        | Ein Skript wird zum Starten des Dogus verwendet. Siehe [startup.sh][startup_sh]                                                                                            |
+| Changelog                         | Änderungen am Dogu werden im Changelog vermerkt. Siehe [CHANGELOG.md][changelog_md]                                                                                        |
+| Best-Practices für Dogu-Container | Best-Practices beim Containerbau werden eingehalten. Siehe [Container-Images][containerimages]                                                                             |
+| Best-Practices für Skripte        | Best-Practices für Skripte werden eingehalten. Siehe [Resources-Ordner & Dogu-Skripte][resourcesdir]                                                                       |
+| Container-Validation              | Fertige Container werden mit `goss` validiert. Siehe [Container Validation][containervalidation]                                                                           |
+| Dokumentation                     | Alle Funktionen und Einstellungsmöglichkeiten des Dogus sind dokumentiert. Siehe [Dokumentation][documentation] und [Cloudogu Dokumentationsregelwerk][documentationrules] |
+| Code-Qualitätssicherung, Tests    | Die Code-Qualität sollte durch verschiedene (automatisierte) Test-, Lint- und Review-Vorgänge sichergestellt werden. Siehe [Qualitätssicherung][qualitycontrol]            |
+| Issue-Tracking                    | Bugs und Verbesserungsvorschläge sollten eingereicht und verfolgt werden können. Siehe [Issue-Tracking][issuetracking]                                                     |
+| Telemetrie konfigurierbar         | Sammelt das Dogu Telemetriedaten, sollte diese Funktion abschaltbar sein.                                                                                                  |
 
 
 [dockerfile]: ../core/basics_de.md#3-dockerfile
