@@ -1001,6 +1001,11 @@ The `pre-upgrade` script can be defined as [Exposed Command](../core/compendium_
 
 This script is executed before the actual upgrade of the Dogu in the old Dogu container.
 
+#### Important info on the pre-upgrade process
+
+- The script is not necessarily executed from the same path where it is located in the new Dogu container. Accordingly, absolute paths must be used in the script.
+- The complete pre-upgrade must be **a single** script, which can be copied accordingly into the old container. If the script uses additional files, these must already be present on the old container.
+
 ### `post-upgrade` - Perform actions after the upgrade of a dogu
 
 The `post-upgrade` script can be defined as [Exposed Command](../core/compendium_en.md#exposedcommands) in the `dogu.json` of a dogu:
