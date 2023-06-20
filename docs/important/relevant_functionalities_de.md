@@ -991,7 +991,10 @@ Das Pre-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#expos
 
 Dieses Skript wird vor dem eigentlichen Upgrade des Dogus im alten Dogu-Container ausgeführt. 
 
-Wichtig: Das Skript wird nicht zwangsweise vom gleichen Pfad ausgeführt, an dem es im neuen Dogu-Container liegt. Dementsprechend müssen absolute Pfade in dem Skript verwendet werden.
+#### Wichtige Infos zum Pre-Upgrade-Prozess 
+
+- Das Skript wird nicht zwangsweise vom gleichen Pfad ausgeführt, an dem es im neuen Dogu-Container liegt. Dementsprechend müssen absolute Pfade in dem Skript verwendet werden.
+- Das komplette Pre-Upgrade muss **ein einziges** Skript sein, welches entsprechend in den alten Container kopiert werden kann. Sollte das Skript weitere Dateien verwenden, so müssen diese bereits auf dem alten Container vorhanden sein.
 
 ### post-upgrade - Führt alle Aktionen nach dem Upgrade des Dogus durch
 
