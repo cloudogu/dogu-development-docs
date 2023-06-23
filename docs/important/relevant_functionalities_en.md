@@ -1056,7 +1056,7 @@ The resource requirements for a Dogu can be applied to the following resources:
 A distinction is made between resource requests and limits:
 
 - **Resource Requests:** Specify the minimum resources (CPU cores, memory, ephemeral storage) required by a dogu for it to be functional.
-  In the multinode EcoSystem, the Kubernetes scheduler ensures that the Dogu is started on a node with sufficient resources.
+  In the Multinode-EcoSystem, the Kubernetes scheduler ensures that the Dogu is started on a node with sufficient resources.
 - **Resource Limits:** Specify the maximum amount of resources a Dogu is allowed to use.
 
 #### Memory
@@ -1069,8 +1069,8 @@ If no value is set for the memory limit, this will not happen.
 
 Memory requests can be used to specify the minimum memory requirement for Dogus to be fully functional.
 
-**Caution!**
-Memory-Requests are only used in the Multinode-EcoSystem.
+**Important:**
+Memory-Requests are only applied in the Multinode-EcoSystem.
 
 #### Swap
 
@@ -1081,8 +1081,8 @@ This is usually the main process of the Dogus and causes the container to be res
 If no value is set on swap limiting, it will not take place.
 For swap limiting `0b` is the default value and thus does not provide swap.
 
-**Caution!**
-Swap limits are only applied in the Singlenode-EcoSystem!
+**Important:**
+Swap limits are **NOT** applied in the Multinode-EcoSystem!
 
 ##### Preparation of the storage limits in the host
 
@@ -1094,7 +1094,7 @@ In order for the ClouDogu EcoSystem host to limit memory **and** swap, the follo
 4. execute the command `sudo update-grub` or `sudo update-bootloader --refresh`.
 5. reboot the machine
 
-**Caution!**
+**Warning!**
 The above activation with `cgroup_enable=memory swapaccount=1` is expected to result in a memory overhead of 1% and a performance penalty of 10% even if Docker is not running.
 
 #### CPU cores
@@ -1104,7 +1104,7 @@ When the CPU cores limit is exceeded, the container runtime throttles the availa
 
 CPU requests can be used to specify the minimum CPU cores required for a Dogu to be fully functional.
 
-**Caution!**
+**Important:**
 CPU limits and requests are only applied in the Multinode-EcoSystem.
 
 #### Ephemeral-Storage
@@ -1116,7 +1116,7 @@ When the limit is exceeded, the container is restarted.
 
 Ephemeral storage requests can be used to specify the minimum ephemeral storage required for a Dogu to be fully functional.
 
-**Caution!**
+**Important:**
 Ephemeral-Storage-Limits and -Requests are only applied in the Multinode-EcoSystem.
 
 
@@ -1229,9 +1229,9 @@ Setting the values can be done in the following ways:
 
 ##### Apply configured resource requests
 
-To apply the limits in the singelnode EcoSystem, the Dogu must be recreated (`cesapp recreate <doguname>`) and then restarted (`cesapp start <doguname>`).
+To apply the limits in the Singlenode-EcoSystem, the Dogu must be recreated (`cesapp recreate <doguname>`) and then restarted (`cesapp start <doguname>`).
 
-In the multinode EcoSystem, the global etcd key `config/_global/sync_resource_requirements` must be created/modified/deleted. 
+In the Multinode-EcoSystem, the global etcd key `config/_global/sync_resource_requirements` must be created/modified/deleted. 
 Any change to the key will start an automatic update process for all dogus. 
 In this update process resource requirements are applied to all dogus and dogus are restarted if new resource requirements are set. 
 Unchanged dogus are not restarted. 

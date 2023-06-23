@@ -1072,7 +1072,7 @@ Wird kein Wert bei der Swap-Limitierung gesetzt, findet diese auch nicht statt.
 Bei der Swap-Limitierung ist `0b` der Standardwert und stellt somit keinen Swap zur Verfügung.
 
 **Achtung!**
-Swap-Limits werden nur im Singlenode-EcoSystem angewendet!
+Swap-Limits werden **NICHT** im Multinode-EcoSystem angewendet!
 
 ##### Vorbereitung der Speicherlimits im Host
 
@@ -1144,12 +1144,12 @@ Um Ressourcenanforderungen setzen zu können, muss die `dogu.json` des Dogus fol
     },
     {
       "Name": "container_config/cpu_core_limit",
-      "Description":"Limits the container's CPU core usage. Use a positive floating value describing a fraction of 1 virtual CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
+      "Description":"Limits the container's CPU core usage. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
       "Optional": true
     },
     {
       "Name": "container_config/cpu_core_request",
-      "Description":"Requests the container's minimal CPU core requirement. Use a positive floating value describing a fraction of 1 virtual CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
+      "Description":"Requests the container's minimal CPU core requirement. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
       "Optional": true
     },
     {
