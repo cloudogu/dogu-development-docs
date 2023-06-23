@@ -1044,30 +1044,85 @@ This script is executed before the upgrade process and should only output inform
 
 This chapter describes features that integrate Dogus deeper into the Cloudogu EcoSystem and make them uniformly administrable.
 
-### Memory/Swap Limit
+### Resource requirements
 
-Memory and swap limits can be used to restrict the memory consumption (working memory and swap space) of Dogus.
+The resource requirements for a Dogu can be applied to the following resources:
 
-If a Dogu exceeds its memory limit, the largest process in the container is killed. This is usually the main process of the Dogus and causes the container to be restarted.
+* Memory (RAM)
+* Swap
+* CPU cores
+* Ephemeral storage
 
-If no value is set for memory limiting, it will not take place. For swap limiting `0b` is the default value and thus does not provide swap.
+A distinction is made between resource requests and limits:
 
-#### Preparation of the memory limits in the host
+- **Resource Requests:** Specify the minimum resources (CPU cores, memory, ephemeral storage) required by a dogu for it to be functional.
+  In the Multinode-EcoSystem, the Kubernetes scheduler ensures that the Dogu is started on a node with sufficient resources.
+- **Resource Limits:** Specify the maximum amount of resources a Dogu is allowed to use.
 
-In order for the Cloudogu EcoSystem host to limit memory **and** swap, the following settings must be done beforehand:
-1. open the file `/etc/default/grub`
-2. add the following value to the variable `GRUB_CMDLINE_LINUX_DEFAULT`:
-   `cgroup_enable=memory swapaccount=1`
+#### Memory
+
+Memory limits can be used to restrict the memory consumption (RAM) of Dogus.
+
+If a Dogu exceeds its memory limit, the largest process in the container is terminated.
+This is usually the main process of the Dogus and causes the container to be restarted.
+If no value is set for the memory limit, this will not happen.
+
+Memory requests can be used to specify the minimum memory requirement for Dogus to be fully functional.
+
+**Important:**
+Memory-Requests are only applied in the Multinode-EcoSystem.
+
+#### Swap
+
+Swap limits can be used to restrict the memory consumption (swap space) of Dogus.
+
+If a Dogu exceeds its swap limit, the largest process in the container is terminated.
+This is usually the main process of the Dogus and causes the container to be restarted.
+If no value is set on swap limiting, it will not take place.
+For swap limiting `0b` is the default value and thus does not provide swap.
+
+**Important:**
+Swap limits are **NOT** applied in the Multinode-EcoSystem!
+
+##### Preparation of the storage limits in the host
+
+In order for the ClouDogu EcoSystem host to limit memory **and** swap, the following settings must be made beforehand:
+1. open the file `/etc/default/grub`.
+2. the following value must be added to the variable `GRUB_CMDLINE_LINUX_DEFAULT`:
+   `cgroup_enable=memory swapaccount=1`.
 3. save the changes
-4. execute the command `sudo update-grub` or `sudo update-bootloader --refresh`
+4. execute the command `sudo update-grub` or `sudo update-bootloader --refresh`.
 5. reboot the machine
 
 **Warning!**
-Enabling the above with `cgroup_enable=memory swapaccount=1` is expected to result in a memory overhead of 1% and a performance penalty of 10% even if Docker is not running.
+The above activation with `cgroup_enable=memory swapaccount=1` is expected to result in a memory overhead of 1% and a performance penalty of 10% even if Docker is not running.
 
-#### Limit in Dogu
+#### CPU cores
 
-To be able to limit memory, the `dogu.json` of the Dogus must contain the following entries:
+CPU limits can be used to restrict the maximum CPU cores available to Dogus.
+When the CPU cores limit is exceeded, the container runtime throttles the available CPU resources for the container.
+
+CPU requests can be used to specify the minimum CPU cores required for a Dogu to be fully functional.
+
+**Important:**
+CPU limits and requests are only applied in the Multinode-EcoSystem.
+
+#### Ephemeral-Storage
+
+Ephemeral storage limits can be used to limit the maximum available ephemeral storage
+(see [Kubernetes-Ephemeral-Storage](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#local-ephemeral-storage))
+of Dogus.
+When the limit is exceeded, the container is restarted.
+
+Ephemeral storage requests can be used to specify the minimum ephemeral storage required for a Dogu to be fully functional.
+
+**Important:**
+Ephemeral-Storage-Limits and -Requests are only applied in the Multinode-EcoSystem.
+
+
+#### Configuration in the Dogu
+
+To be able to set resource requests, the `dogu.json` of the Dogus must contain the following entries:
 
 ```json
 {
@@ -1081,8 +1136,42 @@ To be able to limit memory, the `dogu.json` of the Dogus must contain the follow
       }
     },
     {
+      "Name": "container_config/memory_request",
+      "Description":"Requests the container's minimal memory requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
       "Name": "container_config/swap_limit",
       "Description":"Limits the container's swap memory usage. Use zero or a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). 0 will disable swapping.",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
+      "Name": "container_config/cpu_core_limit",
+      "Description":"Limits the container's CPU core usage. Use a positive floating value describing a fraction of 1 virtual CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
+      "Optional": true
+    },
+    {
+      "Name": "container_config/cpu_core_request",
+      "Description":"Requests the container's minimal CPU core requirement. Use a positive floating value describing a fraction of 1 virtual CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
+      "Optional": true
+    },
+    {
+      "Name": "container_config/storage_limit",
+      "Description":"Limits the container's ephemeral storage usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
+      "Name": "container_config/storage_request",
+      "Description":"Requests the container's minimal ephemeral storage requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
@@ -1092,21 +1181,79 @@ To be able to limit memory, the `dogu.json` of the Dogus must contain the follow
 }
 ```
 
-This can be used to create the registry entries `container_config/memory_limit` and `container_config/swap_limit` in the respective Dogu configuration.
+This creates the registry entries for the resource requirements in the respective Dogu configuration.
 
-The configurable values for the keys are each a string of the form `<number value><unit>` and describe the maximum amount of memory that can be used by the Dogu. Note here that there must be no space between the numeric value and the unit. Available units are `b`, `k`, `m` and `g` (for byte, kibibyte, mebibyte and gibibyte).
+**Memory**
 
+- key for request: `config/<DOGU_NAME>/container_config/memory_request`
+- Key for limit: `config/<DOGU_NAME>/container_config/memory_limit`
+- Optional
+- Description: Sets the memory resource requirement of the Dogus.
+- Format: The configurable values for the keys are each a string of the form `<number value><unit>` and describe the maximum amount of memory that can be used by the Dogu.
+  Note here that there must be no space between the numeric value and the unit.
+  Available units are `b`, `k`, `m` and `g` (for byte, kibibyte, mebibyte and gibibyte).
+
+**Swap**
+
+- Key for limit: `config/<DOGU_NAME>/container_config/swap_limit`
+- Optional
+- Description: Sets the swap limit of the dogus.
+- Format: The configurable values for the keys are each a string of the form `<number value><unit>` and describe the maximum amount of memory that can be used by the dogu.
+  Note here that there must be no space between the numeric value and the unit.
+  Available units are `b`, `k`, `m` and `g` (for byte, kibibyte, mebibyte and gibibyte).
+
+**CPU cores**
+
+- Key for request: `config/<DOGU_NAME>/container_config/cpu_core_request`.
+- Key for limit: `config/<DOGU_NAME>/container_config/cpu_core_limit`
+- Optional
+- Description: Sets the CPU resource request of the dogus.
+- Format:
+  See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes
+
+**Ephemeral-Storage**
+
+- Key for request: `config/<DOGU_NAME>/container_config/storage_request`
+- Key for limit: `config/<DOGU_NAME>/container_config/storage_limit`
+- Optional
+- Description: Sets the ephemeral storage resource requirement of the Dogus.
+- Format: The configurable values for the keys are each a string of the form `<number value><unit>` and describe the maximum amount of storage that can be used by the Dogu.
+  Note here that there must be no space between the numeric value and the unit.
+  Available units are `b`, `k`, `m` and `g` (for byte, kibibyte, mebibyte and gibibyte).
+
+  
 Setting the values can be done in the following ways:
-- `doguctl config container_config/memory_limit 1g`.
-- `cesapp edit-config <dogu name>` (only from the host)
-- `etcdctl set /config/<dogu name>/container_config/memory_limit "1g"` (only from the host)
+- `doguctl config container_config/memory_limit 1g`
+- `cesapp edit-config <doguname>` (only from the host)
+- `etcdctl set /config/<doguname>/container_config/memory_limit "1g"` (only from the host)
 
-To apply the limits, the dogu must be recreated (`cesapp recreate <dogu name>`) and then restarted (`cesapp start <dogu name>`).
+##### Apply configured resource requests
 
-#### Checking the limitation
+To apply the limits in the Singlenode-EcoSystem, the Dogu must be recreated (`cesapp recreate <doguname>`) and then restarted (`cesapp start <doguname>`).
 
-The memory limit (RAM only, no swap) can be checked using `docker stats <doguname>`.
-The column `MEM USAGE / LIMIT` should correctly show the memory limit set.
+In the Multinode-EcoSystem, the global etcd key `config/_global/sync_resource_requirements` must be created/modified/deleted. 
+Any change to the key will start an automatic update process for all dogus. 
+In this update process resource requirements are applied to all dogus and dogus are restarted if new resource requirements are set. 
+Unchanged dogus are not restarted. 
+In general, the update process can be started with the following command:
+
+```bash
+etcdctl set /config/_global/sync_resource_requirements true
+```
+
+#### Checking the resource requirements
+
+**Singlenode-EcoSystem:**
+The limitation of memory (RAM only, no swap) can be checked using `docker stats <doguname>`.
+The `MEM USAGE / LIMIT` column should correctly show the memory limit set.
+
+**Multinode-EcoSystem:**
+The resource requirements are contained in the Kubernetes pod resource and can be checked there.
+For example, with:
+
+```shell
+kubectl get pod ldap-6ccb6c78fd-rp86t -o yaml | yq -r '.spec.containers[0].resources'
+```
 
 #### Limit in Java Dogus
 
