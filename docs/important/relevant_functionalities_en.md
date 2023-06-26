@@ -1137,7 +1137,7 @@ To be able to set resource requests, the `dogu.json` of the Dogus must contain t
     },
     {
       "Name": "container_config/memory_request",
-      "Description":"Requests the container's minimal memory requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Description":"Requests the container's minimal memory requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). This configuration is only applicable to the Multinode-EcoSystem.",
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
@@ -1153,17 +1153,17 @@ To be able to set resource requests, the `dogu.json` of the Dogus must contain t
     },
     {
       "Name": "container_config/cpu_core_limit",
-      "Description":"Limits the container's CPU core usage. Use a positive floating value describing a fraction of 1 virtual CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
+      "Description":"Limits the container's CPU core usage. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU. This configuration is only applicable to the Multinode-EcoSystem.",
       "Optional": true
     },
     {
       "Name": "container_config/cpu_core_request",
-      "Description":"Requests the container's minimal CPU core requirement. Use a positive floating value describing a fraction of 1 virtual CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
+      "Description":"Requests the container's minimal CPU core requirement. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU. This configuration is only applicable to the Multinode-EcoSystem.",
       "Optional": true
     },
     {
       "Name": "container_config/storage_limit",
-      "Description":"Limits the container's ephemeral storage usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Description":"Limits the container's ephemeral storage usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). This configuration is only applicable to the Multinode-EcoSystem.",
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
@@ -1171,7 +1171,7 @@ To be able to set resource requests, the `dogu.json` of the Dogus must contain t
     },
     {
       "Name": "container_config/storage_request",
-      "Description":"Requests the container's minimal ephemeral storage requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Description":"Requests the container's minimal ephemeral storage requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). This configuration is only applicable to the Multinode-EcoSystem.",
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
