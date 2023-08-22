@@ -329,7 +329,7 @@ Die Namespace-Syntax sollte aus folgenden Zeichen bestehen:
 - Ziffern 0-9
 - einer Gesamtlänge von weniger als 200 Zeichen
 
-Der einfache Name von Dogu ermöglicht mehrere Adressierungsarten. Der einfache Name wird als Teil der URI des Cloudogu
+Der einfache Name vom Dogu ermöglicht mehrere Adressierungsarten. Der einfache Name wird als Teil der URI des Cloudogu
 EcoSystems verwendet, um einen URI-Teil zu adressieren (wenn das Dogu eine exponierte UI bietet). Außerdem wird der
 einfache Name verwendet, um das Dogu nach dem Installationsprozess zu adressieren (z. B. um ein Dogu zu starten, zu
 stoppen oder zu entfernen), oder um generierte Ressourcen zu adressieren, die zum Dogu gehören.
@@ -387,7 +387,7 @@ VERSION="1.23.2-1"
 DisplayName ist der Name des Dogus, der in UI-Frontends zur Darstellung des Dogus verwendet wird. Dieses Feld ist ein
 Pflichtfeld.
 
-Verwendungen: Bei der Einrichtung des Ökosystems wird der Anzeigename des Dogus verwendet, um ihn für die Installation
+Verwendungen: Bei der Einrichtung des EcoSystems wird der Anzeigename des Dogus verwendet, um ihn für die Installation
 auszuwählen.
 
 Der Anzeigename wird im Warp-Menü verwendet, damit der Benutzer zur Web-UI des Dogus navigieren kann.
@@ -414,7 +414,7 @@ Beispiele:
 
 Die Beschreibung enthält eine kurze Erklärung, was das Dogu leistet. Dieses Feld ist ein Pflichtfeld.
 
-Es wird bei der Einrichtung des Ökosystems in der Auswahl des Dogus verwendet. Daher sollte die Beschreibung einem
+Es wird bei der Einrichtung des EcoSystems in der Auswahl des Dogus verwendet. Daher sollte die Beschreibung einem
 uninformierten Benutzer einen kurzen Hinweis darauf geben, was das Dogu ist und welche Funktionen es bietet.
 
 Die Beschreibung kann bestehen aus:
@@ -438,7 +438,7 @@ Die Kategorie organisiert die Dogus in drei Kategorien. Dieses Feld ist obligato
 
 Die Liste der Kategorien ist fix, es muss eines hiervon  gewählt werden:
 
-- `Development Apps` - Für reguläre Dogus, die von einem regulären Benutzer des Ökosystems verwendet werden sollen,
+- `Development Apps` - Für reguläre Dogus, die von einem regulären Benutzer des EcoSystems verwendet werden sollen,
 - `Administration Apps` - Für Dogus, die von einem Benutzer mit Administrationsrechten verwendet werden sollen
 - `Base` - Für Dogus, die für das Gesamtsystem wichtig sind.
 
@@ -530,10 +530,10 @@ führt es aus. Es wird hauptsächlich zur Vorbereitung von Datenmigrationen (z. 
 des Skriptes sollte der Vergleich zwischen den Versionen sein, um festzustellen, ob eine Migration notwendig ist. Dazu
 wird der Dogu-Client das Skript mit der alten Version als erstem und der neuen Version als zweitem Parameter aufrufen.
 Außerdem ist es empfehlenswert, im Skript Zustände wie "upgrade" oder "pre-upgrade done" zu setzen. Dies kann sehr
-nützlich sein, da Sie es im Post-Upgrade oder beim regulären Start für eine Wartefunktion verwenden können.
+nützlich sein, da Sie die Zustände im Post-Upgrade oder beim regulären Start für eine Wartefunktion verwenden können.
 
 post-upgrade: Dieser Befehl wird nach einem regulären Dogu-Upgrade ausgeführt. Wie beim Pre-Upgrade wird als erster
-Parameter die alte Dogu-Version und als zweiter Parameter die neue Dogu-Version übergeben. Sie sollten verwendet
+Parameter die alte Dogu-Version und als zweiter Parameter die neue Dogu-Version übergeben. Die alte und neue Dogu-Version sollten verwendet
 werden, um festzustellen, ob eine Aktion erforderlich ist. Denken Sie daran, dass in dieser Zeit auch das reguläre
 Startskript Ihres neuen Containers ausgeführt wird. Verwenden Sie einen Zustand im Cloudogu EcoSystem-Registry, um eine
 Wartefunktion beim
@@ -550,9 +550,9 @@ Datenbank oder eines Authentifizierungsservers. Der Befehl "service-account-crea
 werden, der den Service-Account herstellt und die Anmeldeinformationen erzeugt. Wenn ein
 Service-Account-Verbraucher-Dogu
 installiert wird und einen Service-Account benötigt (z. B. für postgresql), ruft der Dogu-Client das
-service-account-create Skript in dem postgresql-Dogu mit dem Servicenamen als ersten Parameter und benutzerdefinierten
-Parametern als zusätzliche Parameter auf. Siehe [core.ServiceAccount](#type-serviceaccount) für die Definition von
-benutzerdefinierten Parametern. Mit diesen Informationen sollte das Skript ein Service-Account erstellen und speichern (
+service-account-create Skript in dem Dogu, für das der Service-Account benötigt wird, (z.B. postgresql) mit dem Servicenamen als ersten Parameter und benutzerdefinierten
+Parametern als zusätzliche Parameter auf (siehe [core.ServiceAccount](#type-serviceaccount) für die Definition von
+benutzerdefinierten Parametern). Mit diesen Informationen sollte das Skript einen Service-Account erstellen und speichern (
 z. B. in der Tabelle USER in einer zugrunde liegenden Datenbank oder vielleicht verschlüsselt in der Cloudogu
 EcoSystem-Registry). Danach
 müssen
