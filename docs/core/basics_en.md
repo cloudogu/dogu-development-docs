@@ -60,13 +60,15 @@ Afterwards, the setup of the CES must be performed at `http://192.168.56.2:8080`
 In the process you have to create a free account at the platform `myCloudogu` and select the Dogu `nginx` in the Dogu step.
 A more detailed description of how to perform the setup can be found in the [Quick-Start-Guide of the CES](https://docs.cloudogu.com/de/quickstart/).
 
+The IP address of the CES may be different from the `192.168.56.2` address given here. After login, the IP address of the machine can be displayed with the command `hostname -I`. In the following, the IP address `192.168.56.2` is always mentioned for simplification.
+
 ### 2) Create directory
 
-A directory must be created to keep the Dogu files.
+A directory in the directory of the cloned CES must be created to keep the Dogu files.
 
 Example: `mkdir containers/newdogu`
 
-Inside the just started VM of `vagrant` the directory can be found at `/vargrant/containers/newdogu`.
+Inside the just started VM of `vagrant` the directory can be found at `/vagrant/containers/newdogu`.
 
 ### 3) Dockerfile
 

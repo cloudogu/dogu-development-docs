@@ -954,7 +954,7 @@ Beispiele:
 
 ## type [HealthCheck](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L171-L196>)
 
-HealthCheck bietet Verfügbarkeitsprüfungen für den Dogus-Container.
+HealthCheck bietet Verfügbarkeitsprüfungen für den Dogu-Container.
 
 ```go
 type HealthCheck struct {

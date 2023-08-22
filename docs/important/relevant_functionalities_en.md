@@ -89,19 +89,19 @@ The `authorize` endpoint is used to request a short-lived token from the CAS.
 **Condition of the data**
 
 ```
-?response_type = code
-?client_id = Valid clientID from the dogu
-?state = Any string
-?redirect_url = <URL to which the short-term token will be redirected upon successful authentication>
+response_type = code
+client_id = Valid clientID from the dogu
+state = Any string
+redirect_url = <URL to which the short-term token will be redirected upon successful authentication>
 ```
 
 **Data example**
 
 ```
-?response_type = code
-?client_id = portainer
-?state = b8c57125-9281-4b67-b857-1559cdfcdf31
-?redirect_url = http://local.cloudogu.com/portainer/
+response_type = code
+client_id = portainer
+state = b8c57125-9281-4b67-b857-1559cdfcdf31
+redirect_url = http://local.cloudogu.com/portainer/
 ```
 
 **call example**
@@ -128,21 +128,21 @@ This endpoint is used to exchange a short term token (`code`) for a long term to
 **Data constraints**
 
 ```
-?grant_type = authorization_code
-?code = Valid code from `authorize` endpoint
-?client_id = Valid clientID from the dogu
-?client_secret = Valid secret from the dogu
-?redirect_url = <URL to which the long term token will be sent upon successful authentication>
+grant_type = authorization_code
+code = Valid code from `authorize` endpoint
+client_id = Valid clientID from the dogu
+client_secret = Valid secret from the dogu
+redirect_url = <URL to which the long term token will be sent upon successful authentication>
 ```
 
 **Data example**
 
 ```
-?grant_type = authorization_code
-?code = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
-?client_id = portainer
-?client_secret = sPJtcNrmROZ3sZu3
-?redirect_url = https://local.cloudogu.com/portainer/
+grant_type = authorization_code
+code = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
+client_id = portainer
+client_secret = sPJtcNrmROZ3sZu3
+redirect_url = https://local.cloudogu.com/portainer/
 ```
 
 **Request example**
@@ -282,19 +282,19 @@ The `authorize` endpoint is used to request a short-lived token from the CAS.
 **Condition of the data**
 
 ```
-?response_type = code
-?client_id = Valid clientID from the dogu
-?state = Any string
-?redirect_url = <URL to which the short term token of successful authentication will be redirected>.
+response_type = code
+client_id = Valid clientID from the dogu
+state = Any string
+redirect_url = <URL to which the short term token of successful authentication will be redirected>.
 ```
 
 **Data example**
 
 ```
-?response_type = code
-?client_id = teamscale
-?state = b8c57125-9281-4b67-b857-1559cdfcdf31
-?redirect_url = http://local.cloudogu.com/teamscale/
+response_type = code
+client_id = teamscale
+state = b8c57125-9281-4b67-b857-1559cdfcdf31
+redirect_url = http://local.cloudogu.com/teamscale/
 ```
 
 **Request example**
@@ -321,21 +321,21 @@ This endpoint is used to exchange a short term token (`code`) for a long term to
 **Data constraints**
 
 ```
-?grant_type = authorization_code
-?code = Valid code from `authorize` endpoint
-?client_id = Valid clientID from the dogu
-?client_secret = Valid secret from the dogu
-?redirect_url = <URL to which the long term token of successful authentication is sent>
+grant_type = authorization_code
+code = Valid code from `authorize` endpoint
+client_id = Valid clientID from the dogu
+client_secret = Valid secret from the dogu
+redirect_url = <URL to which the long term token of successful authentication is sent>
 ```
 
 **Data example**
 
 ```
-?grant_type = authorization_code
-?code = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
-?client_id = teamscale
-?client_secret = sPJtcNrmROZ3sZu3
-?redirect_url = https://local.cloudogu.com/teamscale/
+grant_type = authorization_code
+code = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
+client_id = teamscale
+client_secret = sPJtcNrmROZ3sZu3
+redirect_url = https://local.cloudogu.com/teamscale/
 ```
 
 **Request example**
@@ -384,19 +384,19 @@ The logout endpoint is used to invalidate the long term token from the CAS.
 **Condition of the data**
 
 ```
-?response_type = code
-?client_id = Valid clientID from the dogu
-?state = Any string
-?redirect_url = <URL to which the short term token of successful authentication will be redirected>.
+response_type = code
+client_id = Valid clientID from the dogu
+state = Any string
+redirect_url = <URL to which the short term token of successful authentication will be redirected>.
 ```
 
 **Data example**
 
 ```
-?response_type = code
-?client_id = teamscale
-?state = b8c57125-9281-4b67-b857-1559cdfcdf31
-?redirect_url = http://local.cloudogu.com/teamscale/
+response_type = code
+client_id = teamscale
+state = b8c57125-9281-4b67-b857-1559cdfcdf31
+redirect_url = http://local.cloudogu.com/teamscale/
 ```
 
 **Request example**

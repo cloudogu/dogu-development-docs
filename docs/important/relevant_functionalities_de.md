@@ -86,19 +86,19 @@ Der `authorize`-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzuford
 **Bedingung der Daten**
 
 ```
-?response_type = code
-?client_id     = Valide ClientID von dem Dogu
-?state         = Irgendeine Zeichenkette
-?redirect_url  = <URL, zu die der Kurzzeittoken bei erfolgreicher Authentifizierung weitergeleitet wird>
+response_type = code
+client_id     = Valide ClientID von dem Dogu
+state         = Irgendeine Zeichenkette
+redirect_url  = <URL, zu die der Kurzzeittoken bei erfolgreicher Authentifizierung weitergeleitet wird>
 ```
 
 **Daten-Beispiel**
 
 ```
-?response_type = code
-?client_id     = portainer
-?state         = b8c57125-9281-4b67-b857-1559cdfcdf31
-?redirect_url  = http://local.cloudogu.com/portainer/
+response_type = code
+client_id     = portainer
+state         = b8c57125-9281-4b67-b857-1559cdfcdf31
+redirect_url  = http://local.cloudogu.com/portainer/
 ```
 
 **Aufruf Beispiel**
@@ -125,21 +125,21 @@ Dieser Endpunkt dient zum Austausch eines Kurzzeittokens (`code`) gegen einen La
 **Data constraints**
 
 ```
-?grant_type    = authorization_code
-?code          = Valider Code vom `authorize` Endpunkt
-?client_id     = Valide ClientID von dem Dogu
-?client_secret = Valides Secret von dem Dogu
-?redirect_url  = <URL, zu die der Langzeittoken bei erfolgreicher Authentifizierung geschickt wird>
+grant_type    = authorization_code
+code          = Valider Code vom `authorize` Endpunkt
+client_id     = Valide ClientID von dem Dogu
+client_secret = Valides Secret von dem Dogu
+redirect_url  = <URL, zu die der Langzeittoken bei erfolgreicher Authentifizierung geschickt wird>
 ```
 
 **Data example**
 
 ```
-?grant_type    = authorization_code
-?code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
-?client_id     = portainer
-?client_secret = sPJtcNrmROZ3sZu3
-?redirect_url  = https://local.cloudogu.com/portainer/
+grant_type    = authorization_code
+code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
+client_id     = portainer
+client_secret = sPJtcNrmROZ3sZu3
+redirect_url  = https://local.cloudogu.com/portainer/
 ```
 
 **Call example**
@@ -280,19 +280,19 @@ Der `authorize`-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzuford
 **Bedingung der Daten**
 
 ```
-?response_type = code
-?client_id     = Valide ClientID von dem Dogu
-?state         = Irgendeine Zeichenkette
-?redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
+response_type = code
+client_id     = Valide ClientID von dem Dogu
+state         = Irgendeine Zeichenkette
+redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
 ```
 
 **Daten-Beispiel**
 
 ```
-?response_type = code
-?client_id     = teamscale
-?state         = b8c57125-9281-4b67-b857-1559cdfcdf31
-?redirect_url  = http://local.cloudogu.com/teamscale/
+response_type = code
+client_id     = teamscale
+state         = b8c57125-9281-4b67-b857-1559cdfcdf31
+redirect_url  = http://local.cloudogu.com/teamscale/
 ```
 
 **Aufruf Beispiel**
@@ -319,21 +319,21 @@ Dieser Endpunkt dient zum Austausch eines Kurzzeittokens (`code`) gegen ein Lang
 **Data constraints**
 
 ```
-?grant_type    = authorization_code
-?code          = Valider Code vom `authorize` Endpunkt
-?client_id     = Valide ClientID von dem Dogu
-?client_secret = Valides Secret von dem Dogu
-?redirect_url  = <URL zu die der Langzeittoken erfolgreicher Authentifizierung geschickt wird>
+grant_type    = authorization_code
+code          = Valider Code vom `authorize` Endpunkt
+client_id     = Valide ClientID von dem Dogu
+client_secret = Valides Secret von dem Dogu
+redirect_url  = <URL zu die der Langzeittoken erfolgreicher Authentifizierung geschickt wird>
 ```
 
 **Data example**
 
 ```
-?grant_type    = authorization_code
-?code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
-?client_id     = teamscale
-?client_secret = sPJtcNrmROZ3sZu3
-?redirect_url  = https://local.cloudogu.com/teamscale/
+grant_type    = authorization_code
+code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
+client_id     = teamscale
+client_secret = sPJtcNrmROZ3sZu3
+redirect_url  = https://local.cloudogu.com/teamscale/
 ```
 
 **Call example**
@@ -382,19 +382,19 @@ Der Logout-Endpunkt wird benutzt, um den Langzeit-Token vom CAS zu invalidieren.
 **Bedingung der Daten**
 
 ```
-?response_type = code
-?client_id     = Valide ClientID von dem Dogu
-?state         = Irgendeine Zeichenkette
-?redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
+response_type = code
+client_id     = Valide ClientID von dem Dogu
+state         = Irgendeine Zeichenkette
+redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
 ```
 
 **Daten-Beispiel**
 
 ```
-?response_type = code
-?client_id     = teamscale
-?state         = b8c57125-9281-4b67-b857-1559cdfcdf31
-?redirect_url  = http://local.cloudogu.com/teamscale/
+response_type = code
+client_id     = teamscale
+state         = b8c57125-9281-4b67-b857-1559cdfcdf31
+redirect_url  = http://local.cloudogu.com/teamscale/
 ```
 
 **Aufruf Beispiel**
