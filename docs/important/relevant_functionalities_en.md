@@ -77,6 +77,8 @@ The following steps describe a successful OAuth authentication flow.
 
 ![Authentication sequence with OAuth 2.0](../images/important/chapter3_auth_oauth_sequencediag.png)
 
+Note: Resource is a part of CAS.
+
 #### OAuth authorize endpoint
 
 This endpoint serves as the initial start of OAuth authorization.
