@@ -69,10 +69,12 @@ Die folgenden Schritte beschreiben einen erfolgreichen Ablauf der OAuth-Authenti
 
 1. Anfordern eines Kurzzeit-Tokens: Siehe Abschnitt unten "OAuth-Authorize-Endpunkt"
 2. Kurzzeittoken gegen ein Langzeittoken tauschen: Siehe Abschnitt unten "AccessToken-Endpunkt"
-3. Langzeittoken kann nun zur Authentifizierung gegen Ressourcen benutzen werden.
+3. Ein Langzeittoken kann nun zur Authentifizierung gegen Ressourcen benutzen werden.
    Derzeit bietet CAS nur das Profil der User als Resource an: Siehe Abschnitt [OAuth-Userprofil](#oauth-userprofil)
 
 ![Ablauf der Authentifizierung mit OAuth 2.0](../images/important/chapter3_auth_oauth_sequencediag.png)
+
+Hinweis: Die Resource ist ein Bestandteil vom CAS.
 
 #### OAuth-Authorize-Endpunkt
 
