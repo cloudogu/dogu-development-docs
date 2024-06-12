@@ -15,7 +15,7 @@ Grundlage für CAS ist hier immer eine korrekte Konfiguration eines Benutzer-/Gr
 
 ### CAS-Protokoll
 
-Authentifizierung innerhalb des Cloudogu EcoSystem geschieht über das [CAS-Protokoll](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html), das Single Sign-on und Single Log-out ermöglicht. Es werden unterschiedliche CAS-Protokoll-Versionen unterstützt (2.0 und 3.0). Bei einer Umsetzung mittels CAS-Protokoll wird empfohlen, die Version 3.0 zu verwenden, da (verglichen mit Version 2.0) nach einer erfolgreichen Authentifizierung wichtige Benutzerattribute zurückgeliefert werden.
+Authentifizierung innerhalb des Cloudogu EcoSystem geschieht über das [CAS-Protokoll](https://apereo.github.io/cas/6.6.x/protocol/CAS-Protocol.html), das Single Sign-on und Single Log-out ermöglicht. Es werden unterschiedliche CAS-Protokoll-Versionen unterstützt (2.0 und 3.0). Bei einer Umsetzung mittels CAS-Protokoll wird empfohlen, die Version 3.0 zu verwenden, da (verglichen mit Version 2.0) nach einer erfolgreichen Authentifizierung wichtige Benutzerattribute zurückgeliefert werden.
 
 Folgendes Diagramm zeigt die Beteiligten an der Authentifizierungskonfiguration. Bevor ein Dogu (hier am Beispiel von Redmine) an diesem Prozess teilnehmen kann, muss das Dogu intern einen Satz von CAS-URLs konfigurieren:
 
@@ -34,7 +34,7 @@ Eine grobe Übersicht über den Anmeldeprozess mit den Beteiligten bietet die fo
 
 Das SSO des CAS reduziert diesen Prozess bei der Anmeldung bei weiteren Dogus deutlich.
 
-Weitere Informationen und eine genauere Abbildung vor, während und nach einer Authentifizierung bietet die [CAS-Dokumentation](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html).
+Weitere Informationen und eine genauere Abbildung vor, während und nach einer Authentifizierung bietet die [CAS-Dokumentation](https://apereo.github.io/cas/6.6.x/protocol/CAS-Protocol.html).
 
 ### OAuth-Protokoll
 
@@ -691,7 +691,9 @@ fi
 
 #### doguctl state
 
-Dieser Aufruft liest und schreibt Dogu-Zustandswerte. Er wird in Kombination mit einem [HealthCheck](../core/compendium_de.md#healthchecks) verwendet.
+Dieser Aufruft liest und schreibt Dogu-Zustandswerte. Er wird in Kombination mit einem [HealthCheck](../core/compendium_de.md#healthchecks) 
+verwendet. Bei einem Neustart des Containers geht dieser Wert verloren. Für persistente Werte, die auch bei neustarts 
+definitiv noch vorhanden sind, sollte `doguctl config` verwendet werden.
 
 ```bash
 $ doguctl state "installing" # schreibt den Wert in den State
