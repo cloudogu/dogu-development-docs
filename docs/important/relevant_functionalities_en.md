@@ -697,7 +697,8 @@ fi
 
 #### doguctl state
 
-This call reads and writes dogu state values. It is used in combination with a [HealthCheck](../core/compendium_en.md#healthchecks).
+This call reads and writes dogu state values. It is used in combination with a [HealthCheck](../core/compendium_en.md#healthchecks). However, for 
+persistent values that need to be present even after restarts, `doguctl config` should be used.
 
 ```bash
 $ doguctl state "installing" # write the value to the state

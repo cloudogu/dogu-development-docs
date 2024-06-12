@@ -689,7 +689,9 @@ fi
 
 #### doguctl state
 
-Dieser Aufruft liest und schreibt Dogu-Zustandswerte. Er wird in Kombination mit einem [HealthCheck](../core/compendium_de.md#healthchecks) verwendet.
+Dieser Aufruft liest und schreibt Dogu-Zustandswerte. Er wird in Kombination mit einem [HealthCheck](../core/compendium_de.md#healthchecks) 
+verwendet. Für persistente Werte, die auch bei neustarts definitiv noch vorhanden sind, sollte jedoch `doguctl config` 
+verwendet werden.
 
 ```bash
 $ doguctl state "installing" # schreibt den Wert in den State

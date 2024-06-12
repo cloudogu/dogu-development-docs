@@ -479,9 +479,19 @@ ExposedCommands defines actions of type [ExposedCommand](#type-exposedcommand) w
 
 Usually, commands which are automatically triggered by a dogu-client are those in upgrade or service account processes. These commands are: pre-upgrade, post-upgrade, upgrade-notification, service-account-create, service-account-remove
 
-pre-upgrade: This command will be executed during an early stage of an upgrade process from a dogu. A dogu client will mount the pre-upgrade script from the new dogu version in the container of the old still running dogu and executes it. It is mainly used to prepare data migrations (e.g. export a database). Core of the script should be the comparison between the version and to determine if a migration is needed. For this, the dogu client will call the script with the old version as the first and the new version as the second parameter. In addition, it is recommended to set states like "upgrading" or "pre-upgrade done" in the script. This can be very useful because you can use it in the post-upgrade or the regular startup for a waiting functionality.
+pre-upgrade: This command will be executed during an early stage of an upgrade process from a dogu. A dogu client will 
+mount the pre-upgrade script from the new dogu version in the container of the old still running dogu and executes it.
+It is mainly used to prepare data migrations (e.g. export a database). Core of the script should be the comparison 
+between the version and to determine if a migration is needed. For this, the dogu client will call the script with the 
+old version as the first and the new version as the second parameter. In addition, it is recommended to set a config key 
+like "local_state" to "upgrading" or "pre-upgrade done" in the script. This can be very useful because you can use it in 
+the post-upgrade or the regular startup for a waiting functionality.
 
-post-upgrade: This command will be executed after a regular dogu upgrade. Like in the pre-upgrade the old dogu version is passed as the first and the new dogu version is passed as the second parameter. They should be used to determine if an action is needed. Keep in mind that in this time the regular startup script of your new container will be executed as well. Use a state in the etcd to handle a wait functionality in the startup. If the post-upgrade ends reset this state and start the regular container.
+post-upgrade: This command will be executed after a regular dogu upgrade. Like in the pre-upgrade the old dogu version 
+is passed as the first and the new dogu version is passed as the second parameter. They should be used to determine if 
+an action is needed. Keep in mind that in this time the regular startup script of your new container will be executed as
+well. Use a config key in the etcd to handle a wait functionality in the startup. If the post-upgrade ends reset 
+this config key and start the regular container.
 
 upgrade-notification: If the upgrade process works, e.g. with really sensitive data an upgrade notification script can be implemented to inform the user about the risk of this process and e.g. give a backup instruction. Before an upgrade the dogu client executes the notification script, prints all upgrade steps and asks the user if he wants to proceed.
 
