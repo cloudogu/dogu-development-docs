@@ -255,7 +255,7 @@ Der `docs`-Ordner ist nach diesem beispielhaften Schema aufgebaut:
 │ ├── users_endpoint_de.md  
 │ └── users_endpoint_en.md  
 └── /development  
-  └── how_to_create_an_image.md  
+  ├── how_to_create_an_image.md  
   └── how_to_build_a_plugin.md
 ```
 

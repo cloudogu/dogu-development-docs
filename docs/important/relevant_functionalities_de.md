@@ -15,7 +15,7 @@ Grundlage für CAS ist hier immer eine korrekte Konfiguration eines Benutzer-/Gr
 
 ### CAS-Protokoll
 
-Authentifizierung innerhalb des Cloudogu EcoSystem geschieht über das [CAS-Protokoll](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html), das Single Sign-on und Single Log-out ermöglicht. Es werden unterschiedliche CAS-Protokoll-Versionen unterstützt (2.0 und 3.0). Bei einer Umsetzung mittels CAS-Protokoll wird empfohlen, die Version 3.0 zu verwenden, da (verglichen mit Version 2.0) nach einer erfolgreichen Authentifizierung wichtige Benutzerattribute zurückliefern kann.
+Authentifizierung innerhalb des Cloudogu EcoSystem geschieht über das [CAS-Protokoll](https://apereo.github.io/cas/6.5.x/protocol/CAS-Protocol.html), das Single Sign-on und Single Log-out ermöglicht. Es werden unterschiedliche CAS-Protokoll-Versionen unterstützt (2.0 und 3.0). Bei einer Umsetzung mittels CAS-Protokoll wird empfohlen, die Version 3.0 zu verwenden, da (verglichen mit Version 2.0) nach einer erfolgreichen Authentifizierung wichtige Benutzerattribute zurückgeliefert werden.
 
 Folgendes Diagramm zeigt die Beteiligten an der Authentifizierungskonfiguration. Bevor ein Dogu (hier am Beispiel von Redmine) an diesem Prozess teilnehmen kann, muss das Dogu intern einen Satz von CAS-URLs konfigurieren:
 
@@ -69,10 +69,12 @@ Die folgenden Schritte beschreiben einen erfolgreichen Ablauf der OAuth-Authenti
 
 1. Anfordern eines Kurzzeit-Tokens: Siehe Abschnitt unten "OAuth-Authorize-Endpunkt"
 2. Kurzzeittoken gegen ein Langzeittoken tauschen: Siehe Abschnitt unten "AccessToken-Endpunkt"
-3. Langzeittoken kann nun zur Authentifizierung gegen Ressourcen benutzen werden.
+3. Ein Langzeittoken kann nun zur Authentifizierung gegen Ressourcen benutzen werden.
    Derzeit bietet CAS nur das Profil der User als Resource an: Siehe Abschnitt [OAuth-Userprofil](#oauth-userprofil)
 
 ![Ablauf der Authentifizierung mit OAuth 2.0](../images/important/chapter3_auth_oauth_sequencediag.png)
+
+Hinweis: Die Resource ist ein Bestandteil vom CAS.
 
 #### OAuth-Authorize-Endpunkt
 
@@ -86,19 +88,19 @@ Der `authorize`-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzuford
 **Bedingung der Daten**
 
 ```
-?response_type = code
-?client_id     = Valide ClientID von dem Dogu
-?state         = Irgendeine Zeichenkette
-?redirect_url  = <URL, zu die der Kurzzeittoken bei erfolgreicher Authentifizierung weitergeleitet wird>
+response_type = code
+client_id     = Valide ClientID von dem Dogu
+state         = Irgendeine Zeichenkette
+redirect_url  = <URL, zu die der Kurzzeittoken bei erfolgreicher Authentifizierung weitergeleitet wird>
 ```
 
 **Daten-Beispiel**
 
 ```
-?response_type = code
-?client_id     = portainer
-?state         = b8c57125-9281-4b67-b857-1559cdfcdf31
-?redirect_url  = http://local.cloudogu.com/portainer/
+response_type = code
+client_id     = portainer
+state         = b8c57125-9281-4b67-b857-1559cdfcdf31
+redirect_url  = http://local.cloudogu.com/portainer/
 ```
 
 **Aufruf Beispiel**
@@ -125,21 +127,21 @@ Dieser Endpunkt dient zum Austausch eines Kurzzeittokens (`code`) gegen einen La
 **Data constraints**
 
 ```
-?grant_type    = authorization_code
-?code          = Valider Code vom `authorize` Endpunkt
-?client_id     = Valide ClientID von dem Dogu
-?client_secret = Valides Secret von dem Dogu
-?redirect_url  = <URL, zu die der Langzeittoken bei erfolgreicher Authentifizierung geschickt wird>
+grant_type    = authorization_code
+code          = Valider Code vom `authorize` Endpunkt
+client_id     = Valide ClientID von dem Dogu
+client_secret = Valides Secret von dem Dogu
+redirect_url  = <URL, zu die der Langzeittoken bei erfolgreicher Authentifizierung geschickt wird>
 ```
 
 **Data example**
 
 ```
-?grant_type    = authorization_code
-?code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
-?client_id     = portainer
-?client_secret = sPJtcNrmROZ3sZu3
-?redirect_url  = https://local.cloudogu.com/portainer/
+grant_type    = authorization_code
+code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
+client_id     = portainer
+client_secret = sPJtcNrmROZ3sZu3
+redirect_url  = https://local.cloudogu.com/portainer/
 ```
 
 **Call example**
@@ -280,19 +282,19 @@ Der `authorize`-Endpunkt wird benutzt, um ein kurzlebiges Token vom CAS anzuford
 **Bedingung der Daten**
 
 ```
-?response_type = code
-?client_id     = Valide ClientID von dem Dogu
-?state         = Irgendeine Zeichenkette
-?redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
+response_type = code
+client_id     = Valide ClientID von dem Dogu
+state         = Irgendeine Zeichenkette
+redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
 ```
 
 **Daten-Beispiel**
 
 ```
-?response_type = code
-?client_id     = teamscale
-?state         = b8c57125-9281-4b67-b857-1559cdfcdf31
-?redirect_url  = http://local.cloudogu.com/teamscale/
+response_type = code
+client_id     = teamscale
+state         = b8c57125-9281-4b67-b857-1559cdfcdf31
+redirect_url  = http://local.cloudogu.com/teamscale/
 ```
 
 **Aufruf Beispiel**
@@ -319,21 +321,21 @@ Dieser Endpunkt dient zum Austausch eines Kurzzeittokens (`code`) gegen ein Lang
 **Data constraints**
 
 ```
-?grant_type    = authorization_code
-?code          = Valider Code vom `authorize` Endpunkt
-?client_id     = Valide ClientID von dem Dogu
-?client_secret = Valides Secret von dem Dogu
-?redirect_url  = <URL zu die der Langzeittoken erfolgreicher Authentifizierung geschickt wird>
+grant_type    = authorization_code
+code          = Valider Code vom `authorize` Endpunkt
+client_id     = Valide ClientID von dem Dogu
+client_secret = Valides Secret von dem Dogu
+redirect_url  = <URL zu die der Langzeittoken erfolgreicher Authentifizierung geschickt wird>
 ```
 
 **Data example**
 
 ```
-?grant_type    = authorization_code
-?code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
-?client_id     = teamscale
-?client_secret = sPJtcNrmROZ3sZu3
-?redirect_url  = https://local.cloudogu.com/teamscale/
+grant_type    = authorization_code
+code          = ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local
+client_id     = teamscale
+client_secret = sPJtcNrmROZ3sZu3
+redirect_url  = https://local.cloudogu.com/teamscale/
 ```
 
 **Call example**
@@ -382,19 +384,19 @@ Der Logout-Endpunkt wird benutzt, um den Langzeit-Token vom CAS zu invalidieren.
 **Bedingung der Daten**
 
 ```
-?response_type = code
-?client_id     = Valide ClientID von dem Dogu
-?state         = Irgendeine Zeichenkette
-?redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
+response_type = code
+client_id     = Valide ClientID von dem Dogu
+state         = Irgendeine Zeichenkette
+redirect_url  = <URL zu die der Kurzzeittoken erfolgreicher Authentifizierung weitergeleitet wird>
 ```
 
 **Daten-Beispiel**
 
 ```
-?response_type = code
-?client_id     = teamscale
-?state         = b8c57125-9281-4b67-b857-1559cdfcdf31
-?redirect_url  = http://local.cloudogu.com/teamscale/
+response_type = code
+client_id     = teamscale
+state         = b8c57125-9281-4b67-b857-1559cdfcdf31
+redirect_url  = http://local.cloudogu.com/teamscale/
 ```
 
 **Aufruf Beispiel**
@@ -412,7 +414,7 @@ Beispiel für `code`: `ST-1-wzG237MUOvfjfZrvRH5s-cas.ces.local`
 
 ## Auf die Registry zugreifen
 
-Die Cloudogu EcoSystem Registry ist eine Key-Value-Datenbank, die auch für Dogus ein Kernelement darstellt. Die Konfiguration eines Dogus wird über die Registry durchgeführt. Darüber hinaus werden in der Registry werden Werte abgelegt, die auch von globaler Natur sind.
+Die Cloudogu EcoSystem Registry ist eine Key-Value-Datenbank, die auch für Dogus ein Kernelement darstellt. Die Konfiguration eines Dogus wird über die Registry durchgeführt. Darüber hinaus werden in der Registry Werte abgelegt, die auch von globaler Natur sind.
 
 ### Registry-Zugriff vom Dogu heraus
 
@@ -991,7 +993,12 @@ Das Pre-Upgrade-Skript kann als [Exposed Command](../core/compendium_de.md#expos
 }
 ```
 
-Dieses Skript wird vor dem eigentlichen Upgrade des Dogus im alten Dogu-Container ausgeführt.
+Dieses Skript wird vor dem eigentlichen Upgrade des Dogus im alten Dogu-Container ausgeführt. 
+
+#### Wichtige Infos zum Pre-Upgrade-Prozess 
+
+- Das Skript wird nicht zwangsweise vom gleichen Pfad ausgeführt, an dem es im neuen Dogu-Container liegt. Dementsprechend müssen absolute Pfade in dem Skript verwendet werden.
+- Das komplette Pre-Upgrade muss **ein einziges** Skript sein, welches entsprechend in den alten Container kopiert werden kann. Sollte das Skript weitere Dateien verwenden, so müssen diese bereits auf dem alten Container vorhanden sein.
 
 ### post-upgrade - Führt alle Aktionen nach dem Upgrade des Dogus durch
 
@@ -1031,32 +1038,86 @@ Dieses Skript wird vor dem Upgrade-Vorgang ausgeführt und sollte ausschließlic
 
 Dieses Kapitel beschreibt Funktionen, die Dogus tiefer in das Cloudogu EcoSystem integrieren und sie einheitlich administrierbar machen.
 
-### Memory-/Swap-Limit
+### Ressourcenanforderungen
 
-Mit Memory- und Swap-Limits kann man den Speicherverbrauch (Arbeitsspeicher und Auslagerungsspeicher) von Dogus einschränken.
+Die Ressourcenanforderungen für ein Dogu können für die folgenden Ressourcen angewendet werden:
+
+  * Memory (Arbeitsspeicher)
+  * Swap (Auslagerungsspeicher)
+  * CPU-Kerne
+  * Ephemeral-Storage (flüchtiger Speicher)
+
+Es wird zwischen Ressourcen-Requests und -Limits unterschieden:
+
+- **Ressourcen-Requests:** Geben die von einem Dogu minimal benötigten Ressourcen (CPU-Kerne, Memory, Ephemeral-Storage) an, damit das Dogu funktionstüchtig ist.
+  Im Multinode-EcoSystem sorgt der Kubernetes-Scheduler dafür, dass das Dogu auf einem Node mit ausreichenden Ressourcen gestartet wird.
+- **Ressourcen-Limits:** Geben die maximal erlaubte Menge an Ressourcen an, die ein Dogu verwenden darf.
+  
+#### Memory
+
+Mit Memory-Limits kann man den Speicherverbrauch (Arbeitsspeicher) von Dogus einschränken.
 
 Falls ein Dogu seine Speicherlimitierung überschreitet, wird der größte Prozess im Container beendet.
 Dies ist normalerweise der Hauptprozess des Dogus und führt dazu, dass der Container neu gestartet wird.
-
 Wird kein Wert bei der Memory-Limitierung gesetzt, findet diese auch nicht statt.
+
+Mit Memory-Requests kann man die minimale Speicheranforderung von Dogus angeben, damit diese voll funktionsfähig sind.
+
+**Achtung!**
+Memory-Requests werden nur im Multinode-EcoSystem angewendet.
+
+#### Swap
+
+Mit Swap-Limits kann man den Speicherverbrauch (Auslagerungsspeicher) von Dogus einschränken.
+
+Falls ein Dogu seine Speicherlimitierung überschreitet, wird der größte Prozess im Container beendet.
+Dies ist normalerweise der Hauptprozess des Dogus und führt dazu, dass der Container neu gestartet wird.
+Wird kein Wert bei der Swap-Limitierung gesetzt, findet diese auch nicht statt.
 Bei der Swap-Limitierung ist `0b` der Standardwert und stellt somit keinen Swap zur Verfügung.
 
-#### Vorbereitung der Speicherlimits im Host
+**Achtung!**
+Swap-Limits werden **NICHT** im Multinode-EcoSystem angewendet!
+
+##### Vorbereitung der Speicherlimits im Host
 
 Damit der Cloudogu EcoSystem-Host die Limitierung des Speichers **und** Swaps vornehmen kann, müssen vorher folgende Einstellungen vorgenommen werden:
 1. die Datei `/etc/default/grub` öffnen
 2. Zur Variable `GRUB_CMDLINE_LINUX_DEFAULT` muss folgender Wert hinzugefügt werden:
    `cgroup_enable=memory swapaccount=1`
-3. die Änderungen speichern 
-4. den Befehl `sudo update-grub` bzw. `sudo update-bootloader --refresh` ausführen 
+3. die Änderungen speichern
+4. den Befehl `sudo update-grub` bzw. `sudo update-bootloader --refresh` ausführen
 5. die Maschine neu starten
 
 **Achtung!**
 Die obige Aktivierung mit `cgroup_enable=memory swapaccount=1` führt voraussichtlich zu einem Speicher-Overhead von 1 % und einer Performanz-Einbuße von 10 %, selbst wenn Docker nicht läuft.
 
-#### Limitierung im Dogu
 
-Um eine Limitierung vornehmen zu können, muss die `dogu.json` des Dogus folgende Einträge enthalten:
+#### CPU-Kerne
+
+Mit CPU-Limits kann man die maximal verfügbaren CPU-Kerne von Dogus einschränken.
+Wenn das Limit für die CPU-Kerne überschritten wird, drosselt die Container-Runtime die verfügbaren CPU-Ressourcen für den Container.
+
+Mit CPU-Requests kann man die minimal benötigten CPU-Kerne für ein Dogu angeben, damit dieses voll funktionsfähig ist.
+
+**Achtung!**
+CPU-Limits und -Requests werden nur im Multinode-EcoSystem angewendet.
+
+#### Ephemeral-Storage
+
+Mit Ephemeral-Storage-Limits kann man den maximal verfügbaren flüchtigen Speicher 
+(siehe [Kubernetes-Ephemeral-Storage](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#local-ephemeral-storage))
+von Dogus einschränken.
+Wenn das Limit überschritten wird, wird der Container neu gestartet.
+
+Mit Ephemeral-Storage-Requests kann man den minimal benötigten flüchtigen Speicher für ein Dogu angeben, damit dieses voll funktionsfähig ist.
+
+**Achtung!**
+Ephemeral-Storage-Limits und -Requests werden nur im Multinode-EcoSystem angewendet.
+
+
+#### Konfiguration im Dogu
+
+Um Ressourcenanforderungen setzen zu können, muss die `dogu.json` des Dogus folgende Einträge enthalten:
 
 ```json
 {
@@ -1070,8 +1131,42 @@ Um eine Limitierung vornehmen zu können, muss die `dogu.json` des Dogus folgend
       }
     },
     {
+      "Name": "container_config/memory_request",
+      "Description":"Requests the container's minimal memory requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). This configuration is only applicable to the Multinode-EcoSystem.",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
       "Name": "container_config/swap_limit",
       "Description":"Limits the container's swap memory usage. Use zero or a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). 0 will disable swapping.",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
+      "Name": "container_config/cpu_core_limit",
+      "Description":"Limits the container's CPU core usage. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU. This configuration is only applicable to the Multinode-EcoSystem.",
+      "Optional": true
+    },
+    {
+      "Name": "container_config/cpu_core_request",
+      "Description":"Requests the container's minimal CPU core requirement. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU. This configuration is only applicable to the Multinode-EcoSystem.",
+      "Optional": true
+    },
+    {
+      "Name": "container_config/storage_limit",
+      "Description":"Limits the container's ephemeral storage usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). This configuration is only applicable to the Multinode-EcoSystem.",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
+      "Name": "container_config/storage_request",
+      "Description":"Requests the container's minimal ephemeral storage requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). This configuration is only applicable to the Multinode-EcoSystem.",
       "Optional": true,
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
@@ -1081,23 +1176,79 @@ Um eine Limitierung vornehmen zu können, muss die `dogu.json` des Dogus folgend
 }
 ```
 
-Hiermit lassen sich die Registry-Einträge `container_config/memory_limit` und `container_config/swap_limit` in der jeweiligen Dogu-Konfiguration erstellen.
+Hiermit werden die Registry-Einträge für die Ressourcenanforderungen in der jeweiligen Dogu-Konfiguration erstellen.
 
-Die konfigurierbaren Werte für die Schlüssel sind jeweils eine Zeichenkette der Form `<Zahlenwert><Einheit>` und beschreiben die maximal vom Dogu nutzbare Menge an Speicher.
-Zu beachten ist hier, dass zwischen dem numerischen Wert und der Einheit kein Leerzeichen stehen darf.
-Verfügbare Einheiten sind `b`, `k`, `m` und `g` (für byte, kibibyte, mebibyte und gibibyte).
+**Memory**
 
+- Schlüssel für Request: `config/<DOGU_NAME>/container_config/memory_request`
+- Schlüssel für Limit: `config/<DOGU_NAME>/container_config/memory_limit`
+- Optional
+- Beschreibung: Setzt die Memory-Ressourcenanforderung des Dogus.
+- Format: Die konfigurierbaren Werte für die Schlüssel sind jeweils eine Zeichenkette der Form `<Zahlenwert><Einheit>` und beschreiben die maximal vom Dogu nutzbare Menge an Speicher.
+  Zu beachten ist hier, dass zwischen dem numerischen Wert und der Einheit kein Leerzeichen stehen darf.
+  Verfügbare Einheiten sind `b`, `k`, `m` und `g` (für byte, kibibyte, mebibyte und gibibyte).
+
+**Swap**
+
+- Schlüssel für Limit: `config/<DOGU_NAME>/container_config/swap_limit`
+- Optional
+- Beschreibung: Setzt das Swap-Limit des Dogus.
+- Format: Die konfigurierbaren Werte für die Schlüssel sind jeweils eine Zeichenkette der Form `<Zahlenwert><Einheit>` und beschreiben die maximal vom Dogu nutzbare Menge an Speicher.
+  Zu beachten ist hier, dass zwischen dem numerischen Wert und der Einheit kein Leerzeichen stehen darf.
+  Verfügbare Einheiten sind `b`, `k`, `m` und `g` (für byte, kibibyte, mebibyte und gibibyte).
+
+**CPU-Kerne**
+
+- Schlüssel für Request: `config/<DOGU_NAME>/container_config/cpu_core_request`
+- Schlüssel für Limit: `config/<DOGU_NAME>/container_config/cpu_core_limit`
+- Optional
+- Beschreibung: Setzt die CPU-Ressourcenanforderung des Dogus.
+- Format:
+  siehe https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes
+
+**Ephemeral-Storage**
+
+- Schlüssel für Request: `config/<DOGU_NAME>/container_config/storage_request`
+- Schlüssel für Limit: `config/<DOGU_NAME>/container_config/storage_limit`
+- Optional
+- Beschreibung: Setzt die Ephemeral-Storage-Ressourcenanforderung des Dogus.
+- Format: Die konfigurierbaren Werte für die Schlüssel sind jeweils eine Zeichenkette der Form `<Zahlenwert><Einheit>` und beschreiben die maximal vom Dogu nutzbare Menge an Speicher.
+  Zu beachten ist hier, dass zwischen dem numerischen Wert und der Einheit kein Leerzeichen stehen darf.
+  Verfügbare Einheiten sind `b`, `k`, `m` und `g` (für byte, kibibyte, mebibyte und gibibyte).
+
+  
 Das Setzen der Werte kann über folgende Wege erfolgen:
 - `doguctl config container_config/memory_limit 1g`
 - `cesapp edit-config <doguname>` (nur vom Host aus)
 - `etcdctl set /config/<doguname>/container_config/memory_limit "1g"` (nur vom Host aus)
 
-Um die Limitierungen zu übernehmen, muss das Dogu neu erstellt (`cesapp recreate <doguname>`) und anschließend neu gestartet (`cesapp start <doguname>`) werden.
+##### Konfigurierte Ressourcenanforderungen anwenden
 
-#### Überprüfen der Limitierung
+Um die Limitierungen im Singelnode-EcoSystem zu übernehmen, muss das Dogu neu erstellt (`cesapp recreate <doguname>`) und anschließend neu gestartet (`cesapp start <doguname>`) werden.
 
+Im Multinode-EcoSystem muss der globale Etcd-Key `config/_global/sync_resource_requirements` erstellt/verändert/gelöscht werden. 
+Jede Änderung an dem Schlüssel führt zum Start einem automatischen Update Prozess für alle Dogus. 
+In diesem Update Prozess werden für alle Dogus die Ressourcenanforderungen angewendet und die Dogus, wenn neue Ressourcenanforderungen gesetzt wurden, neu gestartet. 
+Unveränderte Dogus werden nicht neu gestartet. 
+Generell kann der Update-Prozess mit folgendem Befehl gestartet werden:
+
+```bash
+etcdctl set /config/_global/sync_resource_requirements true
+```
+
+#### Überprüfen der Ressourcenanforderungen
+
+**Singlenode-EcoSystem:**
 Die Limitierung des Speichers (nur RAM, kein Swap) kann mithilfe von `docker stats <doguname>` überprüft werden.
 Die Spalte `MEM USAGE / LIMIT` sollte das gesetzte Speicherlimit korrekt anzeigen.
+
+**Multinode-EcoSystem:**
+Die Ressourcenanforderungen sind in der Kubernetes-Pod-Ressource enthalten und können dort überprüft werden.
+Zum Beispiel mit:
+
+```shell
+kubectl get pod ldap-6ccb6c78fd-rp86t -o yaml | yq -r '.spec.containers[0].resources'
+```
 
 #### Limitierung in Java-Dogus
 

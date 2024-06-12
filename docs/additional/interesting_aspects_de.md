@@ -53,14 +53,17 @@ Beim Bauen von Images sollte auf die folgenden Aspekte geachtet werden:
 - Dockerfile enthält einen [Healthcheck][healthcheck]
   - z.B.: `HEALTHCHECK CMD doguctl healthy nexus || exit 1`
 - Downloads von externen Dateien (z. B. mit curl/wget) werden mit Prüfsummen/Hashes sichergestellt
-   - dies erhöht die Sicherheit von späteren Builds, wenn eine Datei durch Angreifer durch eine andere Datei ausgetauscht wird
+  - dies erhöht die Sicherheit von späteren Builds, wenn eine Datei durch Angreifer durch eine andere Datei ausgetauscht wird
+- Der Dogu-Start muss über ein festes Startskript (bspw. [`startup.sh`][startup-sh]) erfolgen
+  - Dogus nehmen keine externen Commands oder Parameter über die Docker-CLI entgegen
+
 
 [rootless-container]: https://docs.docker.com/engine/security/rootless/
 [minimize-number-of-layers]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#minimize-the-number-of-layers
 [multistage-build]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#use-multi-stage-builds
 [container-tools]: https://github.com/cloudogu/base/blob/3466b5e95c25a6c5ac569069167e513c71815797/Dockerfile#L10
 [base-images]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L1
-[healthcheck]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L3
+[healthcheck]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L41
 [copy-statement]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L33
 
 ## Resources-Ordner & Dogu-Skripte
@@ -258,3 +261,78 @@ Nun können Sie sich über `cesapp login` mit Ihrem Cloudogu-Account einloggen.
 Das Dogu kann dann einfach mit `cesapp push` in die Dogu-Registry gepusht werden.
 
 Wir empfehlen, diese Schritte automatisch im CI/CD-Prozess für Ihren Production-Release-Branch auszuführen.
+
+## Dogu-Checkliste
+
+Anhand dieser Checkliste können Sie ermitteln, ob ihr Dogu alle Voraussetzungen erfüllt, um veröffentlicht zu werden.
+
+### Erforderliche Bestandteile
+
+| Bestandteil                       | Beschreibung                                                                                                                                                               |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **[dogu.json][dogujson]**         |                                                                                                                                                                            |
+| Name                              | Die dogu.json enthält ein Name-Feld. Siehe [Name][doguname]                                                                                                                |
+| Version                           | Die dogu.json enthält ein Version-Feld. Siehe [Version][doguversion]                                                                                                       |
+| Image                             | Die dogu.json enthält ein Image-Feld. Siehe [Image][doguimage]                                                                                                             |
+| DisplayName                       | Die dogu.json enthält ein DisplayName-Feld. Siehe [DisplayName][dogudisplayname]                                                                                           |
+| Description                       | Die dogu.json enthält ein Description-Feld. Siehe [Description][dogudescription]                                                                                           |
+| Category                          | Die dogu.json enthält ein Category-Feld. Siehe [Category][dogucategory]                                                                                                    |
+|                                   |                                                                                                                                                                            |
+| **[Dockerfile][dockerfile]**      |                                                                                                                                                                            |
+| Healthcheck                       | Das Dockerfile enthält einen Healthcheck. Siehe [HealthChecks][healthchecks]                                                                                               |
+| MAINTAINER-Label                  | Das Dockerfile enthält ein Label "MAINTAINER". Siehe [Dockerfile][dockerfile]                                                                                              |
+|                                   |                                                                                                                                                                            |
+| **Zentrale Authentifizierung**    |                                                                                                                                                                            |
+| Single Sign-On (SSO)              | Das Dogu beherrscht die zentrale Anmeldung über SSO. Siehe [Authentifizierung][authentifizierung]                                                                          |
+| Single Logout (SLO)               | Das Dogu beherrscht die zentrale Abmeldung über SLO. Siehe [Authentifizierung][authentifizierung]                                                                          |
+|                                   |                                                                                                                                                                            |
+| **Dogu-Verhalten**                |                                                                                                                                                                            |
+| Replikation der CES-Admin-Gruppe  | Die Rechte der CES-Admingruppe werden in das Dogu repliziert. Siehe [Änderbarkeit der Admin-Gruppe][admingroup]                                                            |
+| Änderbarkeit der CES-Admin-Gruppe | Wird die CES-Admin-Gruppe geändert, passt sich das Dogu daran an. Siehe [Änderbarkeit der Admin-Gruppe][admingroup]                                                        |
+| Änderbarkeit der CES-FQDN         | Wird die FQDN des CES geändert, passt sich das Dogu daran an. Siehe [Änderbarkeit der FQDN][fqdnchange]                                                                    |
+| Backup/Restore-Fähigkeit          | Sämtliche Produktivdaten des Dogus sollten in Volumes ausgelagert werden, um sie sichern und wiederherstellen zu können. Siehe [Backup & Restore-Fähigkeit][backuprestore] |
+| Upgrade-Fähigkeit                 | Upgrade-Schritte zwischen Dogu-Versionen werden per Skript automatisiert. Siehe [Dogu-Upgrades][doguupgrades]                                                              |
+| Memory-Limits                     | Der Speicherverbrauch des Dogu-Containers lässt sich einstellen. Siehe [Memory-/Swap-Limit][memorylimit]                                                                   |
+| Logging-Verhalten                 | Die Menge und Ausführlichkeit von Log-Daten ist einstellbar. Siehe [Logging-Verhalten steuern][logging]                                                                    |
+
+
+### Empfohlene Bestandteile
+
+| Bestandteil                       | Beschreibung                                                                                                                                                               |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| startup.sh                        | Ein Skript wird zum Starten des Dogus verwendet. Siehe [startup.sh][startup_sh]                                                                                            |
+| Changelog                         | Änderungen am Dogu werden im Changelog vermerkt. Siehe [CHANGELOG.md][changelog_md]                                                                                        |
+| Best-Practices für Dogu-Container | Best-Practices beim Containerbau werden eingehalten. Siehe [Container-Images][containerimages]                                                                             |
+| Best-Practices für Skripte        | Best-Practices für Skripte werden eingehalten. Siehe [Resources-Ordner & Dogu-Skripte][resourcesdir]                                                                       |
+| Container-Validation              | Fertige Container werden mit `goss` validiert. Siehe [Container Validation][containervalidation]                                                                           |
+| Dokumentation                     | Alle Funktionen und Einstellungsmöglichkeiten des Dogus sind dokumentiert. Siehe [Dokumentation][documentation] und [Cloudogu Dokumentationsregelwerk][documentationrules] |
+| Code-Qualitätssicherung, Tests    | Die Code-Qualität sollte durch verschiedene (automatisierte) Test-, Lint- und Review-Vorgänge sichergestellt werden. Siehe [Qualitätssicherung][qualitycontrol]            |
+| Issue-Tracking                    | Bugs und Verbesserungsvorschläge sollten eingereicht und verfolgt werden können. Siehe [Issue-Tracking][issuetracking]                                                     |
+| Telemetrie konfigurierbar         | Sammelt das Dogu Telemetriedaten, sollte diese Funktion abschaltbar sein.                                                                                                  |
+
+
+[dockerfile]: ../core/basics_de.md#3-dockerfile
+[authentifizierung]: ../important/relevant_functionalities_de.md#authentifizierung
+[startup_sh]: ../important/relevant_functionalities_de.md#aufbau-und-best-practices-von-startupsh
+[changelog_md]: ../additional/interesting_aspects_de.md#changelog
+[admingroup]: ../important/relevant_functionalities_de.md#änderbarkeit-der-admin-gruppe
+[dogujson]: ../core/basics_de.md#4-dogujson
+[doguname]: ../core/compendium_de.md#name-2
+[doguversion]: ../core/compendium_de.md#version-1
+[fqdnchange]: ../important/relevant_functionalities_de.md#änderbarkeit-der-fqdn
+[dogudisplayname]: ../core/compendium_de.md#displayname
+[doguimage]: ../core/compendium_de.md#image
+[dogudescription]: ../core/compendium_de.md#description-1
+[dogucategory]: ../core/compendium_de.md#category
+[healthchecks]: ../core/compendium_de.md#healthchecks
+[backuprestore]: ../important/relevant_functionalities_de.md#backup--restore-fähigkeit
+[doguupgrades]: ../important/relevant_functionalities_de.md#dogu-upgrades
+[memorylimit]: ../important/relevant_functionalities_de.md#memory-swap-limit
+[logging]: ../important/relevant_functionalities_de.md#logging-verhalten-steuern
+[containerimages]: ../additional/interesting_aspects_de.md#container-images
+[resourcesdir]: ../additional/interesting_aspects_de.md#resources-ordner--dogu-skripte
+[containervalidation]: ../additional/interesting_aspects_de.md#container-validation
+[documentation]: ../additional/interesting_aspects_de.md#dokumentation
+[documentationrules]: ../additional/internal_aspects_de.md#cloudogu-dokumentationsregelwerk
+[qualitycontrol]: ../additional/internal_aspects_de.md#qualitätssicherung
+[issuetracking]: ../additional/internal_aspects_de.md#issue-tracking

@@ -228,7 +228,7 @@ Example:
  "Category": "Development Apps",
  "Tags": ["warp"],
  "Url": "https://www.company.com/newdogu",
- "Image": "registry.cloudogu.com/namespace/newdogu",
+ "Image": "registry.cloudogu.com/official/newdogu",
  "Dependencies": [
    {
      "type":"dogu",
@@ -303,7 +303,7 @@ type Dogu struct {
 
 Name contains the dogu's full qualified name which consists of the dogu namespace and the dogu simple name, delimited by a single forward slash "/". This field is mandatory.
 
-The dogu namespace allows to regulate access to dogus in that namespace. There are three reserved dogu namespaces: The namespaces `official` and `k8s` are open to all users without any further costs. In contrast to that is the namespace `premium` is open to subscription users, only.
+The dogu namespace allows to regulate access to dogus in that namespace. There are three reserved dogu namespaces: The namespaces `official` and `k8s` are open to all users without any further costs. In contrast, the `premium` namespace is open to subscription users only.
 
 The namespace syntax is encouraged to consist of:
 
@@ -321,7 +321,7 @@ The simple name syntax must be an DNS-compatible identifier and is encouraged to
 - ciphers 0-9
 - an overall length of less than 20 characters
 
-It is recommended to use the same full qualified dogu name within the dogu's Dockerfile as environment variable `NAME`.
+It is recommended to use the same full qualified dogu name within the dogu's Dockerfile as a label named `NAME`.
 
 Examples:
 
@@ -436,7 +436,7 @@ Logo represents a URI to a web picture depicting the dogu tool. This field is op
 Deprecated: The Cloudogu EcoSystem does not facilitate the logo URI. It is a candidate for removal. Other options of representing a tool or application can be:
 
 - embed the logo in the dogu's Git repository (if public)
-- provide the logo in to dogu UI (if the dogu provides one)
+- provide the logo in the dogu UI (if the dogu provides one)
 
 ### URL
 
@@ -490,12 +490,12 @@ the post-upgrade or the regular startup for a waiting functionality.
 post-upgrade: This command will be executed after a regular dogu upgrade. Like in the pre-upgrade the old dogu version 
 is passed as the first and the new dogu version is passed as the second parameter. They should be used to determine if 
 an action is needed. Keep in mind that in this time the regular startup script of your new container will be executed as
-well. Use a config key in the etcd to handle a wait functionality in the startup. If the post-upgrade ends reset 
+well. Use a config key in the CES-registry to handle a wait functionality in the startup. If the post-upgrade ends reset 
 this config key and start the regular container.
 
 upgrade-notification: If the upgrade process works, e.g. with really sensitive data an upgrade notification script can be implemented to inform the user about the risk of this process and e.g. give a backup instruction. Before an upgrade the dogu client executes the notification script, prints all upgrade steps and asks the user if he wants to proceed.
 
-service-account-create: The service-account-create command is used in the installation process of a dogu. A service account in the Cloudogu EcoSystem represents credentials to authorize another dogu, like a database or an authentication server. The service-account-create command has to be implemented in the service account producer dogu which produces the credentials. If a service account consuming dogu will be installed and requires a service account (e.g. for postgresql) the dogu client will call the service-account-create script in the postgresql dogu with the service name as the first parameters and custom ones as additional parameters. See core.ServiceAccounts for how to define custom parameters. With this information the script should create a service account and save it (e.g. USER table in an underlying database or maybe encrypted in the etcd). After that, the credentials must be printed to console so that the dogu client saves the credentials for the dogu which requested the service account. It is also important that these outputs are the only ones from the script, otherwise the dogu client will use them as credentials.
+service-account-create: The service-account-create command is used in the installation process of a dogu. A service account in the Cloudogu EcoSystem represents credentials to authorize another dogu, like a database or an authentication server. The service-account-create command has to be implemented in the service account producer dogu which produces the credentials. If a service account consuming dogu will be installed and requires a service account (e.g. for postgresql) the dogu client will call the service-account-create script in the postgresql dogu with the service name as the first parameters and custom ones as additional parameters. See core.ServiceAccounts for how to define custom parameters. With this information the script should create a service account and save it (e.g. USER table in an underlying database or maybe encrypted in the CES-registry). After that, the credentials must be printed to console so that the dogu client saves the credentials for the dogu which requested the service account. It is also important that these outputs are the only ones from the script, otherwise the dogu client will use them as credentials.
 
 Example output:
 
@@ -573,7 +573,7 @@ HealthChecks are used in various use cases:
 
 There are different types of health checks:
 
-- state, via the `/state/<dogu>` etcd key set by ces-setup
+- state, via the `/state/<dogu>` registry key set by ces-setup
 - tcp, to check for an open port
 - http, to check a status code of a http response
 
@@ -886,7 +886,7 @@ For Type "tcp" the given Port needs to be open to be healthy.
 
 For Type "http" the service needs to return a status code between >= 200 and < 300 to be healthy. Port and Path are used to reach the service.
 
-For Type "state" the /state/<dogu> key in the Cloudogu EcoSystem registry gets checked. This key is written by the installation process. A 'ready' value in etcd means that the dogu is healthy.
+For Type "state" the /state/<dogu> key in the Cloudogu EcoSystem registry gets checked. This key is written by the installation process. A 'ready' value in the CES-registry means that the dogu is healthy.
 
 ### State
 

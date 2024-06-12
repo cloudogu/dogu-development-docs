@@ -53,13 +53,15 @@ When building images, the following aspects should be considered:
   - e.g.: `HEALTHCHECK CMD doguctl healthy nexus || exit 1`
 - downloads (with curl/wget or similar) are checked with checksums/hashes
   - verifying downloaded artifacts increases the security of later builds in case an attacker replaced a file with malware
+- Dogu startup must be done via a fixed startup script (e.g. [`startup.sh`][startup-sh])
+  - Dogus do not accept external commands or parameters via the Docker CLI
 
 [rootless-container]: https://docs.docker.com/engine/security/rootless/
 [minimize-number-of-layers]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#minimize-the-number-of-layers
 [multistage-build]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#use-multi-stage-builds
 [container-tools]: https://github.com/cloudogu/base/blob/3466b5e95c25a6c5ac569069167e513c71815797/Dockerfile#L10
 [base-images]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L1
-[healthcheck]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L3
+[healthcheck]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L41
 [copy-statement]: https://github.com/cloudogu/sonar/blob/8e389605d1f2fa7720d725a1cca6692f4c6b77e3/Dockerfile#L33
 
 ## Resources folder & Dogu scripts
@@ -258,3 +260,77 @@ Now you can log in with your Cloudogu account via `cesapp login`.
 The Dogu can then be easily pushed to the Dogu registry using `cesapp push`.
 
 We recommend to perform these steps automatically in the CI/CD process for your production release branch.
+
+## Dogu checklist
+
+Use this checklist to determine if your Dogu meets all the requirements to be published.
+
+### Required components
+
+| Component                     | Description                                                                                                                               |
+|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| **[dogu.json][dogujson]**     |                                                                                                                                           |
+| Name                          | The dogu.json contains a Name field. See [Name][doguname]                                                                                 |
+| Version                       | The dogu.json contains a Version field. See [Version][doguversion]                                                                        |
+| Image                         | The dogu.json contains an Image field. See [Image][doguimage]                                                                             |
+| DisplayName                   | The dogu.json contains a DisplayName field. See [DisplayName][dogudisplayname]                                                            |
+| Description                   | The dogu.json contains a Description field. See [Description][dogudescription]                                                            |
+| Category                      | The dogu.json contains a Category field. See [Category][dogucategory]                                                                     |
+|                               |                                                                                                                                           |
+| **[Dockerfile][dockerfile]**  |                                                                                                                                           |
+| Healthcheck                   | The Dockerfile contains a healthcheck. See [HealthChecks][healthchecks]                                                                   |
+| MAINTAINER label              | The Dockerfile contains a label "MAINTAINER". See [Dockerfile][dockerfile]                                                                |
+|                               |                                                                                                                                           |
+| **Central Authentication**    |                                                                                                                                           |
+| Single Sign-On (SSO)          | The Dogu handles centralized login via SSO. See [authentication][authentication]                                                          |
+| Single Logout (SLO)           | The Dogu masters central logout via SLO. See [authentication][authentication]                                                             |
+|                               |                                                                                                                                           |
+| **Dogu behavior**             |                                                                                                                                           |
+| CES admin group replication   | CES admin group permissions are replicated to the Dogu. See [Admin group changeability][admingroup]                                       |
+| CES admin group changeability | If the CES admin group is changed, the Dogu adapts to it. See [Admin group changeability][admingroup]                                     |
+| CES FQDN changeability        | If the CES FQDN is changed, the Dogu adapts to it. See [Changeability of FQDN][fqdnchange]                                                |
+| Backup/Restore Capability     | All production data of the Dogus should be stored inside volumes for backup and restore. See [Backup & Restore Capability][backuprestore] |
+| Upgrade Capability            | Upgrade steps between Dogu versions are automated by script. See [Dogu upgrades][doguupgrades]                                            |
+| Memory Limits                 | The memory usage of the Dogu container can be set. See [Memory/swap limit][memorylimit]                                                   |
+| Logging behavior              | The amount and verbosity of log data can be set. See [Control logging behavior][logging]                                                  |
+
+
+### Recommended components
+
+| Component                          | Description                                                                                                                                               |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| startup.sh                         | A script is used to start the Dogu. See [startup.sh][startup_sh]                                                                                          |
+| changelog                          | Changes to the dogu are noted in the changelog. See [CHANGELOG.md][changelog_md]                                                                          |
+| Best Practices for Dogu containers | Best practices for container building are followed. See [container images][containerimages]                                                               |
+| Best Practices for scripts         | Best practices for scripts are followed. See [resources folder & dogu scripts][resourcesdir]                                                              |
+| container validation               | Finished containers are validated with `goss`. See [Container Validation][containervalidation]                                                            |
+| Documentation                      | All features and configuration options of Dogus are documented. See [documentation][documentation] and [Cloudogu documentation rules][documentationrules] |
+| Code Quality Assurance, Tests      | Code quality should be assured by various (automated) test, lint and review operations. See [quality assurance][qualitycontrol]                           |
+| Issue Tracking                     | Bugs and improvement suggestions should be able to be submitted and tracked. See [issue tracking][issuetracking]                                          |
+| Telemetry configurable             | If the Dogu collects telemetry data, this feature should be disengageable.                                                                                |
+
+[dockerfile]: ../core/basics_en.md#3-dockerfile
+[authentication]: ../important/relevant_functionalities_en.md#authentication
+[startup_sh]: ../important/relevant_functionalities_en.md#structure-and-best-practices-of-startupsh
+[changelog_md]: ../additional/interesting_aspects_en.md#changelog
+[admingroup]: ../important/relevant_functionalities_en.md#changeability-of-the-admin-group
+[dogujson]: ../core/basics_en.md#4-dogujson
+[doguname]: ../core/compendium_en.md#name-2
+[doguversion]: ../core/compendium_en.md#version
+[fqdnchange]: ../important/relevant_functionalities_en.md#changeability-of-the-fqdn
+[dogudisplayname]: ../core/compendium_en.md#displayname
+[doguimage]: ../core/compendium_en.md#image
+[dogudescription]: ../core/compendium_en.md#description-1
+[dogucategory]: ../core/compendium_en.md#category
+[healthchecks]: ../core/compendium_en.md#healthchecks
+[backuprestore]: ../important/relevant_functionalities_en.md#backup--restore-capability
+[doguupgrades]: ../important/relevant_functionalities_en.md#dogu-upgrades
+[memorylimit]: ../important/relevant_functionalities_en.md#memoryswap-limit
+[logging]: ../important/relevant_functionalities_en.md#controlling-the-logging-behavior
+[containerimages]: ../additional/interesting_aspects_en.md#container-images
+[resourcesdir]: ../additional/interesting_aspects_en.md#resources-folder--dogu-scripts
+[containervalidation]: ../additional/interesting_aspects_en.md#container-validation
+[documentation]: ../additional/interesting_aspects_en.md#documentation
+[documentationrules]: ../additional/internal_aspects_en.md#cloudogu-documentation-rulebook
+[qualitycontrol]: ../additional/internal_aspects_en.md#quality-assurance
+[issuetracking]: ../additional/internal_aspects_en.md#issue-tracking
