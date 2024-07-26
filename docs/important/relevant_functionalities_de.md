@@ -36,6 +36,21 @@ Das SSO des CAS reduziert diesen Prozess bei der Anmeldung bei weiteren Dogus de
 
 Weitere Informationen und eine genauere Abbildung vor, während und nach einer Authentifizierung bietet die [CAS-Dokumentation](https://apereo.github.io/cas/6.6.x/protocol/CAS-Protocol.html).
 
+**Eintrag für einen normalen CAS Client:**
+
+```json
+{
+  "ServiceAccounts": [
+    {
+      "Type": "cas",
+      "Params": [
+        "cas"
+      ]
+    }
+  ]
+}
+```
+
 ### OAuth-Protokoll
 
 CAS bietet OAuth/OIDC als Protokoll zur Authentifizierung samt SSO/SLO an. Im Folgenden wird die Spezifikation des OAuth 2.0 Protokolls in CAS beschrieben.
@@ -61,7 +76,7 @@ Dafür kann die Anforderung eines OAuth-spezifischen CAS-Service Accounts in der
 
 Die Credentials des Service Accounts werden zufällig generiert (siehe [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) und verschlüsselt in der Registry unter dem Pfad `/config/<dogu>/sa-cas/oauth` und `/config/<dogu>/sa-cas/oauth_client_secret` hinterlegt.
 
-Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusammen. Für den CAS wird das `CLIENT_SECRET` als Hash in der Cloudogu EcoSystem Registry unter dem Pfad `/config/cas/service_accounts/oauth/<CLIENT_ID>` abgelegt.
+Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusammen. Für den CAS wird das `CLIENT_SECRET` als Hash in der Cloudogu EcoSystem Registry unter dem Pfad `/config/cas/service_accounts/oauth/<CLIENT_ID>/secret` abgelegt.
 
 ### OAuth-Endpunkte und Ablauf der Authentifizierung
 
@@ -268,7 +283,7 @@ Dafür kann die Anforderung eines OIDC-spezifischen CAS-Service Accounts in der 
 
 Die Credentials des Service Accounts werden zufällig generiert (siehe [create-sa.sh](https://github.com/cloudogu/cas/blob/develop/resources/create-sa.sh)) und verschlüsselt in der Registry unter dem Pfad `/config/<dogu>/sa-cas/oidc` und `/config/<dogu>/sa-cas/oidc_client_secret` hinterlegt.
 
-Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusammen. Für den CAS wird das `CLIENT_SECRET` als Hash in der Cloudogu EcoSystem Registry unter dem Pfad `/config/cas/service_accounts/oidc/<CLIENT_ID>` abgelegt.
+Die Zugangsdaten setzen sich aus der `CLIENT_ID` und dem `CLIENT_SECRET` zusammen. Für den CAS wird das `CLIENT_SECRET` als Hash in der Cloudogu EcoSystem Registry unter dem Pfad `/config/cas/service_accounts/oidc/<CLIENT_ID>/secret` abgelegt.
 
 #### OIDC-Authorize-Endpunkt
 
