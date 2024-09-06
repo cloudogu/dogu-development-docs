@@ -1474,3 +1474,39 @@ rootLogLevel=$(doguctl config logging/root)
 If there is a need for additional Dogu-specific log levels, the Dogu log levels can be supplemented with additional keys (also under `/config/<doguname>/logging/`).
 Such log levels are very specific by their nature.
 Therefore, different rules may apply to the use of such specific keys.
+
+## Supported Communication Protocols
+
+In the Cloudogu EcoSystem, communication protocols play a key role in data exchange, bei it the connection between a user and a dogu, or a dogu to another dogu or another actively running service. The protocols being used strongly depend on each dogu. This chapter enumerates protocols that are supported and have been successfully tested. 
+
+Further information about troubleshooting network communication can be found in the [troubleshooting document](troubleshooting_en.md#troubleshooting-network-problems-in-a-dogu)
+
+### User-to-dogu communication
+
+There are two ways to make a connection from a user client to a dogu:
+
+1. the nginx reverse-proxy dogu
+   - generally, all network traffic from the user's web client to the target dogu is reverse-proxied by the nginx dogu
+   - nginx takes care of the TLS termination and the internal URL rewriting
+2. exposed dogu ports
+   - a dogu might also [expose its ports to the outside](../core/compendium_en.md#exposedports)
+   - the nginx dogu will not handle or re-route any requests made to this port
+   - generally speaking, this is a dangerous matter because the dogu must solve all security measures by itself
+     - f. i. authorization, SSO/SLO, request throttling, access logging, etc.
+
+Currently, these communication protocols have been successfully tested from outside into a Cloudogu EcoSystem:
+- via nginx:
+  - HTTP 1 and 2
+  - Websockets
+- via port exposing
+  - SSH
+
+### Dogu-to-dogu/xyz communication
+
+Of course, dogus can communicate with other dogus over the internal network, too! Usually this is done in an unsecured 
+fashion, i. e. HTTP (and not HTTPS).
+
+Currently, these communication protocols have been successfully tested from inside the Cloudogu EcoSystem:
+- HTTP 1 and 2
+- Websockets
+- gRPC

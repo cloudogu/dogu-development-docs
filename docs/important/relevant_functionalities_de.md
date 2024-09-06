@@ -1465,3 +1465,38 @@ rootLogLevel=$(doguctl config logging/root)
 Sollte der Bedarf für weitere, Dogu-spezifische Log-Levels bestehen, können diese mit zusätzlichen Schlüsseln erweitert werden (ebenfalls unter `/config/<doguname>/logging/`).
 Solche Log-Levels sind von ihrer Natur sehr spezifisch.
 Daher können andere Regeln für die Verwendung von solch spezifischen Keys gelten.
+
+## Unterstützte Kommunikationsprotokolle
+
+Im Cloudogu EcoSystem spielen Kommunikationsprotokolle eine Schlüsselrolle beim Datenaustausch, sei es die Verbindung zwischen einem Benutzer und einem Dogu, oder einem Dogu zu einem anderen Dogu (oder einem anderen aktiv laufenden Dienst). Welche Protokolle verwendet werden, hängt stark vom jeweiligen Dogu ab. In diesem Kapitel werden Protokolle aufgeführt, die unterstützt und erfolgreich getestet wurden.
+
+Weitere Informationen zur Fehlerbehebung bei der Netzwerkkommunikation befinden sich im [Troubleshooting-Dokument](troubleshooting_de.md#fehlerbehebung-bei-netzwerkproblemen-in-einem-dogu)
+
+### Benutzer-zu-Dogu-Kommunikation
+
+Es gibt zwei Möglichkeiten, eine Verbindung von einem Benutzer-Client zu einem Dogu herzustellen:
+
+1. das nginx-Reverse-Proxy-Dogu
+   - Im Allgemeinen wird der gesamte Netzwerkverkehr vom Web-Client des Benutzers zum Ziel-Dogu über das nginx-Dogu abgewickelt.
+   - nginx kümmert sich um die TLS-Terminierung und um das interne URL-Rewriting
+2. freigegebene Dogu-Ports
+   - ein Dogu kann auch [seine Ports nach außen freigeben](../core/compendium_de.md#exposedports)
+   - generell ist dies eine gefährliche Angelegenheit, da die dogu alle Sicherheitsmaßnahmen selbst lösen muss
+      - z. B. Autorisierung, SSO/SLO, Request-Throttling, Logs von Zugriffen, etc.
+
+Derzeit wurden diese Kommunikationsprotokolle erfolgreich von außen in ein Cloudogu EcoSystem getestet:
+- über nginx:
+   - HTTP 1 und 2
+   - Websockets
+- über Portfreigabe
+   - SSH
+
+### Dogu-zu-Dogu/xyz-Kommunikation
+
+Natürlich können Dogus auch über das interne Netzwerk mit anderen Dogus kommunizieren! Normalerweise geschieht dies auf eine ungesicherte
+Weise, d. h. über HTTP (und nicht HTTPS).
+
+Derzeit wurden diese Kommunikationsprotokolle erfolgreich innerhalb des Cloudogu EcoSystems getestet:
+- HTTP 1 und 2
+- Websockets
+- gRPC
