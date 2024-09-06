@@ -82,7 +82,7 @@ Beispiel:
 
 ### Encrypted
 
-Encrypted kennzeichnet dieses Konfigurationsfeld als einen sensiblen Wert, der mit dem privaten Schlüssel des Dogus
+Encrypted kennzeichnet dieses Konfigurationsfeld als einen sensiblen Wert, der mit dem öffentlichen Schlüssel des Dogus
 verschlüsselt wird. Dieses Feld ist optional. Wenn es nicht gesetzt ist, wird der Wert `false` angenommen.
 
 Beispiel:
