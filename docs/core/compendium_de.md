@@ -529,16 +529,15 @@ Dogu-Client mountet das Pre-Upgrade-Skript der neuen Dogu-Version in den Contain
 führt es aus. Es wird hauptsächlich zur Vorbereitung von Datenmigrationen (z. B. Export einer Datenbank) verwendet. Kern
 des Skriptes sollte der Vergleich zwischen den Versionen sein, um festzustellen, ob eine Migration notwendig ist. Dazu
 wird der Dogu-Client das Skript mit der alten Version als erstem und der neuen Version als zweitem Parameter aufrufen.
-Außerdem ist es empfehlenswert, einen Konfigurationsschlüssel wie „local_state“ im Skript auf „upgrading“ oder 
-„pre-upgrade done“ zu setzen. Dies kann sehr nützlich sein, da Sie diese Werte im Post-Upgrade oder beim regulären Start 
-für eine Wartefunktion verwenden können.
+Außerdem ist es empfehlenswert, im Skript Zustände wie "upgrade" oder "pre-upgrade done" zu setzen. Dies kann sehr
+nützlich sein, da Sie die Zustände im Post-Upgrade oder beim regulären Start für eine Wartefunktion verwenden können.
 
 post-upgrade: Dieser Befehl wird nach einem regulären Dogu-Upgrade ausgeführt. Wie beim Pre-Upgrade wird als erster
 Parameter die alte Dogu-Version und als zweiter Parameter die neue Dogu-Version übergeben. Die alte und neue Dogu-Version sollten verwendet
 werden, um festzustellen, ob eine Aktion erforderlich ist. Denken Sie daran, dass in dieser Zeit auch das reguläre
-Startskript Ihres neuen Containers ausgeführt wird. Verwenden Sie einen Konfigurationsschlüssel im Cloudogu EcoSystem-Registry, 
-um eine Wartefunktion beim Start zu handhaben. Wenn das Post-Upgrade endet, entfernen Sie diesen Konfigurationsschlüssel 
-und starten den regulären Container.
+Startskript Ihres neuen Containers ausgeführt wird. Verwenden Sie einen Zustand im Cloudogu EcoSystem-Registry, um eine
+Wartefunktion beim
+Start zu handhaben. Wenn das Post-Upgrade endet, setzen Sie diesen Status zurück und starten den regulären Container.
 
 upgrade-notification: Wenn der Upgrade-Prozess z.B. mit sehr sensiblen Daten arbeitet, kann ein
 Upgrade-Benachrichtigungsskript implementiert werden, um den Benutzer über das Risiko des Prozesses zu informieren
