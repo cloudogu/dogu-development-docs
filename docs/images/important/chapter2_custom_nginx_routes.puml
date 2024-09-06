@@ -1,0 +1,28 @@
+@startuml
+!define CLOUDOGUURL https://raw.githubusercontent.com/cloudogu/plantuml-cloudogu-sprites/master
+
+!includeurl CLOUDOGUURL/common.puml
+!includeurl CLOUDOGUURL/dogus/cloudogu.puml
+!includeurl CLOUDOGUURL/tools/docker.puml
+!includeurl CLOUDOGUURL/dogus/nginx.puml
+!define SECONDARY_COLOR #55EE55
+
+actor user
+
+Node "Cloudogu EcoSystem" as ces <<$cloudogu>> {
+    DOGU_NGINX(nginx, nginx) #white
+    rectangle my-dogu #white {
+        rectangle p8081 as "port 8081" #white
+        rectangle p8088 as "port 8088" #white
+    }
+
+}
+
+user --> nginx : "dials\nhttps://my-ces-instance/my-dogu"
+user ==> nginx #red: "dials\nhttps://my-ces-instance/urlx"
+nginx --> p8081 : "regular my-dogu route"
+nginx ==> p8088 #red: "additional urlx route"
+
+
+caption additional nginx route with help of the environment variable "SERVICE_ADDITIONAL_SERVICES"
+@enduml

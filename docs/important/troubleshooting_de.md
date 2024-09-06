@@ -162,3 +162,144 @@ In dem Fall ist ein Systemneustart notwendig.
 Bei längeren Offline-Zeiten des Cloudogu EcoSystem kann es notwendig sein, die Systemzeit neu zu synchronisieren:
 
 - `systemctl restart systemd-timesyncd.service`
+
+## Fehlerbehebung bei Netzwerkproblemen in einem Dogu
+
+Dieses Kapitel gibt Ideen, wie man Netzwerkprobleme in einem Dogu untersuchen kann. Weiterführende Informationen zum Thema Dogu-Kommunikation bietet zudem das über [relevante Funktionalitäten](relevant_functionalities_de.md#unterstützte-kommunikationsprotokolle) an.
+
+### Netzwerkverbindungen
+
+Wenn unklar ist, welche Verbindungen gerade möglich sind, helfen übliche Methoden und Werkzeuge wie diese:
+
+- Prüfen, ob der Container erfolgreich im Netzwerk angesiedelt ist
+  - z. B. im Classic-CES: `docker inspect $doguName`
+- Zugriffslogs des Containers prüfen
+  - evtl. auf ein ausreichend eingestellte Log-Level achten
+- Prüfen, ob der Netzwerkdienst auch tatsächlich läuft
+  - häufig dauert es eine Weile, bis die Anwendung tatsächlich den Port öffnet und/oder aktiv darauf Netzwerkverbindungen annimmt
+- ping
+  - der schnelle Klassiker unter den Verbindungsprüfungen
+  - allerdings verwendet Ping ein anderes Protokoll, als das was voraussichtlich verwendet werden soll
+- netstat
+  - Hilft bei der Frage, welche Verbindung zu welcher IP-Adresse und Port geöffnet ist.
+  - im Container:
+    ```bash
+      while true; do \
+        echo -n $(date '+%M:%S'); \
+        echo -n "  " ; \
+        netstat -an 2> /dev/null | grep $MY_EXPECTED_PORT ; \
+        sleep 1; \
+      done;
+    ```
+- nslookup/dig/`/etc/hosts`
+  - Hilft bei der Frage, auf ob und auf welche IP-Adresse sich die FQDN oder ein Dogu auflösen lässt.
+- wscat
+  - Hilft bei der Frage, ob sich eine Websocket-Verbindung herstellen lässt. 
+  ```bash
+    wscat -n -L -c "wss://fqdn/deineUrl/"
+    wscat -n -L -c "ws://dogu/deineDoguSpezifischeUrl/"
+  ```
+
+Wenn diese zuletzt genannten Werkzeute nicht im Container vorhanden sind, können sie ggf. über den jeweiligen Paketmanager (häufig `apk` oder `apt/apt-get`) nachträglich installiert werden, sofern eine Internetverbindung zu dem jeweiligen Paket-Repository möglich ist.
+
+### Spezielle nginx-Routen
+
+Bevor erklärt wird, wie spezielle nginx-Routen erzeugt werden können, muss die Erzeugung normaler nginx-Routen erklärt werden.
+Dieser Abschnitt ist daher in zwei größere Teile unterteilt:
+
+1. Wie werden normale nginx-Routen für Dogus erzeugt? 
+2. Wie lassen sich nginx-Routen für Dogus anpassen?
+
+#### Wie werden normale nginx-Routen für Dogus erzeugt?
+
+Wenn ein Dogu installiert wird, dessen `Dockerfile` einen Container-Port mittels `EXPOSE` exponiert, dann erzeugt das Cloudogu EcoSystem automatisch ein nginx-URL-Rewrite für dieses Dogus.
+
+Beispiel eines beliebigen Dogu-`Dockerfiles`. Die Datei [`dogu.json`](../core/compendium_de.md#type-dogu) spielt in diesem Beispiel keine Rolle, außer dass der Dogu-Name `my-dogu` lautet:
+
+```Dockerfile
+FROM registry.cloudogu.com/official/base:3.17.1-1
+...
+EXPOSE 8081
+CMD ["/resources/startup.sh"]
+```
+
+Wenn das Dogu basierend auf diesem Dockerfile installiert wird, entsteht automatisch ein neuer nginx-Konfigurationseintrag. Das bedeutet, es kann grundsätzlich `https://my-ces-instance/my-dogu` als URL angewählt werden. <!-- markdown-link-check-disable-line -->
+
+Die Qualität dieses Konfigurationseintrags hängt allerdings von dem [Health-Zustand](../core/compendium_de.md#healthchecks) des Dogus ab. Wenn das Dogu noch nicht _healthy_, also noch nicht betriebsbereit ist, wird dies erkannt und eine Meldung "Dogu is starting" mit dem HTTP-Status 503 wird ausgegeben. Die dazugehörige nginx-Konfiguration dazu etwa so aus:
+
+```
+server {
+...
+    location /my-dogu {                               
+        error_page 503 /errors/starting.html;
+        return 503     
+    }
+...
+}
+```
+
+Wenn das Dogu jedoch vollumfänglich betriebsbereit und damit _healthy_ ist, wird dies erkannt und die dazugehörige nginx-Konfiguration so umgeschrieben, dass die Anfrage an den Dogu-Container weitergeleitet wird. Die dazugehörige nginx-Konfiguration dazu etwa so aus:
+
+```
+server {
+...
+    location /my-dogu {                               
+        proxy_pass http://172.18.0.8:8081;     
+    }
+...
+}
+```
+
+#### Wie lassen sich nginx-Routen für Dogus anpassen?
+
+> [!CAUTION]
+> Angepasste Routen können für Verwirrung sorgen. Sie sollten nur sparsam eingesetzt werden.
+
+Nun sollte klar sein, welches Routing erzeugt wird, wenn man in einem Dogu ein herkömmliches `Dockerfile` einsetzt.
+
+Abhängig von der Applikation im Dogu, kann die erzeugte URL `https://my-ces-instance/my-dogu` vielleicht nicht ausreichen. In komplexeren Szenarien ist es unter Umständen nötig, weitere URLs zu erzeugen. <!-- markdown-link-check-disable-line -->
+
+Die Eigenschaften der Dogu-Einträge in der nginx-Konfiguration lassen sich durch Umgebungsvariablen im `Dockerfile` anpassen und sogar um neue Einträge erweitern:
+
+Quelle: [gliderlabs/registrator Docs](https://github.com/gliderlabs/registrator/blob/master/docs/user/services.md)
+
+| Umgebungsvariable             | Wert                                                                            | Ergebnis                                               |
+|-------------------------------|---------------------------------------------------------------------------------|--------------------------------------------------------|
+| `SERVICE_TAGS`                | `webapp`                                                                        | ordnet dem Dogu eine neue URL zu                       |
+| `SERVICE_NAME`                | `neuerServiceName`                                                              | ordnet dem Dogu eine neue URL zu                       |
+| `SERVICE_<port>_NAME`         | `neuerServiceName`                                                              | ordnet nur für Port `<port>` dem Dogu eine neue URL zu |
+| `SERVICE_ADDITIONAL_SERVICES` | `[{"name": "eindeutiger-bezeichner", "location": "urlx", "pass": "/neue-url"}]` | erzeugt einen neuen `location`-Eintrag                 |
+| `SERVICE_IGNORE`              | `true`                                                                          | erzeugt für das Dogu keine URL                         |
+| `SERVICE_<port>_IGNORE`       | `true`                                                                          | erzeugt nur für Port `<port>` keine URL                |
+
+In diesem Kontext ist die Umgebungsvariable `SERVICE_ADDITIONAL_SERVICES` interessant, denn damit lassen sich umfangreiche Anpassungen an dem neuen nginx-Service vornehmen. Angenommen das `Dockerfile` aus dem vorigen Abschnitt wird um einen zweiten `EXPOSE`-Eintrag erweitert, weil das Dogu nun zwei Ports bedienen kann:
+
+Beispiel: Angepasstes `Dockerfile`:
+```Dockerfile
+FROM registry.cloudogu.com/official/base:3.17.1-1
+ENV SERVICE_ADDITIONAL_SERVICES='[{"name": "my-dogu-speziallfall", "port:8088", "location": "alte-url", "pass": "/neue-url"}]'
+...
+EXPOSE 8081
+EXPOSE 8088
+CMD ["/resources/startup.sh"]
+```
+
+Beispiel einer resultierenden nginx-Konfiguration:
+```
+server {
+...
+    location /urlx {
+        proxy_pass http://172.18.0.8:8088/neue-url;
+    }
+    location /my-dogu {                               
+        proxy_pass http://172.18.0.8:8081;     
+    }
+...
+}
+```
+
+![](../images/important/chapter2_custom_nginx_routes.png "Visualisierung wie zwei unterschiedliche URLs beim gleichen Dogu aber in unterschiedlichen Ports enden")
+
+Wenn nun ein Client die URL `https://my-ces-instance/urlx` aufruft, so wird der Request intern auf http://172.18.0.8:8088/neue-url umgeschrieben, das in diesem Beispiel das gleiche Dogu aber mit einem anderen Port darstellt. Die ursprüngliche URL https://my-ces-instance/my-dogu landet wie bisher im gleichen Container-Port. <!-- markdown-link-check-disable-line -->
+
+Zusammenfassend ist dies ist ein mächtiger Mechanismus, um unterschiedliche Routings zu erzeugen.
