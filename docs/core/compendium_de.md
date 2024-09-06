@@ -225,7 +225,7 @@ Beispiel:
 
 - "<=0.0.0" - verbietet, dass die ausgewählte Entität vorhanden ist
 
-## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L510-L951>)
+## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L544-L989>)
 
 Dogu beschreibt die Eigenschaften einer containerisierten Anwendung für das Cloudogu EcoSystem. Neben den
 Meta-Informationen und dem [OCI Container Image](https://opencontainers.org/) beschreibt das Dogu alle Notwendigkeiten
@@ -242,7 +242,7 @@ Ein Beispiel:
  "Category": "Development Apps",
  "Tags": ["warp"],
  "Url": "https://www.company.com/newdogu",
- "Image": "registry.cloudogu.com/official/newdogu",
+ "Image": "registry.cloudogu.com/namespace/newdogu",
  "Dependencies": [
    {
      "type":"dogu",
@@ -535,7 +535,7 @@ nützlich sein, da Sie die Zustände im Post-Upgrade oder beim regulären Start 
 post-upgrade: Dieser Befehl wird nach einem regulären Dogu-Upgrade ausgeführt. Wie beim Pre-Upgrade wird als erster
 Parameter die alte Dogu-Version und als zweiter Parameter die neue Dogu-Version übergeben. Die alte und neue Dogu-Version sollten verwendet
 werden, um festzustellen, ob eine Aktion erforderlich ist. Denken Sie daran, dass in dieser Zeit auch das reguläre
-Startskript Ihres neuen Containers ausgeführt wird. Verwenden Sie einen Zustand im Cloudogu EcoSystem-Registry, um eine
+Startskript Ihres neuen Containers ausgeführt wird. Verwenden Sie einen Zustand im etcd, um eine
 Wartefunktion beim
 Start zu handhaben. Wenn das Post-Upgrade endet, setzen Sie diesen Status zurück und starten den regulären Container.
 
@@ -553,8 +553,7 @@ installiert wird und einen Service-Account benötigt (z. B. für postgresql), ru
 service-account-create Skript in dem Dogu, für das der Service-Account benötigt wird, (z.B. postgresql) mit dem Servicenamen als ersten Parameter und benutzerdefinierten
 Parametern als zusätzliche Parameter auf (siehe [core.ServiceAccount](#type-serviceaccount) für die Definition von
 benutzerdefinierten Parametern). Mit diesen Informationen sollte das Skript einen Service-Account erstellen und speichern (
-z. B. in der Tabelle USER in einer zugrunde liegenden Datenbank oder vielleicht verschlüsselt in der Cloudogu
-EcoSystem-Registry). Danach
+z. B. in der Tabelle USER in einer zugrunde liegenden Datenbank oder vielleicht verschlüsselt im etcd). Danach
 müssen
 die Anmeldedaten auf der Konsole ausgegeben werden, damit der Dogu-Client die Anmeldedaten für das Dogu speichert, das
 den Service-Account angefordert hat. Es ist auch wichtig, dass diese Ausgaben die einzigen des Skripts sind, da der
@@ -616,8 +615,11 @@ Beispiel:
 Volumes enthält eine Liste von [Volume](#type-volume), die [OCI container volumes](https://opencontainers.org/)
 definiert. Dieses Feld ist optional.
 
-Volumes werden während der Erstellung oder des Upgrades eines Dogus erstellt. Volumes bieten eine Leistungssteigerung im
-Vergleich zum Container-Speicher.
+Alle dynamischen Daten einer dogu sollten in Volumes gespeichert werden. Dies hat mehrere Vorteile:
+
+- Die Daten in den Volumes gehen nicht verloren, wenn das Dogu aktualisiert wird.
+- Die Daten in den Volumes können gesichert und wiederhergestellt werden. Siehe Flag [NeedsBackup].
+- Der Zugriff auf Daten, die in Volumes gespeichert sind, ist viel schneller als der Zugriff auf Daten, die innerhalb des dogu-Containers gespeichert sind.
 
 Beispiele:
 
@@ -707,7 +709,7 @@ Beispiele:
 Privileged gibt an, ob der Docker-Socket in das Container-Dateisystem eingehängt werden soll. Dieses Feld ist optional.
 Der Standardwert ist `false`.
 
-Aus Sicherheitsgründen wird sehr empfohlen, Privileged auf false zu setzen, da regulär kein Dogu Zugriffe auf das Container-System erhalten sollte.
+Aus Sicherheitsgründen wird sehr empfohlen, Privileged auf false zu setzen, da regulär keine Dogu-Zugriffe auf das Container-System erhalten sollte.
 
 Beispiel:
 
@@ -823,7 +825,7 @@ Beispiele:
 ]
 ```
 
-## type [DoguJsonV2FormatProvider](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L1177>)
+## type [DoguJsonV2FormatProvider](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L1215>)
 
 DoguJsonV2FormatProvider bietet Methoden, um Dogus kompatibel zur v2 API zu formatieren.
 
@@ -979,7 +981,7 @@ Bei Typ "tcp" muss der angegebene Port offen sein, um als healthy zu gelten.
 Bei Typ "http" muss der Dienst einen Statuscode zwischen >= 200 und < 300 zurückgeben, um als healthy zu gelten.
 Port und Pfad werden verwendet, um den Dienst zu erreichen.
 
-Für den Typ "state" wird der Schlüssel /state/<dogu> in der Cloudogu EcoSystem-Registry überprüft. Dieser Schlüssel
+Für den Typ "state" wird der Schlüssel /state/<dogu> im etcd überprüft. Dieser Schlüssel
 wird durch den Installationsprozess geschrieben. Ein 'ready'-Wert in der Registry bedeutet, dass das Dogu healthy ist.
 
 ### State
