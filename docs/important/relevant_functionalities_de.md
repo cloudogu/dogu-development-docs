@@ -34,7 +34,7 @@ Eine grobe Übersicht über den Anmeldeprozess mit den Beteiligten bietet die fo
 
 Das SSO des CAS reduziert diesen Prozess bei der Anmeldung bei weiteren Dogus deutlich.
 
-Weitere Informationen und eine genauere Abbildung vor, während und nach einer Authentifizierung bietet die [CAS-Dokumentation](https://apereo.github.io/cas/6.6.x/protocol/CAS-Protocol.html).
+Weitere Informationen und eine genauere Abbildung vor, während und nach einer Authentifizierung bietet die [CAS-Dokumentation](https://apereo.github.io/cas/7.0.x/protocol/CAS-Protocol.html).
 
 **Eintrag für einen normalen CAS Client:**
 

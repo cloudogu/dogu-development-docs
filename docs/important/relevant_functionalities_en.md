@@ -37,7 +37,7 @@ The following figure provides a rough overview of the login process with the par
 The SSO of the CAS significantly reduces this process when logging in to additional dogus.
 
 For more information and a more detailed illustration before, during and after an authentication, see
-the [CAS documentation](https://apereo.github.io/cas/6.6.x/protocol/CAS-Protocol.html).
+the [CAS documentation](https://apereo.github.io/cas/7.0.x/protocol/CAS-Protocol.html).
 
 **entry for a normal CAS client:**
 
