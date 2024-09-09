@@ -16,7 +16,7 @@ The basis for CAS is always a correct configuration of a user/group directory, b
 
 ### CAS protocol
 
-Authentication within the Cloudogu EcoSystem is done using the [CAS protocol](https://apereo.github.io/cas/6.6.x/protocol/CAS-Protocol.html), which enables single sign-on and single log-out. Different CAS protocol versions are supported (2.0 and 3.0). When implementing using CAS protocol, it is recommended to use version 3.0 because (compared to version 2.0) it can return important user attributes after a successful authentication.
+Authentication within the Cloudogu EcoSystem is done using the [CAS protocol](https://apereo.github.io/cas/7.0.x/protocol/CAS-Protocol.html), which enables single sign-on and single log-out. Different CAS protocol versions are supported (2.0 and 3.0). When implementing using CAS protocol, it is recommended to use version 3.0 because (compared to version 2.0) it can return important user attributes after a successful authentication.
 
 The following diagram shows the parties involved in the authentication configuration. Before a dogu (here using Redmine as an example) can participate in this process, the dogu must internally configure a set of CAS URLs:
 
