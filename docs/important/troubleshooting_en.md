@@ -255,7 +255,12 @@ server {
 > [!CAUTION]
 > Customized routes can cause confusion. They should only be used sparingly.
 
+> [!CAUTION]
+> Faulty nginx configuration entries can disrupt entire parts of the Cloudogu EcoSystem if they overlap.
+
 It should now be clear which routing is generated when a conventional `Dockerfile` is used in a Dogu.
+
+##### Automation through Dockerfile environment variables
 
 Depending on the application in the dogu, the generated URL `https://my-ces-instance/my-dogu` may not be sufficient. In more complex scenarios, it may be necessary to generate additional URLs. <!-- markdown-link-check-disable-line -->
 
@@ -303,3 +308,29 @@ server {
 If a client now calls the URL `https://my-ces-instance/urlx`, the request is internally rewritten to http://172.18.0.8:8088/neue-url, which in this example represents the same dogu but with a different port. The original URL https://my-ces-instance/my-dogu ends up in the same container port as before. <!-- markdown-link-check-disable-line -->
 
 In summary, this is a powerful mechanism for creating different routings.
+
+##### Modify entries manually
+
+In complex scenarios, the repeated rebuilding of Dogu container images can slow down the development cycle. The same applies if it is not yet clear exactly which route is required.
+
+Manual editing of the nginx configuration, which is responsible for the Dogu routes, can help here.
+
+Editing can be achieved using Docker and container on-board resources.
+
+```bash
+# Edit file as desired
+docker exec -it nginx vi /var/nginx/conf.d/app.conf
+
+# Re-import nginx configuration
+docker exec -it nginx nginx -s reload -c /etc/nginx/nginx.conf
+```
+
+> [!IMPORTANT]
+> However, this change only lasts until the file is not re-rendered.
+
+This usually happens when:
+- new Dogus are installed (new `location` entries must be added)
+- existing Dogus are uninstalled (entries must be removed)
+- Dogus is restarted (the relevant `location` entry is rewritten to an HTTP 503 page)
+
+If this is not sufficient, a separate file can also be stored in the container file system, which is only removed when the container is recreated. This should be any `*.conf` file in the nginx configuration format in the directory `/var/nginx/conf.d/app.conf/`.

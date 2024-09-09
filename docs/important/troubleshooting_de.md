@@ -255,7 +255,12 @@ server {
 > [!CAUTION]
 > Angepasste Routen können für Verwirrung sorgen. Sie sollten nur sparsam eingesetzt werden.
 
+> [!CAUTION]
+> Fehlerhafte nginx-Konfigurationseinträge können bei Überlappung ganze Teile des Cloudogu EcoSystems stören. 
+
 Nun sollte klar sein, welches Routing erzeugt wird, wenn man in einem Dogu ein herkömmliches `Dockerfile` einsetzt.
+
+##### Automatisierung durch Dockerfile-Umgebungsvariablen
 
 Abhängig von der Applikation im Dogu, kann die erzeugte URL `https://my-ces-instance/my-dogu` vielleicht nicht ausreichen. In komplexeren Szenarien ist es unter Umständen nötig, weitere URLs zu erzeugen. <!-- markdown-link-check-disable-line -->
 
@@ -303,3 +308,29 @@ server {
 Wenn nun ein Client die URL `https://my-ces-instance/urlx` aufruft, so wird der Request intern auf http://172.18.0.8:8088/neue-url umgeschrieben, das in diesem Beispiel das gleiche Dogu aber mit einem anderen Port darstellt. Die ursprüngliche URL https://my-ces-instance/my-dogu landet wie bisher im gleichen Container-Port. <!-- markdown-link-check-disable-line -->
 
 Zusammenfassend ist dies ist ein mächtiger Mechanismus, um unterschiedliche Routings zu erzeugen.
+
+##### Manuell Einträge modifizieren
+
+In komplexen Szenarien kann das wiederholte Neubauen von Dogu-Container-Images den Entwicklungszyklus verlangsamen. Gleiches gilt, wenn noch nicht klar ist, welche Route genau benötigt wird.
+
+Hier kann eine manuelle Bearbeitung der nginx-Konfiguration helfen, die für die Dogu-Routen zuständig ist.
+
+Die Bearbeitung lässt sich mit Docker- und Container-Bordmitteln erreichen.
+
+```bash
+# Datei wie gewünscht bearbeiten
+docker exec -it nginx vi /var/nginx/conf.d/app.conf
+
+# nginx-Konfiguration neu einlesen lassen
+docker exec -it nginx nginx -s reload -c /etc/nginx/nginx.conf
+```
+
+> [!IMPORTANT]
+> Diese Änderung hält aber nur solange bis die Datei nicht neu gerendert wird.
+
+Dies passiert i. d. R. wenn:
+- neue Dogus installiert werden (neue `location`-Einträge müssen hinzukommen)
+- bestehende Dogus deinstalliert werden (Einträge müssen entfernt werden)
+- Dogus neustarten (der betreffende `location`-Eintrag wird auf eine HTTP 503-Seite umgeschrieben)
+
+Sollte dies nicht ausreichen, so lässt sich auch eine eigene Datei im Container-Dateisystem ablegen, die nur dann entfernt wird, wenn der Container neu erzeugt wird. Dies sollte eine beliebige `*.conf`-Datei im nginx-Konfigurationsformat im Verzeichnis `/var/nginx/conf.d/app.conf/` sein.
