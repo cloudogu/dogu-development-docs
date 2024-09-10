@@ -212,7 +212,7 @@ Dieser Abschnitt ist daher in zwei größere Teile unterteilt:
 
 #### Wie werden normale nginx-Routen für Dogus erzeugt?
 
-Wenn ein Dogu installiert wird, dessen `Dockerfile` einen Container-Port mittels `EXPOSE` exponiert, dann erzeugt das Cloudogu EcoSystem automatisch ein nginx-URL-Rewrite für dieses Dogus.
+Wenn ein Dogu installiert wird, dessen `Dockerfile` einen Container-Port mittels `EXPOSE` öffnet, dann erzeugt das Cloudogu EcoSystem automatisch ein nginx-URL-Rewrite für dieses Dogus.
 
 Beispiel eines beliebigen Dogu-`Dockerfiles`. Die Datei [`dogu.json`](../core/compendium_de.md#type-dogu) spielt in diesem Beispiel keine Rolle, außer dass der Dogu-Name `my-dogu` lautet:
 

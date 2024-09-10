@@ -212,7 +212,7 @@ This section is therefore divided into two larger parts:
 
 #### How are normal nginx routes created for Dogus?
 
-When a Dogu is installed whose `Dockerfile` exposes a container port via `EXPOSE`, the Cloudogu EcoSystem automatically generates an nginx URL rewrite for this Dogus.
+When a Dogu is installed whose `Dockerfile` opens a container port via `EXPOSE`, the Cloudogu EcoSystem automatically generates an nginx URL rewrite for this Dogus.
 
 Example of any Dogu `Dockerfile`. The file [`dogu.json`](../core/compendium_en.md#type-dogu) plays no role in this example, except that the Dogu name is `my-dogu`:
 
