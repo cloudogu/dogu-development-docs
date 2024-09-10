@@ -16,7 +16,7 @@ The basis for CAS is always a correct configuration of a user/group directory, b
 
 ### CAS protocol
 
-Authentication within the Cloudogu EcoSystem is done using the [CAS protocol](https://apereo.github.io/cas/6.6.x/protocol/CAS-Protocol.html), which enables single sign-on and single log-out. Different CAS protocol versions are supported (2.0 and 3.0). When implementing using CAS protocol, it is recommended to use version 3.0 because (compared to version 2.0) it can return important user attributes after a successful authentication.
+Authentication within the Cloudogu EcoSystem is done using the [CAS protocol](https://apereo.github.io/cas/7.0.x/protocol/CAS-Protocol.html), which enables single sign-on and single log-out. Different CAS protocol versions are supported (2.0 and 3.0). When implementing using CAS protocol, it is recommended to use version 3.0 because (compared to version 2.0) it can return important user attributes after a successful authentication.
 
 The following diagram shows the parties involved in the authentication configuration. Before a dogu (here using Redmine as an example) can participate in this process, the dogu must internally configure a set of CAS URLs:
 
@@ -37,7 +37,7 @@ The following figure provides a rough overview of the login process with the par
 The SSO of the CAS significantly reduces this process when logging in to additional dogus.
 
 For more information and a more detailed illustration before, during and after an authentication, see
-the [CAS documentation](https://apereo.github.io/cas/6.6.x/protocol/CAS-Protocol.html).
+the [CAS documentation](https://apereo.github.io/cas/7.0.x/protocol/CAS-Protocol.html).
 
 **entry for a normal CAS client:**
 
@@ -1474,3 +1474,39 @@ rootLogLevel=$(doguctl config logging/root)
 If there is a need for additional Dogu-specific log levels, the Dogu log levels can be supplemented with additional keys (also under `/config/<doguname>/logging/`).
 Such log levels are very specific by their nature.
 Therefore, different rules may apply to the use of such specific keys.
+
+## Supported Communication Protocols
+
+In the Cloudogu EcoSystem, communication protocols play a key role in data exchange, bei it the connection between a user and a dogu, or a dogu to another dogu or another actively running service. The protocols being used strongly depend on each dogu. This chapter enumerates protocols that are supported and have been successfully tested. 
+
+Further information about troubleshooting network communication can be found in the [troubleshooting document](troubleshooting_en.md#troubleshooting-network-problems-in-a-dogu)
+
+### User-to-dogu communication
+
+There are two ways to make a connection from a user client to a dogu:
+
+1. the nginx reverse-proxy dogu
+   - generally, all network traffic from the user's web client to the target dogu is reverse-proxied by the nginx dogu
+   - nginx takes care of the TLS termination and the internal URL rewriting
+2. exposed dogu ports
+   - a dogu might also [expose its ports to the outside](../core/compendium_en.md#exposedports)
+   - the nginx dogu will not handle or re-route any requests made to this port
+   - generally speaking, this is a dangerous matter because the dogu must solve all security measures by itself
+     - f. i. authorization, SSO/SLO, request throttling, access logging, etc.
+
+Currently, these communication protocols have been successfully tested from outside into a Cloudogu EcoSystem:
+- via nginx:
+  - HTTP 1 and 2
+  - Websockets
+- via port exposing
+  - SSH
+
+### Dogu-to-dogu/xyz communication
+
+Of course, dogus can communicate with other dogus over the internal network, too! Usually this is done in an unsecured 
+fashion, i. e. HTTP (and not HTTPS).
+
+Currently, these communication protocols have been successfully tested from inside the Cloudogu EcoSystem:
+- HTTP 1 and 2
+- Websockets
+- gRPC

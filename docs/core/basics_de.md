@@ -85,7 +85,7 @@ Daher muss ein Container-Image erzeugt werden, das dann zu einem Container insta
     - Go-Templating
     - Health-Checks
 - Wenn das Dogu eine Web-Anwendung ist, ist die Zeile `ENV SERVICE_TAGS=webapp` notwendig.
-  Dies führt dazu, dass der Reverse-Proxy das Routing zu dem neuen Dogu registriert.
+  Dies führt dazu, dass der Reverse-Proxy das Routing zu dem neuen Dogu registriert. Weitere Informationen zu `SERVICE_x`-Umgebungsvariablen bietet das [Troubleshooting-Dokument](../important/troubleshooting_de.md#wie-lassen-sich-nginx-routen-für-dogus-anpassen).
 - Kopieren Sie Ihre Ressourcen in das Dogu, falls erforderlich.
 - Das Label `MAINTAINER` dient zur schnelleren Kommunikation bei Supportfällen.
 

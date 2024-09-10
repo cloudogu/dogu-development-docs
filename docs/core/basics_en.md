@@ -85,7 +85,7 @@ Therefore, a container image must be created, which is then instantiated into a 
       - Go-templating
       - Health checks
 - If the Dogu is a web application, the line `ENV SERVICE_TAGS=webapp` is necessary.
-  This causes the reverse proxy to register the routing to the dogu.
+  This causes the reverse proxy to register the routing to the dogu. Further information on `SERVICE_x` environment variables can be found in the [Troubleshooting document](../important/troubleshooting_en.md#how-to-customize-nginx-routes-for-dogus).
 - Copy your resources into the Dogu if necessary.
 - The label `MAINTAINER` is used for faster communication in support cases.
 
