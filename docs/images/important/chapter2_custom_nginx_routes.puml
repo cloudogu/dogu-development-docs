@@ -18,11 +18,11 @@ Node "Cloudogu EcoSystem" as ces <<$cloudogu>> {
 
 }
 
-user --> nginx : "dials\nhttps://my-ces-instance/my-dogu"
-user ==> nginx #red: "dials\nhttps://my-ces-instance/urlx"
+user -l----> nginx : "dials https://my-ces-instance/my-dogu"
+user =l=====> nginx #red: "dials https://my-ces-instance/urlx"
 nginx --> p8081 : "regular my-dogu route"
 nginx ==> p8088 #red: "additional urlx route"
 
 
-caption additional nginx route with help of the environment variable "SERVICE_ADDITIONAL_SERVICES"
+caption Additional nginx route with help of the environment variable "SERVICE_ADDITIONAL_SERVICES"
 @enduml
