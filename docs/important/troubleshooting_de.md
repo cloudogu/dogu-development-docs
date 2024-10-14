@@ -273,6 +273,7 @@ Quelle: [gliderlabs/registrator Docs](https://github.com/gliderlabs/registrator/
 | `SERVICE_TAGS`                | `webapp`                                                                        | ordnet dem Dogu eine neue URL zu                       |
 | `SERVICE_NAME`                | `neuerServiceName`                                                              | ordnet dem Dogu eine neue URL zu                       |
 | `SERVICE_<port>_NAME`         | `neuerServiceName`                                                              | ordnet nur für Port `<port>` dem Dogu eine neue URL zu |
+| `SERVICE_<port>_TAGS`         | `webapp`                                                                        | ordnet nur für Port `<port>` dem Dogu Tags zu |
 | `SERVICE_ADDITIONAL_SERVICES` | `[{"name": "eindeutiger-bezeichner", "location": "urlx", "pass": "/neue-url"}]` | erzeugt einen neuen `location`-Eintrag                 |
 | `SERVICE_IGNORE`              | `true`                                                                          | erzeugt für das Dogu keine URL                         |
 | `SERVICE_<port>_IGNORE`       | `true`                                                                          | erzeugt nur für Port `<port>` keine URL                |

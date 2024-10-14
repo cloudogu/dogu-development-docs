@@ -273,6 +273,7 @@ Source: [gliderlabs/registrator Docs](https://github.com/gliderlabs/registrator/
 | `SERVICE_TAGS` | `webapp` | assigns a new URL to the dogu |
 | `SERVICE_NAME` | `newServiceName` | assigns a new URL to the dogu |
 | `SERVICE_<port>_NAME` | `newServiceName` | assigns a new URL to the dogu for port `<port>` only |
+| `SERVICE_<port>_TAGS` | `webapp` | assigns tags for port `<port>` only |
 | `SERVICE_ADDITIONAL_SERVICES` | `[{"name": "unique-identifier", "location": "urlx", "pass": "/new-url"}]` | creates a new `location` entry |
 | `SERVICE_IGNORE` | `true` | does not create a URL for the dogu |
 | `SERVICE_<port>_IGNORE` | `true` | creates no URL for port `<port>` only |
