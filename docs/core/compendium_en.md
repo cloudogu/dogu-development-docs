@@ -213,7 +213,7 @@ Example:
 
 - "<=0.0.0" - prohibit the selected entity being present
 
-## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L544-L985>)
+## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L544-L989>)
 
 Dogu describes properties of a containerized application for the Cloudogu EcoSystem. Besides the meta information and the [OCI container image](https://opencontainers.org/), Dogu describes all necessities for automatic container instantiation, f. i. volumes, dependencies towards other dogus, and much more.
 
@@ -228,7 +228,7 @@ Example:
  "Category": "Development Apps",
  "Tags": ["warp"],
  "Url": "https://www.company.com/newdogu",
- "Image": "registry.cloudogu.com/official/newdogu",
+ "Image": "registry.cloudogu.com/namespace/newdogu",
  "Dependencies": [
    {
      "type":"dogu",
@@ -303,7 +303,7 @@ type Dogu struct {
 
 Name contains the dogu's full qualified name which consists of the dogu namespace and the dogu simple name, delimited by a single forward slash "/". This field is mandatory.
 
-The dogu namespace allows to regulate access to dogus in that namespace. There are three reserved dogu namespaces: The namespaces `official` and `k8s` are open to all users without any further costs. In contrast, the `premium` namespace is open to subscription users only.
+The dogu namespace allows to regulate access to dogus in that namespace. There are three reserved dogu namespaces: The namespaces `official` and `k8s` are open to all users without any further costs. In contrast to that is the namespace `premium` is open to subscription users, only.
 
 The namespace syntax is encouraged to consist of:
 
@@ -321,7 +321,7 @@ The simple name syntax must be an DNS-compatible identifier and is encouraged to
 - ciphers 0-9
 - an overall length of less than 20 characters
 
-It is recommended to use the same full qualified dogu name within the dogu's Dockerfile as a label named `NAME`.
+It is recommended to use the same full qualified dogu name within the dogu's Dockerfile as environment variable `NAME`.
 
 Examples:
 
@@ -360,17 +360,17 @@ DisplayName is the name of the dogu which is used in UI frontends to represent t
 
 Usages: In the setup of the ecosystem the display name of the dogu is used to select it for installation.
 
-the display name is used in the warp menu to let the user navigate to the web ui of the dogu.
+The display name is used in the warp menu to let the user navigate to the web ui of the dogu.
 
 Another usage is the textual output of tools like the cesapp or the k8s-dogu-operator where the name is used in commands like list upgradeable dogus.
 
-The description may consist of:
+The display name may consist of:
 
 - lower and upper case latin characters where the first is upper case
 - any special characters
 - ciphers 0-9
 
-Description is encouraged to consist of less than 30 characters because it is displayed in the Cloudogu EcoSystem warp menu.
+DisplayName is encouraged to consist of less than 30 characters because it is displayed in the Cloudogu EcoSystem warp menu.
 
 Examples:
 
@@ -436,7 +436,7 @@ Logo represents a URI to a web picture depicting the dogu tool. This field is op
 Deprecated: The Cloudogu EcoSystem does not facilitate the logo URI. It is a candidate for removal. Other options of representing a tool or application can be:
 
 - embed the logo in the dogu's Git repository (if public)
-- provide the logo in the dogu UI (if the dogu provides one)
+- provide the logo in to dogu UI (if the dogu provides one)
 
 ### URL
 
@@ -481,11 +481,11 @@ Usually, commands which are automatically triggered by a dogu-client are those i
 
 pre-upgrade: This command will be executed during an early stage of an upgrade process from a dogu. A dogu client will mount the pre-upgrade script from the new dogu version in the container of the old still running dogu and executes it. It is mainly used to prepare data migrations (e.g. export a database). Core of the script should be the comparison between the version and to determine if a migration is needed. For this, the dogu client will call the script with the old version as the first and the new version as the second parameter. In addition, it is recommended to set states like "upgrading" or "pre-upgrade done" in the script. This can be very useful because you can use it in the post-upgrade or the regular startup for a waiting functionality.
 
-post-upgrade: This command will be executed after a regular dogu upgrade. Like in the pre-upgrade the old dogu version is passed as the first and the new dogu version is passed as the second parameter. They should be used to determine if an action is needed. Keep in mind that in this time the regular startup script of your new container will be executed as well. Use a state in the CES-registry to handle a wait functionality in the startup. If the post-upgrade ends reset this state and start the regular container.
+post-upgrade: This command will be executed after a regular dogu upgrade. Like in the pre-upgrade the old dogu version is passed as the first and the new dogu version is passed as the second parameter. They should be used to determine if an action is needed. Keep in mind that in this time the regular startup script of your new container will be executed as well. Use a state in the etcd to handle a wait functionality in the startup. If the post-upgrade ends reset this state and start the regular container.
 
 upgrade-notification: If the upgrade process works, e.g. with really sensitive data an upgrade notification script can be implemented to inform the user about the risk of this process and e.g. give a backup instruction. Before an upgrade the dogu client executes the notification script, prints all upgrade steps and asks the user if he wants to proceed.
 
-service-account-create: The service-account-create command is used in the installation process of a dogu. A service account in the Cloudogu EcoSystem represents credentials to authorize another dogu, like a database or an authentication server. The service-account-create command has to be implemented in the service account producer dogu which produces the credentials. If a service account consuming dogu will be installed and requires a service account (e.g. for postgresql) the dogu client will call the service-account-create script in the postgresql dogu with the service name as the first parameters and custom ones as additional parameters. See core.ServiceAccounts for how to define custom parameters. With this information the script should create a service account and save it (e.g. USER table in an underlying database or maybe encrypted in the CES-registry). After that, the credentials must be printed to console so that the dogu client saves the credentials for the dogu which requested the service account. It is also important that these outputs are the only ones from the script, otherwise the dogu client will use them as credentials.
+service-account-create: The service-account-create command is used in the installation process of a dogu. A service account in the Cloudogu EcoSystem represents credentials to authorize another dogu, like a database or an authentication server. The service-account-create command has to be implemented in the service account producer dogu which produces the credentials. If a service account consuming dogu will be installed and requires a service account (e.g. for postgresql) the dogu client will call the service-account-create script in the postgresql dogu with the service name as the first parameters and custom ones as additional parameters. See core.ServiceAccounts for how to define custom parameters. With this information the script should create a service account and save it (e.g. USER table in an underlying database or maybe encrypted in the etcd). After that, the credentials must be printed to console so that the dogu client saves the credentials for the dogu which requested the service account. It is also important that these outputs are the only ones from the script, otherwise the dogu client will use them as credentials.
 
 Example output:
 
@@ -536,7 +536,13 @@ Example:
 
 Volumes contains a list of [Volume](#type-volume) which defines [OCI container volumes](https://opencontainers.org/). This field is optional.
 
-Volumes are created during the dogu creation or upgrade. Volumes provide a performance boost compared to in-container storage.
+Volumes are created during the dogu creation or upgrade.
+
+All dynamic data of a Dogu should be stored inside volumes. This holds multiple advantages:
+
+- Data inside volumes is not lost when the Dogu is upgraded.
+- Data inside volumes can be backed up and restored. See [needsbackup] flag.
+- The access to data stored inside volumes is much faster than to data stored inside the Dogu container.
 
 Examples:
 
@@ -563,7 +569,7 @@ HealthChecks are used in various use cases:
 
 There are different types of health checks:
 
-- state, via the `/state/<dogu>` registry key set by ces-setup
+- state, via the `/state/<dogu>` etcd key set by ces-setup
 - tcp, to check for an open port
 - http, to check a status code of a http response
 
@@ -616,7 +622,7 @@ Examples:
 
 Privileged indicates whether the Docker socket should be mounted into the container file system. This field is optional. The default value is `false`.
 
-For security reasons, it is highly recommended to leave Privileged set to false since almost no dogu should gain retrospective container insights.
+For security reasons, it is highly recommended to leave Privileged set to false since almost no dogu should gain introspective container insights.
 
 Example:
 
@@ -657,8 +663,7 @@ Examples:
 
 ### Properties
 
-Properties is a `map[string]string` of Properties. This field is optional. It describes generic properties of the dogu 
-which are evaluated by a client like cesapp or k8s-dogu-operator.
+Properties is a `map[string]string` of Properties. This field is optional. It describes generic properties of the dogu which are evaluated by a client like cesapp or k8s-dogu-operator.
 
 Example:
 
@@ -725,7 +730,7 @@ Examples:
 ]
 ```
 
-## type [DoguJsonV2FormatProvider](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L1211>)
+## type [DoguJsonV2FormatProvider](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L1215>)
 
 DoguJsonV2FormatProvider provides methods to format Dogu results compatible to v2 API.
 
@@ -876,7 +881,7 @@ For Type "tcp" the given Port needs to be open to be healthy.
 
 For Type "http" the service needs to return a status code between >= 200 and < 300 to be healthy. Port and Path are used to reach the service.
 
-For Type "state" the /state/<dogu> key in the Cloudogu EcoSystem registry gets checked. This key is written by the installation process. A 'ready' value in the CES-registry means that the dogu is healthy.
+For Type "state" the /state/<dogu> key in the Cloudogu EcoSystem registry gets checked. This key is written by the installation process. A 'ready' value in etcd means that the dogu is healthy.
 
 ### State
 
