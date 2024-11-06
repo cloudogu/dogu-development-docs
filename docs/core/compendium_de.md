@@ -242,7 +242,7 @@ Ein Beispiel:
  "Category": "Development Apps",
  "Tags": ["warp"],
  "Url": "https://www.company.com/newdogu",
- "Image": "registry.cloudogu.com/official/newdogu",
+ "Image": "registry.cloudogu.com/namespace/newdogu",
  "Dependencies": [
    {
      "type":"dogu",
@@ -395,7 +395,7 @@ Der Anzeigename wird im Warp-Menü verwendet, damit der Benutzer zur Web-UI des 
 Eine weitere Verwendung ist die textuelle Ausgabe von Tools wie `cesapp` oder `k8s-dogu-operator`, wo der Name in
 Befehlen wie `list upgradeable dogus` verwendet wird.
 
-Die Beschreibung kann bestehen aus:
+Der DisplayName kann aus folgendem bestehen:
 
 - lateinischen Klein- und Großbuchstaben, wobei der Erste ein Großbuchstabe ist
 - beliebige Sonderzeichen
@@ -535,7 +535,7 @@ nützlich sein, da Sie die Zustände im Post-Upgrade oder beim regulären Start 
 post-upgrade: Dieser Befehl wird nach einem regulären Dogu-Upgrade ausgeführt. Wie beim Pre-Upgrade wird als erster
 Parameter die alte Dogu-Version und als zweiter Parameter die neue Dogu-Version übergeben. Die alte und neue Dogu-Version sollten verwendet
 werden, um festzustellen, ob eine Aktion erforderlich ist. Denken Sie daran, dass in dieser Zeit auch das reguläre
-Startskript Ihres neuen Containers ausgeführt wird. Verwenden Sie einen Zustand im Cloudogu EcoSystem-Registry, um eine
+Startskript Ihres neuen Containers ausgeführt wird. Verwenden Sie einen Zustand im etcd, um eine
 Wartefunktion beim
 Start zu handhaben. Wenn das Post-Upgrade endet, setzen Sie diesen Status zurück und starten den regulären Container.
 
@@ -616,8 +616,13 @@ Beispiel:
 Volumes enthält eine Liste von [Volume](#type-volume), die [OCI container volumes](https://opencontainers.org/)
 definiert. Dieses Feld ist optional.
 
-Volumes werden während der Erstellung oder des Upgrades eines Dogus erstellt. Volumes bieten eine Leistungssteigerung im
-Vergleich zum Container-Speicher.
+Volumes werden während der Erstellung oder des Upgrades eines Dogus erstellt. Alle dynamischen Daten einer Dogu sollten in Volumes gespeichert werden. Dies hat mehrere Vorteile:
+
+- Die Daten in den Volumes gehen nicht verloren, wenn das Dogu aktualisiert wird.
+- Daten innerhalb von Volumes können gesichert und wiederhergestellt werden. Siehe Flag [needsbackup].
+- Der Zugriff auf Daten, die in Volumes gespeichert sind, ist viel schneller als auf Daten, die innerhalb des Dogu-Containers gespeichert sind.
+
+Übersetzt mit DeepL.com (kostenlose Version)
 
 Beispiele:
 
@@ -646,7 +651,7 @@ HealthChecks werden in verschiedenen Anwendungsfällen verwendet:
 
 Es gibt verschiedene Arten von HealthChecks:
 
-- state, über den `/state/<dogu>` Registry-Schlüssel, der von ces-setup gesetzt wird
+- state, über den `/state/<dogu>` etcd-Schlüssel, der von ces-setup gesetzt wird
 - tcp, um auf einen offenen Port zu prüfen
 - http, um einen Statuscode einer http-Antwort zu prüfen
 
@@ -707,7 +712,7 @@ Beispiele:
 Privileged gibt an, ob der Docker-Socket in das Container-Dateisystem eingehängt werden soll. Dieses Feld ist optional.
 Der Standardwert ist `false`.
 
-Aus Sicherheitsgründen wird sehr empfohlen, Privileged auf false zu setzen, da regulär kein Dogu Zugriffe auf das Container-System erhalten sollte.
+Aus Sicherheitsgründen wird sehr empfohlen, Privileged auf false zu setzen, da regulär kein Dogu Zugriffe auf das interne Container-System erhalten sollte.
 
 Beispiel:
 
@@ -980,7 +985,7 @@ Bei Typ "http" muss der Dienst einen Statuscode zwischen >= 200 und < 300 zurüc
 Port und Pfad werden verwendet, um den Dienst zu erreichen.
 
 Für den Typ "state" wird der Schlüssel /state/<dogu> in der Cloudogu EcoSystem-Registry überprüft. Dieser Schlüssel
-wird durch den Installationsprozess geschrieben. Ein 'ready'-Wert in der Registry bedeutet, dass das Dogu healthy ist.
+wird durch den Installationsprozess geschrieben. Ein 'ready'-Wert im etcd bedeutet, dass das Dogu healthy ist.
 
 ### State
 
