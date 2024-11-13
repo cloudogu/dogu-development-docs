@@ -24,7 +24,7 @@ represents the `dogu.json`.
 
 
 
-## type [ConfigurationField](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L320-L395>)
+## type [ConfigurationField](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L321-L396>)
 
 ConfigurationField describes a single dogu configuration field which is stored in the Cloudogu EcoSystem registry.
 
@@ -128,7 +128,7 @@ Example:
  }
 ```
 
-## type [Dependency](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L454-L503>)
+## type [Dependency](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L455-L504>)
 
 Dependency describes the quality of a dogu dependency towards another entity.
 
@@ -213,7 +213,7 @@ Example:
 
 - "<=0.0.0" - prohibit the selected entity being present
 
-## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L544-L989>)
+## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L545-L1000>)
 
 Dogu describes properties of a containerized application for the Cloudogu EcoSystem. Besides the meta information and the [OCI container image](https://opencontainers.org/), Dogu describes all necessities for automatic container instantiation, f. i. volumes, dependencies towards other dogus, and much more.
 
@@ -258,6 +258,8 @@ type Dogu struct {
     Name string
 
     Version string
+
+    PublishedAt time.Time
 
     DisplayName string
 
@@ -353,6 +355,17 @@ LABEL maintainer="hello@cloudogu.com" \
 NAME="official/nginx" \
 VERSION="1.23.2-1"
 ```
+
+### PublishedAt
+
+PublishedAt is the date and time when the dogu was created.
+
+This field does not need to be filled in by the developer. The dogu.cloudogu.com service automatically replaces the content with the current time when the new dogu is created.
+
+Examples:
+
+- 2024-10-16T07:49:34.738Z
+- 2019-05-03T13:31:48.612Z
 
 ### DisplayName
 
@@ -730,7 +743,7 @@ Examples:
 ]
 ```
 
-## type [DoguJsonV2FormatProvider](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L1215>)
+## type [DoguJsonV2FormatProvider](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L1228>)
 
 DoguJsonV2FormatProvider provides methods to format Dogu results compatible to v2 API.
 
@@ -738,7 +751,7 @@ DoguJsonV2FormatProvider provides methods to format Dogu results compatible to v
 type DoguJsonV2FormatProvider struct{}
 ```
 
-## type [EnvironmentVariable](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L280-L283>)
+## type [EnvironmentVariable](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L281-L284>)
 
 EnvironmentVariable struct represents custom parameters that can change the behaviour of a dogu build process
 
@@ -751,7 +764,7 @@ type EnvironmentVariable struct {
 
 
 
-## type [ExposedCommand](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L243-L276>)
+## type [ExposedCommand](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L244-L277>)
 
 ExposedCommand struct represents a command which can be executed inside the dogu
 
@@ -804,7 +817,7 @@ Examples:
 - /resources/create-sa.sh
 - /resources/deletePlugin.sh
 
-## type [ExposedPort](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L204-L231>)
+## type [ExposedPort](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L205-L232>)
 
 ExposedPort struct is used to define ports which are exported to the host.
 
@@ -855,7 +868,7 @@ Examples:
 - 8080
 - 65535
 
-## type [HealthCheck](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L171-L196>)
+## type [HealthCheck](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L172-L197>)
 
 HealthCheck provide readiness and health checks for the dogu container.
 
@@ -903,7 +916,7 @@ Deprecated: is not in use.
 
 
 
-## type [ServiceAccount](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L299-L317>)
+## type [ServiceAccount](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L300-L318>)
 
 ServiceAccount struct can be used to get access to another dogu.
 
@@ -945,7 +958,7 @@ Kind defines the kind of service on which the account should be created, e.g. `d
 
 Reading this property and creating a corresponding service account is up to the client.
 
-## type [ValidationDescriptor](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L398-L411>)
+## type [ValidationDescriptor](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L399-L412>)
 
 ValidationDescriptor describes how to determine if a config value is valid.
 
@@ -969,7 +982,7 @@ Type contains the name of the config value validator. This field is mandatory. V
 
 Values may contain values that aid the selected validator. The values may or may not be optional, depending on the Type being used. It is up to the selected validator whether this field is mandatory, optional, or unused.
 
-## type [Volume](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L74-L136>)
+## type [Volume](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L75-L137>)
 
 Volume defines container volumes that are created during the dogu creation or upgrade.
 
@@ -1059,7 +1072,7 @@ NeedsBackup controls whether the Cloudogu EcoSystem backup facility backs up the
 
 Clients contains a list of client-specific (t. i., the client that interprets the dogu.json) configurations for the volume. This field is optional.
 
-## type [VolumeClient](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L58-L67>)
+## type [VolumeClient](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L59-L68>)
 
 VolumeClient adds additional information for clients to create volumes.
 
