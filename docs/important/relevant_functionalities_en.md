@@ -626,6 +626,23 @@ For more complex tasks, a startup script such as `startup.sh` may gain complexit
 
 Analysis tools such as [Shellcheck](https://www.shellcheck.net/) can detect errors in the use of shell calls.
 
+
+#### Changed behavior when `doguctl` is used in the CES multinode cluster.
+
+In the multinode CES, `etcd` has been replaced by ConfigMaps and SecretMaps as the storage location 
+for the Dogus configuration. Config and SecretMaps are made available to a pod as a mounted volume via Kubernetes.
+These volumes are readonly. The keys of SecretsMaps are decrypted by Kubernetes before mounting.
+
+This means that `doguctl` cannot write a configuration and sensitive data no longer needs to be encrypted.
+
+If a configuration value is set with `doguctl`, it is written to the LocalConfig. This is a file that is located 
+in a writable volume. Sensitive configuration values are not encrypted and are also written to the LocalConfig.
+
+If configuration values are read, sensitive values have the highest priority, followed by non-sensitive values.
+Values in the LocalConfig have the lowest priority. For example, if a key is in the ConfigMap and in the
+LocalConfig, the value from the ConfigMap is used.
+
+
 ### Usage of `doguctl`
 
 The section [about registry access](#registry-access-from-the-dogu) has already touched on the subject of `doguctl`. `doguctl` is a command line tool that bundles and simplifies recurring interactions with the Cloudogu EcoSystem registry. This section describes possible calls.
