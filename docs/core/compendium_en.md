@@ -8,14 +8,15 @@ represents the `dogu.json`.
 
 ## Index
 
+- [type Capabilities](<#type-capabilities>)
 - [type ConfigurationField](<#type-configurationfield>)
 - [type Dependency](<#type-dependency>)
 - [type Dogu](<#type-dogu>)
-- [type DoguJsonV2FormatProvider](<#type-dogujsonv2formatprovider>)
 - [type EnvironmentVariable](<#type-environmentvariable>)
 - [type ExposedCommand](<#type-exposedcommand>)
 - [type ExposedPort](<#type-exposedport>)
 - [type HealthCheck](<#type-healthcheck>)
+- [type Security](<#type-security>)
 - [type ServiceAccount](<#type-serviceaccount>)
 - [type ValidationDescriptor](<#type-validationdescriptor>)
 - [type Volume](<#type-volume>)
@@ -24,7 +25,51 @@ represents the `dogu.json`.
 
 
 
-## type [ConfigurationField](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L321-L396>)
+## type [Capabilities](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_security.go#L134-L139>)
+
+Capabilities represent POSIX capabilities that can be added to or removed from a dogu.
+
+The fields Add and Drop will modify the default capabilities as provided by DefaultCapabilities. Add will append further capabilities while Drop will remove capabilities. The capability All can be used to add or remove all available capabilities.
+
+See DefaultCapabilities for the standard set being used in the Cloudogu Ecosystem.
+
+This example will result in the following capability list: DacOverride, Fsetid, Fowner, Setgid, Setuid, Setpcap, NetBindService, Kill, Syslog
+
+```
+"Capabilities": {
+   "Drop": "Chown"
+   "Add": "Syslog"
+}
+```
+
+This example will result in the following capability list: NetBindService
+
+```
+"Capabilities": {
+   "Drop": ["All"],
+   "Add": ["NetBindService", "Kill"]
+}
+```
+
+```go
+type Capabilities struct {
+    Add []Capability `json:"Add,omitempty"`
+
+    Drop []Capability `json:"Drop,omitempty"`
+}
+```
+
+### Add
+
+Add contains the capabilities that should be allowed to be used in a container. This list is optional.
+
+### Drop
+
+Drop contains the capabilities that should be blocked from being used in a container. This list is optional.
+
+
+
+## type [ConfigurationField](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_configuration_field.go#L4-L79>)
 
 ConfigurationField describes a single dogu configuration field which is stored in the Cloudogu EcoSystem registry.
 
@@ -128,7 +173,7 @@ Example:
  }
 ```
 
-## type [Dependency](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L455-L504>)
+## type [Dependency](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_dependency.go#L38-L87>)
 
 Dependency describes the quality of a dogu dependency towards another entity.
 
@@ -213,7 +258,7 @@ Example:
 
 - "<=0.0.0" - prohibit the selected entity being present
 
-## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L545-L1000>)
+## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L241-L720>)
 
 Dogu describes properties of a containerized application for the Cloudogu EcoSystem. Besides the meta information and the [OCI container image](https://opencontainers.org/), Dogu describes all necessities for automatic container instantiation, f. i. volumes, dependencies towards other dogus, and much more.
 
@@ -288,6 +333,8 @@ type Dogu struct {
     ServiceAccounts []ServiceAccount
 
     Privileged bool
+
+    Security Security `json:"Security,omitempty"`
 
     Configuration []ConfigurationField
 
@@ -641,6 +688,29 @@ Example:
 
 - false
 
+Deprecated: This feature will be removed in the future because no dogu should have the privilege of container meta-insights for obvious security reasons. Also, this field is subject of a misnomer because mounting a container socket has nothing to do with privileged execution.
+
+### Security
+
+Security defines security policies for the dogu. This field is optional.
+
+The Cloudogu Ecosystem may not support restricting capabilities in all environments, e.g. in docker. This feature was added for the kubernetes platform via [pod security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/).
+
+Example:
+
+```
+{
+  "Security": {
+    "Capabilities": {
+      "Drop": ["All"],
+      "Add": ["NetBindService", "Kill"]
+    },
+    "RunAsNonRoot": true,
+    "ReadOnlyRootFileSystem": true
+  }
+}
+```
+
 ### Configuration
 
 Configuration contains a list of [ConfigurationField](#type-configurationfield). This field is optional.
@@ -743,15 +813,7 @@ Examples:
 ]
 ```
 
-## type [DoguJsonV2FormatProvider](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L1228>)
-
-DoguJsonV2FormatProvider provides methods to format Dogu results compatible to v2 API.
-
-```go
-type DoguJsonV2FormatProvider struct{}
-```
-
-## type [EnvironmentVariable](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L281-L284>)
+## type [EnvironmentVariable](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L157-L160>)
 
 EnvironmentVariable struct represents custom parameters that can change the behaviour of a dogu build process
 
@@ -764,7 +826,7 @@ type EnvironmentVariable struct {
 
 
 
-## type [ExposedCommand](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L244-L277>)
+## type [ExposedCommand](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L120-L153>)
 
 ExposedCommand struct represents a command which can be executed inside the dogu
 
@@ -817,7 +879,7 @@ Examples:
 - /resources/create-sa.sh
 - /resources/deletePlugin.sh
 
-## type [ExposedPort](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L205-L232>)
+## type [ExposedPort](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L81-L108>)
 
 ExposedPort struct is used to define ports which are exported to the host.
 
@@ -868,7 +930,7 @@ Examples:
 - 8080
 - 65535
 
-## type [HealthCheck](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L172-L197>)
+## type [HealthCheck](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L48-L73>)
 
 HealthCheck provide readiness and health checks for the dogu container.
 
@@ -916,7 +978,46 @@ Deprecated: is not in use.
 
 
 
-## type [ServiceAccount](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L300-L318>)
+## type [Security](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_security.go#L153-L163>)
+
+Security defines security policies for the dogu. These fields can be used to reduce a dogu's attack surface.
+
+Example:
+
+```
+"Security": {
+  "Capabilities": {
+     "Drop": ["All"],
+     "Add": ["NetBindService", "Kill"]
+   },
+  "RunAsNonRoot": true,
+  "ReadOnlyRootFileSystem": true
+}
+```
+
+```go
+type Security struct {
+    Capabilities Capabilities `json:"Capabilities,omitempty"`
+
+    RunAsNonRoot bool
+
+    ReadOnlyRootFileSystem bool
+}
+```
+
+### Capabilities
+
+Capabilities sets the allowed and dropped capabilities for the dogu. The dogu should not use more than the configured capabilities here, otherwise failure may occur at start-up or at run-time. This list is optional.
+
+### RunAsNonRoot
+
+RunAsNonRoot indicates that the container must run as a non-root user. The dogu must support running as non-root user otherwise the dogu start may fail. This flag is optional and defaults to false.
+
+### ReadOnlyRootFileSystem
+
+ReadOnlyRootFileSystem mounts the container's root filesystem as read-only. The dogu must support accessing the root file system by only reading otherwise the dogu start may fail. This flag is optional and defaults to false.
+
+## type [ServiceAccount](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L176-L194>)
 
 ServiceAccount struct can be used to get access to another dogu.
 
@@ -958,7 +1059,7 @@ Kind defines the kind of service on which the account should be created, e.g. `d
 
 Reading this property and creating a corresponding service account is up to the client.
 
-## type [ValidationDescriptor](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L399-L412>)
+## type [ValidationDescriptor](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_configuration_field.go#L82-L95>)
 
 ValidationDescriptor describes how to determine if a config value is valid.
 
@@ -982,7 +1083,7 @@ Type contains the name of the config value validator. This field is mandatory. V
 
 Values may contain values that aid the selected validator. The values may or may not be optional, depending on the Type being used. It is up to the selected validator whether this field is mandatory, optional, or unused.
 
-## type [Volume](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L75-L137>)
+## type [Volume](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_volume.go#L10-L72>)
 
 Volume defines container volumes that are created during the dogu creation or upgrade.
 
@@ -1072,7 +1173,7 @@ NeedsBackup controls whether the Cloudogu EcoSystem backup facility backs up the
 
 Clients contains a list of client-specific (t. i., the client that interprets the dogu.json) configurations for the volume. This field is optional.
 
-## type [VolumeClient](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L59-L68>)
+## type [VolumeClient](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_volume.go#L119-L128>)
 
 VolumeClient adds additional information for clients to create volumes.
 
