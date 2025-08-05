@@ -25,7 +25,7 @@ represents the `dogu.json`.
 
 
 
-## type [Capabilities](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_security.go#L134-L139>)
+## type [Capabilities](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_security.go#L139-L144>)
 
 Capabilities represent POSIX capabilities that can be added to or removed from a dogu.
 
@@ -258,7 +258,7 @@ Example:
 
 - "<=0.0.0" - prohibit the selected entity being present
 
-## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L241-L720>)
+## type [Dogu](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L240-L719>)
 
 Dogu describes properties of a containerized application for the Cloudogu EcoSystem. Besides the meta information and the [OCI container image](https://opencontainers.org/), Dogu describes all necessities for automatic container instantiation, f. i. volumes, dependencies towards other dogus, and much more.
 
@@ -813,7 +813,7 @@ Examples:
 ]
 ```
 
-## type [EnvironmentVariable](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L157-L160>)
+## type [EnvironmentVariable](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L156-L159>)
 
 EnvironmentVariable struct represents custom parameters that can change the behaviour of a dogu build process
 
@@ -826,7 +826,7 @@ type EnvironmentVariable struct {
 
 
 
-## type [ExposedCommand](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L120-L153>)
+## type [ExposedCommand](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L119-L152>)
 
 ExposedCommand struct represents a command which can be executed inside the dogu
 
@@ -879,7 +879,7 @@ Examples:
 - /resources/create-sa.sh
 - /resources/deletePlugin.sh
 
-## type [ExposedPort](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L81-L108>)
+## type [ExposedPort](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L80-L107>)
 
 ExposedPort struct is used to define ports which are exported to the host.
 
@@ -930,7 +930,7 @@ Examples:
 - 8080
 - 65535
 
-## type [HealthCheck](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L48-L73>)
+## type [HealthCheck](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L47-L72>)
 
 HealthCheck provide readiness and health checks for the dogu container.
 
@@ -978,7 +978,7 @@ Deprecated: is not in use.
 
 
 
-## type [Security](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_security.go#L153-L163>)
+## type [Security](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2_security.go#L158-L168>)
 
 Security defines security policies for the dogu. These fields can be used to reduce a dogu's attack surface.
 
@@ -1017,7 +1017,7 @@ RunAsNonRoot indicates that the container must run as a non-root user. The dogu 
 
 ReadOnlyRootFileSystem mounts the container's root filesystem as read-only. The dogu must support accessing the root file system by only reading otherwise the dogu start may fail. This flag is optional and defaults to false.
 
-## type [ServiceAccount](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L176-L194>)
+## type [ServiceAccount](<https://github.com/cloudogu/cesapp-lib/blob/main/core/dogu_v2.go#L175-L193>)
 
 ServiceAccount struct can be used to get access to another dogu.
 
