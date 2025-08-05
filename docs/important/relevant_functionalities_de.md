@@ -624,6 +624,25 @@ Der Abschnitt [über Registry-Zugriff](#registry-zugriff-vom-dogu-heraus) hat da
 
 Mit `--help` gibt jedes Unterkommando von `doguctl` eine Hilfeseite aus.
 
+
+#### Geändertes Verhalten wenn `doguctl` im CES Multinode Cluster verwendet wird.
+
+Im Multinode CES wurde `etcd` als Speicherort für die Konfiguration der Dogus durch ConfigMaps und SecretMaps
+abgelöst. Config- und SecretMaps werden über Kubernetes einem Pod als gemountetes Volume zur Verfügung gestellt. 
+Diese Volumes können nur gelesen, nicht geschrieben werden. Die Keys von SecretsMaps werden vor dem Mounten von Kubernetes
+entschlüsselt. 
+
+Das hat zur Folge, dass `doguctl` keine Konfiguration schreiben kann und sensitive Daten nicht mehr verschlüsselt
+werden müssen. 
+
+Wird mit `doguctl` ein Konfigurationswert gesetzt, wird er in die LocalConfig geschrieben. Dabei handelt es sich um
+eine Datei, die sich in einem beschreibbaren Volume befindet. Sensitive Konfigurationswerte werden nicht verschlüsselt
+und ebenfalls in die LocalConfig geschreiben. 
+
+Werden Konfigurationswerte gelesen, so haben sensitive Werte die höchste Priorität, gefolgt von nicht sensitiven Werten. 
+Werte in der LocalConfig haben die niedrigste Priorität. Befindet sich z.B. ein Schlüssel in der ConfigMap und in der 
+LocalConfig, wird der Wert aus der ConfigMap genutzt.
+
 #### doguctl config
 
 Dieser Aufruf liest und schreibt Konfigurationswerte.
