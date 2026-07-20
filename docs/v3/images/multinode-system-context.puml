@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam componentStyle rectangle
+hide stereotype
+skinparam defaultTextAlignment center
+skinparam ArrowColor #4A5568
+skinparam rectangle {
+  BackgroundColor #F7FAFC
+  BorderColor #2D3748
+}
+skinparam component {
+  BackgroundColor #EBF8FF
+  BorderColor #2B6CB0
+}
+
+<style>
+arrow {
+  Padding 5
+}
+rectangle {
+  .doguNamespace {
+    HorizontalAlignment left
+  }
+}
+</style>
+
+actor "Dogu developer" as developer
+cloud "OCI registry" as registry
+artifact "Dogu V3 Helm chart" as chart
+
+rectangle "Multinode CES" {
+  component "Dogu lifecycle\n(Dogu Operator + Helm)" as lifecycle
+
+  rectangle "Dogu namespace" <<doguNamespace>> {
+    component "Application workloads\nand Services" as workloads
+    component "CES integration CRs\nExposition · AuthRegistration\nServiceAccount · WarpMenuEntry" as crs
+  }
+
+  component "CES integration controllers" as controllers
+  component "Gateway · Identity Provider\nCredential Secrets · Warp Menu" as services
+  database "Persistent volumes" as storage
+}
+
+developer --> registry : &#160;publishes chart + images
+registry --> chart : &#160;supplies chart and metadata
+chart --> lifecycle : &#160;resolved and validated
+lifecycle --> workloads : &#160;reconciles release resources
+lifecycle --> crs : &#160;reconciles release resources
+controllers --> crs : &#160;watches + reports status
+controllers --> services
+workloads --> storage : &#160;mounts PVCs
+workloads --> services : &#160;consumes CES capabilities
+
+@enduml

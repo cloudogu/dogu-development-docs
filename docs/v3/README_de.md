@@ -13,6 +13,10 @@ Die Dokumentation wird Entwickler:innen von einem minimalen lauffähigen Dogu zu
 5. CES-Integrationen mit gezielten Anleitungen ergänzen und
 6. bei Bedarf Informationen zu Release, Migration oder Fehlerbehebung nachschlagen.
 
+## Verfügbare Konzepte
+
+- [Die Multinode-Laufzeitumgebung verstehen](concepts/multinode-environment_de.md)
+
 ## Inhaltliche Abgrenzung
 
 - **Erste Schritte** enthalten ausführbare, durchgängige Anleitungen. Der Quickstart behandelt nur den kleinsten lauffähigen Happy Path.

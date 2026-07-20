@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam sequence {
+  ArrowColor #4A5568
+  LifeLineBorderColor #4A5568
+  ParticipantBackgroundColor #EBF8FF
+  ParticipantBorderColor #2B6CB0
+}
+
+actor "Browser / API client" as client
+participant "Exposition CR" as exposition
+participant "Service Discovery" as discovery
+participant "CES Gateway" as gateway
+participant "Generated route" as route
+participant "Kubernetes Service" as service
+participant "Dogu Pod" as pod
+
+exposition -> discovery : service + port + path + rewrite
+discovery -> route : reconcile
+route -> gateway : configure route
+discovery -> exposition : update API-specific conditions
+
+client -> gateway : HTTPS request to /my-dogu/...
+gateway -> route : match CES path
+route -> service : forward / optionally rewrite
+service -> pod : target port
+pod --> service : response
+service --> route : response
+route --> gateway : response
+gateway --> client : HTTPS response
+
+note over exposition,route
+Helm tracks Service + Exposition.
+The Exposition controls generated routes through controller ownership.
+end note
+
+@enduml

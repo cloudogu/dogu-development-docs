@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam sequence {
+  ArrowColor #4A5568
+  LifeLineBorderColor #4A5568
+  ParticipantBackgroundColor #EBF8FF
+  ParticipantBorderColor #2B6CB0
+}
+
+actor "CES operator" as user
+participant "Dogu resource" as dogu
+participant "Dogu Operator" as operator
+participant "OCI registry" as registry
+participant "Helm release" as helm
+participant "Kubernetes" as kubernetes
+participant "Integration controllers" as integrations
+
+user -> dogu : create or change desired version/config
+dogu -> operator : reconciliation event
+operator -> registry : resolve chart + metadata
+registry --> operator : chart package
+operator -> operator : validate metadata, config, upgrade path
+
+operator -> helm : install / upgrade / uninstall
+helm -> kubernetes : apply chart resources
+kubernetes --> helm : workload/resource result
+integrations -> kubernetes : reconcile integration CRs
+integrations -> kubernetes : update integration CR status
+helm --> operator : release result
+operator -> dogu : on success: update conditions and installed version
+operator -> dogu : on failure: set failing condition with reason
+
+note over dogu,integrations
+Reconciliation repeats until desired and actual state converge.
+Resource creation alone does not imply readiness.
+end note
+
+@enduml
