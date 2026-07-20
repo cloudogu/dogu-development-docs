@@ -13,10 +13,10 @@ Die Verantwortlichkeiten sind bewusst getrennt:
 | Bereich | Dogu-Chart | CES-Plattform |
 | --- | --- | --- |
 | Anwendung | Definiert Deployments, StatefulSets, Jobs, Container, Probes und interne Services | Plant und betreibt die resultierenden Kubernetes-Ressourcen |
-| Lebenszyklus | Liefert Chart-Metadaten, Standardwerte, Validierung und optionale Migrationslogik | Ermittelt das Chart, validiert den gewünschten Übergang und reconciled das Helm-Release |
+| Lebenszyklus | Liefert Chart-Metadaten, Standardwerte, Validierung und optionale Migrationslogik | Ermittelt das Chart, validiert den gewünschten Übergang und gleicht das Helm-Release mit dem Sollzustand ab |
 | Konfiguration | Definiert unterstützte Values, sichere Standardwerte und ein Schema | Liefert instanzspezifische Values über die Dogu-Ressource |
 | Persistente Daten | Definiert die benötigten PVCs und Volume-Mounts | Stellt konfigurierte StorageClasses bereit und bindet Volumes |
-| Externer Zugriff | Definiert einen Service und bei Bedarf eine `Exposition` | Reconciled Gateway-Routen und externe Ports |
+| Externer Zugriff | Definiert einen Service und bei Bedarf eine `Exposition` | Gleicht Gateway-Routen und externe Ports mit dem Sollzustand ab |
 | Authentifizierung | Definiert eine `AuthRegistration` und verwendet deren Credential-Secret | Registriert den Client beim Identity Provider und veröffentlicht Credentials |
 | Technischer Zugriff auf einen anderen CES-Dienst | Definiert einen `ServiceAccountRequest` oder beim Anbieten eines Zugangs einen `ServiceAccountProducer` | Vermittelt die Credential-Erzeugung und speichert Credentials in einem Secret |
 | Warp-Menü | Definiert null oder mehrere `WarpMenuEntry`-Ressourcen für interne Anwendungsseiten | Validiert die Einträge und rendert das gemeinsame Menü |
@@ -29,7 +29,7 @@ Ein Dogu und seine namensraumgebundenen Ressourcen werden gemeinsam in dem vom C
 
 - Verwenden Sie `.Release.Namespace`, statt `ecosystem` oder einen anderen Namespace fest einzutragen.
 - Leiten Sie Namen aus `.Release.Name` und Chart-Helper-Templates ab, statt einen festen Helm-Release-Namen anzunehmen.
-- Referenzieren Sie Services, ConfigMaps, Secrets und Custom Resources innerhalb des Release-Namespace, sofern eine dokumentierte API nichts anderes vorgibt.
+- Referenzieren Sie Services, ConfigMaps, Secrets und Custom Resources innerhalb des Namespace des Releases, sofern eine dokumentierte API nichts anderes vorgibt.
 - Leiten Sie Anwendungsverhalten niemals aus dem lokalen `kubectl`-Kontext einer entwickelnden Person ab.
 
 Prüfen Sie bei der Diagnose eines Clusters zuerst den Kontext und geben Sie den Namespace immer explizit an:
@@ -44,7 +44,7 @@ Der Dogu-Registry-Namespace in einem Namen wie `official/my-dogu`, der OCI-Repos
 
 ## Helm-Release und Dogu-Lebenszyklus
 
-Die Dogu-Custom-Resource beschreibt den Sollzustand aus Sicht der Plattform. Das Helm-Release ist der Mechanismus, der diesen Zustand umsetzt. Operatoren oder Administrator:innen ändern die Dogu-Ressource; das daraus erzeugte Helm-Release darf nicht direkt verändert werden.
+Die Dogu-Custom-Resource beschreibt den Sollzustand aus Sicht der Plattform. Das Helm-Release ist der Mechanismus, der diesen Zustand umsetzt. CES-Administrator:innen ändern die Dogu-Ressource; das daraus erzeugte Helm-Release darf nicht direkt verändert werden.
 
 ![Reconciliation und Lebenszyklus eines Dogu V3](../images/multinode-lifecycle.svg)
 
@@ -54,25 +54,25 @@ Der vorgesehene Ablauf ist:
 2. Der Dogu Operator ermittelt und validiert das Chart und seine Metadaten.
 3. Helm validiert die zusammengeführten Values und installiert oder aktualisiert das Release.
 4. Kubernetes startet die Workloads aus dem Chart.
-5. CES-Controller reconciliieren die Integrationsressourcen unabhängig voneinander.
-6. Statusinformationen an der Dogu- und den Integrationsressourcen melden Fortschritt oder Fehler.
+5. CES-Controller gleichen die Integrationsressourcen unabhängig voneinander mit dem Sollzustand ab.
+6. Statusinformationen an der Dogu-Ressource und den Integrationsressourcen melden Fortschritt oder Fehler.
 
-Reconciliation läuft kontinuierlich. Ein erfolgreiches `helm template` oder die bloße Existenz einer Ressource bedeuten noch nicht, dass das Dogu bereit ist. Auch Workloads, PVCs und jede benötigte Integration müssen bereit werden.
+Reconciliation läuft kontinuierlich. Ein erfolgreiches `helm template` oder die bloße Existenz einer Ressource bedeuten noch nicht, dass das Dogu bereit ist. Auch die Workloads, PVCs und alle benötigten Integrationen müssen betriebsbereit sein.
 
 ### Upgrades
 
 Die Dogu-Version entspricht der Chart-`version`; `appVersion` enthält die Version der verpackten Anwendung. Beide Versionen dürfen voneinander abweichen. In der akzeptierten Zielarchitektur beschreibt `dogu-upgrade.yaml` gültige Übergänge zwischen Dogu-/Chart-Versionen und Parameter, die der Dogu Operator zur Koordination eines Upgrades benötigt. Ein Chart kann Migrationslogik durch Kubernetes-native Mechanismen wie Init-Container oder Helm-Hook-Jobs bereitstellen. Migrationslogik muss:
 
-- nach einem Neustart von Pod, Job oder Controller sicher wiederholbar sein,
+- nach einem Pod- oder Controller-Neustart oder einer erneuten Job-Ausführung sicher wiederholbar sein,
 - Quell- und Zielversion des Dogus/Charts sowie relevante Anwendungsversionen explizit berücksichtigen,
 - mit den Volume-Access-Modes des Charts kompatibel sein,
 - durch aussagekräftige Job-Logs und Workload-Status beobachtbar sein.
 
-Der Operator muss Values und Workload-Skalierung koordinieren, wenn Migrationscontainer oder Hook-Jobs auf bestehende Workloads oder `ReadWriteOnce`-Volumes zugreifen. Verlassen Sie sich nicht darauf, dass die Plattform V2-`pre-upgrade.sh`- oder `post-upgrade.sh`-Skripte ausführt. Ein V3-Chart liefert seine Migrationsimplementierung, eigenständige Helm-Hooks sind aber noch kein einsetzbarer V3-Lebenszyklusvertrag.
+Der Dogu Operator muss Values und die Skalierung der Workloads koordinieren, wenn Migrationscontainer oder Hook-Jobs auf bestehende Workloads oder `ReadWriteOnce`-Volumes zugreifen. Verlassen Sie sich nicht darauf, dass die Plattform V2-`pre-upgrade.sh`- oder `post-upgrade.sh`-Skripte ausführt. Ein V3-Chart liefert seine Migrationsimplementierung; verlassen Sie sich nicht auf eigenständige Helm-Hooks als V3-Lebenszyklusvertrag.
 
 ### Reconciliation und Status
 
-Untersuchen Sie vor Controller-Interna zuerst den Status:
+Prüfen Sie zuerst den Status, bevor Sie Controller-interne Details untersuchen:
 
 ```shell
 kubectl -n <dogu-namespace> get dogu <dogu-name> -o yaml
@@ -87,20 +87,20 @@ Die APIs verwenden keine gemeinsame Readiness-Condition. Prüfen Sie ihre API-sp
 - ServiceAccountRequest: `ServiceAccountReady` und
 - WarpMenuEntry: `Ready` und `Visible`.
 
-Verwenden Sie `metadata.generation`, Condition-`status`, `reason`, `message` und `observedGeneration`, sofern die API das jeweilige Feld bereitstellt. Eine vorhandene Ressource ohne ihre API-spezifischen Erfolgsbedingungen ist noch nicht erfolgreich integriert.
+Verwenden Sie `metadata.generation` sowie die Condition-Felder `status`, `reason`, `message` und `observedGeneration`, sofern die API das jeweilige Feld bereitstellt. Eine vorhandene Ressource ohne ihre API-spezifischen Erfolgsbedingungen ist noch nicht erfolgreich integriert.
 
 ## Konfiguration
 
 Behandeln Sie die `values.yaml` als öffentliche Konfigurationsschnittstelle des Charts:
 
-1. Stellen Sie sichere Standardwerte bereit, sodass eine normale Installation wenige Overrides benötigt.
+1. Stellen Sie sichere Standardwerte bereit, sodass für eine normale Installation nur wenige Values überschrieben werden müssen.
 2. Dokumentieren Sie Values, die Partner oder Instanzbetreiber:innen ändern sollen.
-3. Validieren Sie die endgültige Value-Struktur mit `values.schema.json`.
+3. Validieren Sie die Struktur der endgültigen Values mit `values.schema.json`.
 4. Verwenden Sie `dogu-values-metadata.yaml` für CES-weit abgebildete Einstellungen wie den Root-Loglevel, wenn der V3-Vertrag dies verlangt.
 
 Instanzspezifische Overrides werden über die Dogu-Ressource geliefert und durch die Plattform zusammengeführt. Verlangen Sie nicht, dass Betreiber:innen nach der Installation Deployments, StatefulSets oder Helm-Release-Secrets patchen; Reconciliation kann solche Änderungen überschreiben.
 
-Passwörter, Tokens und private Schlüssel dürfen weder in `values.yaml` committed noch in ConfigMaps gerendert werden. Verwenden Sie ein namensraumgebundenes Kubernetes-Secret oder ein Credential-Secret eines CES-Integrationscontrollers. Die V3-Architektur definiert aktuell keinen einheitlichen Mechanismus für sensitive Values; dokumentieren Sie deshalb jeden Secret-Vertrag im Chart.
+Passwörter, Token und private Schlüssel dürfen weder in `values.yaml` eingecheckt noch in ConfigMaps ausgegeben werden. Verwenden Sie ein namensraumgebundenes Kubernetes-Secret oder ein Credential-Secret eines CES-Integrationscontrollers. Die V3-Architektur definiert aktuell keinen einheitlichen Mechanismus für vertrauliche Values; dokumentieren Sie deshalb jeden Secret-Vertrag im Chart.
 
 ## Storage und PVCs
 
@@ -110,7 +110,7 @@ Dokumentieren Sie für jeden PVC:
 
 - welche Daten er enthält,
 - welcher Workload ihn verwendet,
-- den benötigten Access Mode,
+- den benötigten Zugriffsmodus,
 - die Standardgröße und
 - ob `storageClassName` konfigurierbar ist.
 
@@ -122,9 +122,9 @@ Eine Anwendung bleibt clusterintern, bis das Chart externen Zugriff deklariert. 
 
 ![Request-Routing von einem Client zu einem Dogu](../images/multinode-request-routing.svg)
 
-Bei HTTP-Routen bezeichnet die Exposition den Ziel-Service und -Port, den CES-relativen Pfad und ein optionales Path-Rewrite. Anwendungen müssen unter einem Pfad wie `/my-dogu` funktionieren; sie dürfen nicht voraussetzen, unter `/` zu laufen. Verwenden Sie TCP- oder UDP-Exposition nur, wenn das Anwendungsprotokoll nicht über das HTTP-Gateway laufen kann. Angeforderte externe Ports können kollidieren; `LoadBalancerPortsAllocated` und dessen Begründung zeigen, ob die Zuweisung erfolgreich war.
+Bei HTTP-Routen bezeichnet die Exposition den Ziel-Service und -Port, den CES-relativen Pfad und ein optionales Path-Rewrite. Anwendungen müssen unter einem Pfad wie `/my-dogu` funktionieren; sie dürfen nicht voraussetzen, unter `/` zu laufen. Verwenden Sie TCP- oder UDP-Routen nur, wenn das Anwendungsprotokoll nicht über das HTTP-Gateway laufen kann. Angeforderte externe Ports können kollidieren; `LoadBalancerPortsAllocated` und dessen Begründung zeigen, ob die Zuweisung erfolgreich war.
 
-Der Service-Discovery-Controller besitzt die erzeugten Gateway-Ressourcen. Helm verfolgt den vom Dogu-Chart gerenderten Service und die Exposition; das Chart darf die erzeugten Routen nicht patchen.
+Der Service-Discovery-Controller besitzt die erzeugten Gateway-Ressourcen. Helm verwaltet den vom Dogu-Chart erzeugten Service und die `Exposition`; das Chart darf die erzeugten Routen nicht verändern.
 
 ## Identity Provider und Authentifizierung
 
@@ -132,34 +132,34 @@ Um am CES-Single-Sign-on teilzunehmen, deklarieren Sie eine [`AuthRegistration`]
 
 Der Authentifizierungscontroller registriert den Client und veröffentlicht Credentials in einem Secret. Mounten oder lesen Sie dieses Secret in der Anwendung; duplizieren Sie die Credentials niemals in Chart-Values. Zur Fehleranalyse dienen `status.resolvedSecretRef` sowie die Conditions `Completed` und `CredentialsPublished`.
 
-Eine AuthRegistration provisioniert nur die clientseitige Integration. Die Anwendung muss das ausgewählte Authentifizierungsprotokoll weiterhin selbst implementieren, CES-pfadkompatible Callback-/Logout-URLs bilden und mit nicht verfügbaren oder rotierten Credentials umgehen.
+Eine AuthRegistration provisioniert nur die clientseitige Integration. Die Anwendung muss das ausgewählte Authentifizierungsprotokoll weiterhin selbst implementieren, mit CES-Pfaden kompatible Callback- und Logout-URLs bilden und mit nicht verfügbaren oder rotierten Credentials umgehen.
 
 ## Zwei Arten von Service-Accounts
 
 ### Kubernetes-Workload-ServiceAccount
 
-Ein Kubernetes-`ServiceAccount` gibt einem Pod Zugriff auf die Kubernetes-API. Erstellen Sie ihn nur, wenn die Anwendung diesen Zugriff benötigt. Verwenden Sie einen namensraumgebundenen ServiceAccount, setzen Sie `serviceAccountName` am Workload und gewähren Sie über eine Role nur die erforderlichen Rechte. Vermeiden Sie clusterweite RBAC.
+Ein Kubernetes-`ServiceAccount` stellt einem Pod eine Identität für den Zugriff auf die Kubernetes-API bereit. Wenn die Anwendung diesen Zugriff benötigt, konfigurieren Sie einen namensraumgebundenen ServiceAccount, setzen Sie `serviceAccountName` im Workload und gewähren Sie über eine Role nur die erforderlichen Rechte. Verwenden Sie clusterweite RBAC nur, wenn sie ausdrücklich erforderlich ist.
 
 ### CES-Service-Account-Credentials
 
 Ein [`ServiceAccountRequest`](https://github.com/cloudogu/k8s-serviceaccount-lib) (`k8s.cloudogu.com/v2`) fordert technische Credentials eines anderen Dogus oder einer Komponente an. Der Service Account Operator stellt sie in einem verwalteten Secret bereit.
 
-Die konsumierende Anwendung muss:
+Die konsumierende Anwendung und ihr Chart müssen:
 
 - den dokumentierten Parameter- und Secret-Key-Vertrag des Producers einhalten,
-- optionale Credential-Secrets mit `optional: true` mounten,
-- bei Secret-Rotation die Credentials neu laden oder den Workload neu starten und
+- optionale Credential-Secrets mit `optional: true` einbinden,
+- sicherstellen, dass die Anwendung rotierte Credentials neu lädt, oder den Workload neu starten und
 - das verwaltete Secret unverändert lassen.
 
 Ein Dogu, das Accounts anbietet, muss einen `ServiceAccountProducer` deklarieren und die [Producer-API](https://github.com/cloudogu/service-account-producer-sidecar) implementieren. Container desselben Dogus benötigen diesen CES-weiten Mechanismus normalerweise nicht. Wenn Credentials fehlen, prüfen Sie `ServiceAccountReady`.
 
 ## Warp-Menü
 
-Deklarieren Sie einen [`WarpMenuEntry`](https://github.com/cloudogu/k8s-warp-menu-entry-lib) (`k8s.cloudogu.com/v1`) für jeden internen, für Benutzer:innen sichtbaren Einstiegspunkt. Ein Dogu darf keinen oder mehrere Einträge besitzen.
+Deklarieren Sie einen [`WarpMenuEntry`](https://github.com/cloudogu/k8s-warp-menu-entry-lib) (`k8s.cloudogu.com/v1`) für jeden internen, für Benutzer:innen sichtbaren Einstiegspunkt. Je nach Bedarf kann ein Dogu keinen, einen oder mehrere Einträge definieren.
 
-Jeder Eintrag enthält deutsche und englische Anzeigenamen, einen Kategorie-Key und einen CES-relativen Pfad. Externe URLs sind bewusst nicht erlaubt; sie werden zentral von der Plattform kontrolliert. Mit `disabled: true` bleibt eine Deklaration erhalten, ohne gerendert zu werden. Die Status-Conditions `Ready` und `Visible` helfen bei der Diagnose eines fehlenden Eintrags.
+Jeder Eintrag enthält je einen deutschen und einen englischen Anzeigenamen, einen Kategorie-Key und einen CES-relativen Pfad. Externe URLs sind in `WarpMenuEntry`-Ressourcen nicht erlaubt; die Plattform verwaltet sie zentral. Mit `disabled: true` bleibt eine Deklaration erhalten, ohne angezeigt zu werden. Die Status-Conditions `Ready` und `Visible` helfen bei der Diagnose eines fehlenden Eintrags.
 
-Das Warp-Menü exponiert die Anwendung nicht. Sein Pfad muss zu einer unabhängig funktionierenden HTTP-Exposition passen.
+Das Warp-Menü macht die Anwendung nicht erreichbar. Sein Pfad muss zu einer unabhängig funktionierenden HTTP-Exposition passen.
 
 ## Labels und Selektoren
 
@@ -189,12 +189,12 @@ Dokumentieren und testen Sie das Löschverhalten persistenter oder extern verwal
 
 ## Checkliste vor einem Release
 
-Prüfen Sie vor der Übergabe eines Charts oder dem Test in einem Partner-CES:
+Verwenden Sie diese Checkliste vor der Übergabe eines Charts und bei Tests in einem Partner-CES:
 
 - [ ] Das Chart rendert mit beliebigen Release-Namen und Namespaces und `values.schema.json` validiert seine Values.
 - [ ] Workloads definieren Probes, Resource-Requests und -Limits sowie stabile Selektoren.
 - [ ] Storage- und Deinstallationsverhalten sind dokumentiert und getestet.
-- [ ] Externe Pfade verwenden Exposition-Ressourcen und Warp-Menü-Pfade funktionieren.
-- [ ] Credentials für Authentifizierung und technische Accounts werden aus Secrets verwendet, ohne offengelegt zu werden.
+- [ ] Für externe Pfade werden `Exposition`-Ressourcen verwendet, und die Pfade der Warp-Menü-Einträge funktionieren.
+- [ ] Credentials für die Authentifizierung und technische Accounts werden Secrets entnommen, ohne offengelegt zu werden.
 - [ ] Jede vom Dogu verwendete CES-Integration meldet einen erfolgreichen Status.
 - [ ] Installation, Upgrades, Reconciliation nach Konfigurationsänderungen und Deinstallation sind gegen die vorgesehene CES-Version getestet.

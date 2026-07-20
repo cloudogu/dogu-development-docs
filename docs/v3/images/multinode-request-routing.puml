@@ -1,11 +1,18 @@
 @startuml
 skinparam backgroundColor white
 skinparam shadowing false
+skinparam ActorBorderColor #00426B
+skinparam ActorFontColor #392A25
+skinparam NoteBackgroundColor #FCFAF4
+skinparam NoteBorderColor #23A3DD
+skinparam NoteFontColor #392A25
 skinparam sequence {
-  ArrowColor #4A5568
-  LifeLineBorderColor #4A5568
-  ParticipantBackgroundColor #EBF8FF
-  ParticipantBorderColor #2B6CB0
+  ArrowColor #00426B
+  ArrowFontColor #392A25
+  LifeLineBorderColor #1978A3
+  ParticipantBackgroundColor #23A3DD
+  ParticipantBorderColor #1978A3
+  ParticipantFontColor #392A25
 }
 
 actor "Browser / API client" as client

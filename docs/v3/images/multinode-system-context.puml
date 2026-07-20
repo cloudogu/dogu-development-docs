@@ -4,14 +4,34 @@ skinparam shadowing false
 skinparam componentStyle rectangle
 hide stereotype
 skinparam defaultTextAlignment center
-skinparam ArrowColor #4A5568
+skinparam ArrowColor #00426B
+skinparam ArrowFontColor #392A25
+skinparam ActorBorderColor #00426B
+skinparam ActorFontColor #392A25
 skinparam rectangle {
-  BackgroundColor #F7FAFC
-  BorderColor #2D3748
+  BackgroundColor #FCFAF4
+  BorderColor #00426B
+  FontColor #392A25
 }
 skinparam component {
-  BackgroundColor #EBF8FF
-  BorderColor #2B6CB0
+  BackgroundColor #23A3DD
+  BorderColor #1978A3
+  FontColor #392A25
+}
+skinparam cloud {
+  BackgroundColor #FCFAF4
+  BorderColor #1978A3
+  FontColor #392A25
+}
+skinparam artifact {
+  BackgroundColor #FCFAF4
+  BorderColor #1978A3
+  FontColor #392A25
+}
+skinparam database {
+  BackgroundColor #FCFAF4
+  BorderColor #1978A3
+  FontColor #392A25
 }
 
 <style>
