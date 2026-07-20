@@ -133,7 +133,7 @@ stage('Trivy scan') {
 }
 ```
 
-[trivy]: https://github.com/cloudogu/dogu-build-lib/blob/develop/docs/development/trivy_de.md
+[trivy]: https://github.com/cloudogu/ces-build-lib/blob/main/README.md#scan-dogu-image-with-trivy
 
 #### Manual testing on a test stage
 

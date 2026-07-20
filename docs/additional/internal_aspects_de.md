@@ -138,7 +138,7 @@ stage('Trivy scan') {
 }
 ```
 
-[trivy]: https://github.com/cloudogu/dogu-build-lib/blob/develop/docs/development/trivy_de.md
+[trivy]: https://github.com/cloudogu/ces-build-lib/blob/main/README.md#scan-dogu-image-with-trivy
 
 #### Manuelle Tests auf einer Test-Stage
 
@@ -313,4 +313,3 @@ Dort können dann die Bilder abgelegt werden.
 | SCM-Manager     | SCM-Manager                       | Mit Bindestrich                      |
 | User Management | User Management                   | Nicht zusammengeschrieben            |
 | Warp Menü       | Warp Menü (de) und Warp Menu (en) | Das CES Ausklappmenü am rechten Rand |
-
