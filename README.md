@@ -13,6 +13,13 @@ It has 3 main topics:
   - [interesting aspects](docs/additional/interesting_aspects_en.md)
   - [internal aspects](docs/additional/internal_aspects_en.md)
 
+## Dogu V3
+
+The Dogu V3 documentation is being developed. The current skeleton defines its navigation and content boundaries. Technical content will be added once the necessary V3 foundations are defined.
+
+- [Dogu V3 documentation — English](docs/v3/README.md)
+- [Dogu-V3-Dokumentation — Deutsch](docs/v3/README_de.md)
+
 ---
 
 ### What is the Cloudogu EcoSystem?
