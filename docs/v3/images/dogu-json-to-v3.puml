@@ -1,0 +1,71 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontColor #392A25
+skinparam ArrowColor #00426B
+skinparam rectangleBorderColor #1978A3
+skinparam rectangleBackgroundColor #23A3DD
+skinparam rectangleRoundCorner 0
+skinparam shadowing false
+hide stereotype
+left to right direction
+
+<style>
+rectangle {
+  FontColor white
+  .group {
+    BackgroundColor #FCFAF4
+    FontColor #392A25
+    LineColor #1978A3
+    HorizontalAlignment left
+  }
+  .mapping {
+    MinimumWidth 245
+    MinimumHeight 50
+    HorizontalAlignment left
+  }
+}
+</style>
+
+rectangle "V2 dogu.json responsibilities" as v2 <<group>> {
+  rectangle "Identity, versions,\ndiscovery metadata" as a <<mapping>>
+  rectangle "Workloads, ports, storage,\nhealth and security" as b <<mapping>>
+  rectangle "Configuration" as c <<mapping>>
+  rectangle "CES integrations" as d <<mapping>>
+  rectangle "Defined catalogue and\npublication data" as e <<mapping>>
+  rectangle "Fields removed without\nreplacement" as f <<mapping>>
+  rectangle "Category and other fields without\na general V3 destination" as g <<mapping>>
+
+  g -[hidden]right-> f
+  f -[hidden]right-> e
+  e -[hidden]right-> d
+  d -[hidden]right-> c
+  c -[hidden]right-> b
+  b -[hidden]right-> a
+}
+
+rectangle "Dogu V3 destinations" as v3 <<group>> {
+  rectangle "Chart.yaml\nmetadata" as chart <<mapping>>
+  rectangle "Helm templates →\nKubernetes resources" as helm <<mapping>>
+  rectangle "Chart values + schema +\ndogu-values-metadata.yaml" as config <<mapping>>
+  rectangle "CES custom resources" as ces <<mapping>>
+  rectangle "Chart.yaml + Dogu Registry +\nexternal marketing/sales data" as registry <<mapping>>
+  rectangle "Removed" as removed <<mapping>>
+  rectangle "No general V3\ndestination defined" as noGeneral <<mapping>>
+
+  noGeneral -[hidden]right-> removed
+  removed -[hidden]right-> registry
+  registry -[hidden]right-> ces
+  ces -[hidden]right-> config
+  config -[hidden]right-> helm
+  helm -[hidden]right-> chart
+}
+
+a --> chart
+b --> helm
+c --> config
+d --> ces
+e --> registry
+f --> removed
+g --> noGeneral
+@enduml

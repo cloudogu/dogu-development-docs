@@ -1,0 +1,66 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontColor #392A25
+skinparam ArrowColor #00426B
+skinparam rectangleBorderColor #1978A3
+skinparam rectangleBackgroundColor #23A3DD
+skinparam rectangleRoundCorner 0
+skinparam shadowing false
+hide stereotype
+left to right direction
+
+<style>
+root {
+  Margin 20
+}
+rectangle {
+  FontColor white
+  .group {
+    BackgroundColor #FCFAF4
+    FontColor #392A25
+    LineColor #1978A3
+    HorizontalAlignment left
+  }
+  .leftArtifact {
+    MinimumWidth 205
+    HorizontalAlignment left
+  }
+  .renderedArtifact {
+    MinimumWidth 238
+    HorizontalAlignment left
+  }
+}
+</style>
+
+rectangle "Helm chart" as chart <<group>> {
+  together {
+    rectangle "Chart.yaml\nidentity + versions" as metadata <<leftArtifact>>
+    rectangle "values.yaml\nvalues.schema.json\ndogu-values-\nmetadata.yaml" as config <<leftArtifact>>
+    rectangle "Image metadata\nchart-patch-tpl.yaml" as imageMetadata <<leftArtifact>>
+    rectangle "Upgrade metadata\ndogu-upgrade.yaml" as upgradeMetadata <<leftArtifact>>
+  }
+  rectangle "templates/" as templates
+}
+
+cloud "Referenced\ncontainer images" as images #FCFAF4
+rectangle "Platform tooling\nDogu Registry · ces-mirror" as tooling <<group>>
+rectangle "Dogu Operator" as operator <<group>>
+rectangle "Rendered release resources" as rendered <<group>> {
+  together {
+    rectangle "Kubernetes resources\nworkloads · Services · PVCs" as k8s <<renderedArtifact>>
+    rectangle "CES integration resources\nAuthRegistration · Exposition\nServiceAccountRequest / Producer\nWarpMenuEntry" as ces <<renderedArtifact>>
+  }
+}
+
+chart -[hidden]right-> rendered
+rendered -[hidden]right-> images
+metadata --> templates
+config --> templates
+templates --> k8s
+templates --> ces
+imageMetadata --> tooling
+tooling --> images
+upgradeMetadata --> operator
+k8s --> images
+@enduml

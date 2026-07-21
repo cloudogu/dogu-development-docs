@@ -15,7 +15,12 @@ The documentation will guide developers from a minimal working Dogu to more deta
 
 ## Available concepts
 
+- [Understand Dogu V3 artifacts](concepts/artifacts.md)
 - [Understand the Multinode runtime environment](concepts/multinode-environment.md)
+
+## Available reference
+
+- [Dogu V3 artifact compendium](reference/compendium.md)
 
 ## Content boundaries
 
