@@ -12,7 +12,7 @@ skinparam sequence {
   LifeLineBorderColor #1978A3
   ParticipantBackgroundColor #23A3DD
   ParticipantBorderColor #1978A3
-  ParticipantFontColor #392A25
+  ParticipantFontColor #FFFFFF
 }
 
 actor "Browser / API client" as client

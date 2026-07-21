@@ -16,7 +16,7 @@ skinparam rectangle {
 skinparam component {
   BackgroundColor #23A3DD
   BorderColor #1978A3
-  FontColor #392A25
+  FontColor #FFFFFF
 }
 skinparam cloud {
   BackgroundColor #FCFAF4
