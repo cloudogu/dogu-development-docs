@@ -30,8 +30,8 @@ rectangle {
 rectangle "Aufgaben der V2-Datei dogu.json" as v2 <<group>> {
   rectangle "Identität, Versionen,\nDiscovery-Metadaten" as a <<mapping>>
   rectangle "Workloads, Ports, Speicher,\nHealth und Sicherheit" as b <<mapping>>
-  rectangle "Konfiguration" as c <<mapping>>
-  rectangle "CES-Integrationen" as d <<mapping>>
+  rectangle "Konfiguration\n " as c <<mapping>>
+  rectangle "CES-\nIntegrationen" as d <<mapping>>
   rectangle "Definierte Katalog- und\nVeröffentlichungsdaten" as e <<mapping>>
   rectangle "Ersatzlos entfernte\nFelder" as f <<mapping>>
   rectangle "Kategorie und andere Felder ohne\nallgemeines V3-Ziel" as g <<mapping>>
@@ -48,9 +48,9 @@ rectangle "Ziele in Dogu V3" as v3 <<group>> {
   rectangle "Chart.yaml\nMetadaten" as chart <<mapping>>
   rectangle "Helm-Templates →\nKubernetes-Ressourcen" as helm <<mapping>>
   rectangle "Chart-Values + Schema +\ndogu-values-metadata.yaml" as config <<mapping>>
-  rectangle "CES-Custom-Resources" as ces <<mapping>>
+  rectangle "CES-Custom-\nResources" as ces <<mapping>>
   rectangle "Chart.yaml + Dogu Registry +\nexterne Marketing-/Vertriebsdaten" as registry <<mapping>>
-  rectangle "Entfällt" as removed <<mapping>>
+  rectangle "Entfällt\n " as removed <<mapping>>
   rectangle "Kein allgemeines\nV3-Ziel festgelegt" as noGeneral <<mapping>>
 
   noGeneral -[hidden]right-> removed

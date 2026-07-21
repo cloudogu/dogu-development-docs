@@ -30,8 +30,8 @@ rectangle {
 rectangle "V2 dogu.json responsibilities" as v2 <<group>> {
   rectangle "Identity, versions,\ndiscovery metadata" as a <<mapping>>
   rectangle "Workloads, ports, storage,\nhealth and security" as b <<mapping>>
-  rectangle "Configuration" as c <<mapping>>
-  rectangle "CES integrations" as d <<mapping>>
+  rectangle "Configuration\n " as c <<mapping>>
+  rectangle "CES\nintegrations" as d <<mapping>>
   rectangle "Defined catalogue and\npublication data" as e <<mapping>>
   rectangle "Fields removed without\nreplacement" as f <<mapping>>
   rectangle "Category and other fields without\na general V3 destination" as g <<mapping>>
@@ -48,9 +48,9 @@ rectangle "Dogu V3 destinations" as v3 <<group>> {
   rectangle "Chart.yaml\nmetadata" as chart <<mapping>>
   rectangle "Helm templates →\nKubernetes resources" as helm <<mapping>>
   rectangle "Chart values + schema +\ndogu-values-metadata.yaml" as config <<mapping>>
-  rectangle "CES custom resources" as ces <<mapping>>
+  rectangle "CES custom\nresources" as ces <<mapping>>
   rectangle "Chart.yaml + Dogu Registry +\nexternal marketing/sales data" as registry <<mapping>>
-  rectangle "Removed" as removed <<mapping>>
+  rectangle "Removed\n " as removed <<mapping>>
   rectangle "No general V3\ndestination defined" as noGeneral <<mapping>>
 
   noGeneral -[hidden]right-> removed
