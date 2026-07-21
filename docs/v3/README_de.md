@@ -2,8 +2,6 @@
 
 Dieser Bereich wird Dogu-Entwickler:innen durch die Entwicklung und den Betrieb von Dogu-V3-Anwendungen führen.
 
-> **Dokumentationsstatus:** Die Dokumentationsstruktur ist vorhanden, die technische Dokumentation aber noch nicht vollständig. Themenseiten werden ergänzt, sobald die nötigen V3-Grundlagen feststehen.
-
 ## Geplanter Lernpfad
 
 Die Dokumentation wird Entwickler:innen von einem minimalen lauffähigen Dogu zu detaillierten, aufgabenorientierten Informationen führen:
@@ -15,23 +13,7 @@ Die Dokumentation wird Entwickler:innen von einem minimalen lauffähigen Dogu zu
 5. CES-Integrationen mit gezielten Anleitungen ergänzen und
 6. bei Bedarf Informationen zu Release, Migration oder Fehlerbehebung nachschlagen.
 
-## Zielstruktur
-
-Der folgende Baum ist die Zielstruktur. Verzeichnisse und Seiten werden erst durch die Folge-Storys angelegt, die ihre tatsächlichen Inhalte liefern; leere Platzhalter werden nicht erstellt.
-
-```text
-docs/v3/
-├── README_en.md / README_de.md
-├── getting-started/   # Voraussetzungen, Quickstart und erweiterte Anleitung
-├── concepts/          # Dogu V3, Artefakte, Lebenszyklus und Multinode-Kontext
-├── guides/            # Aufgabenorientierte Integrations-, Release- und Migrationsanleitungen
-├── reference/         # Artefaktübersicht und Links auf normative Verträge
-├── best-practices/    # CES-spezifische Chart-, Image- und Sicherheitspraktiken
-├── troubleshooting/   # Symptomorientierte Diagnose
-└── images/            # Editierbare Diagrammquellen und gerenderte Bilder
-```
-
-### Inhaltliche Abgrenzung
+## Inhaltliche Abgrenzung
 
 - **Erste Schritte** enthalten ausführbare, durchgängige Anleitungen. Der Quickstart behandelt nur den kleinsten lauffähigen Happy Path.
 - **Konzepte** erklären das mentale Modell und Zusammenhänge, ohne technische Referenzen zu duplizieren.
