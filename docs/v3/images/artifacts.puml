@@ -8,7 +8,7 @@ skinparam rectangleBackgroundColor #23A3DD
 skinparam rectangleRoundCorner 0
 skinparam shadowing false
 hide stereotype
-left to right direction
+top to bottom direction
 
 <style>
 root {
@@ -22,45 +22,52 @@ rectangle {
     LineColor #1978A3
     HorizontalAlignment left
   }
-  .leftArtifact {
-    MinimumWidth 205
+  .artifact {
+    MinimumWidth 240
     HorizontalAlignment left
   }
-  .renderedArtifact {
-    MinimumWidth 238
+  .system {
+    BackgroundColor white
+    FontColor #1978A3
+    LineColor #1978A3
     HorizontalAlignment left
   }
 }
 </style>
 
-rectangle "Helm chart" as chart <<group>> {
-  together {
-    rectangle "Chart.yaml\nidentity + versions" as metadata <<leftArtifact>>
-    rectangle "values.yaml\nvalues.schema.json\ndogu-values-\nmetadata.yaml" as config <<leftArtifact>>
-    rectangle "Image metadata\nchart-patch-tpl.yaml" as imageMetadata <<leftArtifact>>
-    rectangle "Upgrade metadata\ndogu-upgrade.yaml" as upgradeMetadata <<leftArtifact>>
-  }
-  rectangle "templates/" as templates
+rectangle "Helm chart — the Dogu V3 package" as chart <<group>> {
+  rectangle "Chart.yaml\nidentity + discovery metadata" as metadata <<artifact>>
+  rectangle "values.yaml\nvalues.schema.json" as config <<artifact>>
+  rectangle "dogu-values-metadata.yaml\nCES config mapping" as valuesMeta <<artifact>>
+  rectangle "chart-patch-tpl.yaml\ncontainer image references" as imageMeta <<artifact>>
+  rectangle "dogu-upgrade.yaml\nupgrade coordination" as upgradeMeta <<artifact>>
+  rectangle "templates/\nrender workloads + CES CRs" as templates <<artifact>>
+
+  metadata -[hidden]right-> config
+  config -[hidden]right-> valuesMeta
+  imageMeta -[hidden]right-> upgradeMeta
+  upgradeMeta -[hidden]right-> templates
 }
 
-cloud "Referenced\ncontainer images" as images #FCFAF4
-rectangle "Platform tooling\nDogu Registry · ces-mirror" as tooling <<group>>
-rectangle "Dogu Operator" as operator <<group>>
 rectangle "Rendered release resources" as rendered <<group>> {
-  together {
-    rectangle "Kubernetes resources\nworkloads · Services · PVCs" as k8s <<renderedArtifact>>
-    rectangle "CES integration resources\nAuthRegistration · Exposition\nServiceAccountRequest / Producer\nWarpMenuEntry" as ces <<renderedArtifact>>
-  }
+  rectangle "Kubernetes resources\nworkloads · Services · PVCs" as k8s <<artifact>>
+  rectangle "CES integration resources\nAuthRegistration · Exposition\nServiceAccountRequest / Producer\nWarpMenuEntry" as ces <<artifact>>
+  k8s -[hidden]right-> ces
 }
 
-chart -[hidden]right-> rendered
-rendered -[hidden]right-> images
-metadata --> templates
+rectangle "Dogu Registry\nces-mirror" as registry <<system>>
+rectangle "Dogu Operator" as operator <<system>>
+cloud "Referenced\ncontainer images" as images #FCFAF4
+
 config --> templates
 templates --> k8s
 templates --> ces
-imageMetadata --> tooling
-tooling --> images
-upgradeMetadata --> operator
 k8s --> images
+
+metadata --> registry
+imageMeta --> registry
+registry --> images
+
+valuesMeta --> operator
+upgradeMeta --> operator
 @enduml
