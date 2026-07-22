@@ -54,7 +54,7 @@ rectangle "Multinode CES" {
 
   rectangle "Dogu namespace" <<doguNamespace>> {
     component "Application workloads\nand Services" as workloads
-    component "CES integration CRs\nExposition · AuthRegistration\nServiceAccount · WarpMenuEntry" as crs
+    component "CES integration CRs\nExposition · AuthRegistration\nServiceAccountRequest / Producer\nWarpMenuEntry" as crs
   }
 
   component "CES integration controllers" as controllers
@@ -67,8 +67,8 @@ registry --> chart : &#160;supplies chart and metadata
 chart --> lifecycle : &#160;resolved and validated
 lifecycle --> workloads : &#160;reconciles release resources
 lifecycle --> crs : &#160;reconciles release resources
-controllers --> crs : &#160;watches + reports status
-controllers --> services
+crs <--> controllers : &#160;watches CRs + reports status
+controllers --> services : &#160;creates + updates
 workloads --> storage : &#160;mounts PVCs
 workloads --> services : &#160;consumes CES capabilities
 

@@ -6,6 +6,7 @@ skinparam ActorFontColor #392A25
 skinparam NoteBackgroundColor #FCFAF4
 skinparam NoteBorderColor #23A3DD
 skinparam NoteFontColor #392A25
+skinparam maxMessageSize 180
 skinparam sequence {
   ArrowColor #00426B
   ArrowFontColor #392A25
@@ -15,13 +16,13 @@ skinparam sequence {
   ParticipantFontColor #FFFFFF
 }
 
-actor "CES operator" as user
-participant "Dogu resource" as dogu
-participant "Dogu Operator" as operator
-participant "OCI registry" as registry
-participant "Helm release" as helm
+participant "CES\noperator" as user
+participant "Dogu\nresource" as dogu
+participant "Dogu\nOperator" as operator
+participant "OCI\nregistry" as registry
+participant "Helm\nrelease" as helm
 participant "Kubernetes" as kubernetes
-participant "Integration controllers" as integrations
+participant "Integration\ncontrollers" as integrations
 
 user -> dogu : create or change desired version/config
 dogu -> operator : reconciliation event

@@ -44,7 +44,7 @@ The Dogu Registry namespace in a name such as `official/my-dogu`, the OCI reposi
 
 ## Helm release and Dogu lifecycle
 
-The Dogu custom resource is the desired state from the platform's perspective. The Helm release is the mechanism used to realize that state. CES administrators change the Dogu resource; they must not modify the generated Helm release directly.
+The Dogu custom resource represents the platform's desired state. In a Blueprint-managed CES, change the Blueprint; the Blueprint Operator owns the derived Dogu resource. Modify a Dogu resource directly only when the deployment procedure explicitly identifies it as the source of truth. Do not modify the generated Helm release directly.
 
 ![Dogu V3 reconciliation and lifecycle](../images/multinode-lifecycle.svg)
 
@@ -68,7 +68,7 @@ The Dogu version is the chart `version`; `appVersion` records the packaged appli
 - compatible with the chart's volume access modes;
 - observable through useful Job logs and workload status.
 
-The Dogu Operator must coordinate values and workload scaling when migration containers or hook Jobs need existing workloads or `ReadWriteOnce` volumes. Do not rely on the platform to execute V2 `pre-upgrade.sh` or `post-upgrade.sh` scripts. A V3 chart supplies its migration implementation; do not rely on standalone Helm hooks as the V3 lifecycle contract.
+The Dogu Operator must coordinate values and workload scaling when migration containers or hook Jobs need existing workloads or `ReadWriteOnce` volumes. A chart may implement migrations with init containers or Jobs started by Helm upgrade hooks. `dogu-upgrade.yaml` is the platform-level contract for valid version transitions; hook annotations alone do not replace that contract. The platform does not automatically execute V2 `pre-upgrade.sh` or `post-upgrade.sh` scripts.
 
 ### Reconciliation and status
 
@@ -98,7 +98,7 @@ Treat `values.yaml` as the chart's public configuration interface:
 3. validate the final value structure with `values.schema.json`; and
 4. use `dogu-values-metadata.yaml` for CES-wide mapped settings such as the root log level when required by the V3 contract.
 
-Instance-specific overrides are supplied through the Dogu resource and merged by the platform. Do not require operators to patch Deployments, StatefulSets or Helm release Secrets after installation; reconciliation can overwrite those changes.
+Instance-specific overrides are supplied through the Dogu resource and merged by the platform. In a Blueprint-managed CES, define these overrides in the Blueprint instead of editing the derived Dogu resource. Do not require operators to patch Deployments, StatefulSets or Helm release Secrets after installation; reconciliation can overwrite those changes.
 
 Passwords, tokens and private keys must not be committed to `values.yaml` or rendered into ConfigMaps. Consume a namespaced Kubernetes Secret or a credential Secret produced by a CES integration controller. The V3 architecture does not currently define one generic sensitive-values mechanism, so document each Secret contract in the chart.
 
@@ -147,11 +147,11 @@ A [`ServiceAccountRequest`](https://github.com/cloudogu/k8s-serviceaccount-lib) 
 The consuming application and its chart must:
 
 - follow the producer's documented parameter and Secret-key contract;
-- mount optional credential Secrets with `optional: true`;
+- mount the credential Secret with `optional: true` when `ServiceAccountRequest.spec.optional` is `true`;
 - ensure that the application reloads rotated credentials or restart the workload; and
 - leave the managed Secret unchanged.
 
-A Dogu that offers accounts must declare a `ServiceAccountProducer` and implement the [producer API](https://github.com/cloudogu/service-account-producer-sidecar). Containers in the same Dogu normally do not need this CES-wide mechanism. Inspect `ServiceAccountReady` when credentials are unavailable.
+A Dogu that offers accounts must declare a `ServiceAccountProducer` and implement its configured producer strategy. The HTTP strategy is typically exposed through an adapter such as the [service-account-producer sidecar](https://github.com/cloudogu/service-account-producer-sidecar). Consult the [`ServiceAccountProducer` API](https://github.com/cloudogu/k8s-serviceaccount-lib/tree/develop/api/v2) for the complete contract. Containers in the same Dogu normally do not need this CES-wide mechanism. Inspect `ServiceAccountReady` when credentials are unavailable.
 
 ## Warp Menu
 

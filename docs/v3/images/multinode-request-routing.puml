@@ -16,25 +16,25 @@ skinparam sequence {
 }
 
 actor "Browser / API client" as client
-participant "Exposition CR" as exposition
-participant "Service Discovery" as discovery
 participant "CES Gateway" as gateway
-participant "Generated route" as route
 participant "Kubernetes Service" as service
 participant "Dogu Pod" as pod
+participant "Exposition CR" as exposition
+participant "Service Discovery" as discovery
+participant "Generated route\nconfiguration" as route
 
+== Control plane: route reconciliation ==
 exposition -> discovery : service + port + path + rewrite
 discovery -> route : reconcile
 route -> gateway : configure route
 discovery -> exposition : update API-specific conditions
 
+== Data plane: request processing ==
 client -> gateway : HTTPS request to /my-dogu/...
-gateway -> route : match CES path
-route -> service : forward / optionally rewrite
+gateway -> service : match route, forward / optionally rewrite
 service -> pod : target port
 pod --> service : response
-service --> route : response
-route --> gateway : response
+service --> gateway : response
 gateway --> client : HTTPS response
 
 note over exposition,route

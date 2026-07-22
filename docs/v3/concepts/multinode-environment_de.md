@@ -6,7 +6,7 @@ Diese Seite erklärt die daraus entstehenden Verantwortlichkeiten und Interaktio
 
 ## Das mentale Modell
 
-![Systemkontext eines Dogu V3](../images/multinode-system-context.svg)
+![Systemkontext eines Dogu V3](../images/multinode-system-context_de.svg)
 
 Die Verantwortlichkeiten sind bewusst getrennt:
 
@@ -44,9 +44,9 @@ Der Dogu-Registry-Namespace in einem Namen wie `official/my-dogu`, der OCI-Repos
 
 ## Helm-Release und Dogu-Lebenszyklus
 
-Die Dogu-Custom-Resource beschreibt den Sollzustand aus Sicht der Plattform. Das Helm-Release ist der Mechanismus, der diesen Zustand umsetzt. CES-Administrator:innen ändern die Dogu-Ressource; das daraus erzeugte Helm-Release darf nicht direkt verändert werden.
+Die Dogu-Custom-Resource beschreibt den Sollzustand aus Sicht der Plattform. In einem Blueprint-verwalteten CES ändern Administrator:innen den Blueprint; der Blueprint-Operator verwaltet die daraus abgeleitete Dogu-Ressource. Verändern Sie eine Dogu-Ressource nur dann direkt, wenn das Bereitstellungsverfahren sie ausdrücklich als führende Konfigurationsquelle ausweist. Verändern Sie das erzeugte Helm-Release nicht direkt.
 
-![Reconciliation und Lebenszyklus eines Dogu V3](../images/multinode-lifecycle.svg)
+![Reconciliation und Lebenszyklus eines Dogu V3](../images/multinode-lifecycle_de.svg)
 
 Der vorgesehene Ablauf ist:
 
@@ -68,7 +68,7 @@ Die Dogu-Version entspricht der Chart-`version`; `appVersion` enthält die Versi
 - mit den Volume-Access-Modes des Charts kompatibel sein,
 - durch aussagekräftige Job-Logs und Workload-Status beobachtbar sein.
 
-Der Dogu Operator muss Values und die Skalierung der Workloads koordinieren, wenn Migrationscontainer oder Hook-Jobs auf bestehende Workloads oder `ReadWriteOnce`-Volumes zugreifen. Verlassen Sie sich nicht darauf, dass die Plattform V2-`pre-upgrade.sh`- oder `post-upgrade.sh`-Skripte ausführt. Ein V3-Chart liefert seine Migrationsimplementierung; verlassen Sie sich nicht auf eigenständige Helm-Hooks als V3-Lebenszyklusvertrag.
+Der Dogu Operator muss Values und die Skalierung der Workloads koordinieren, wenn Migrationscontainer oder Hook-Jobs auf bestehende Workloads oder `ReadWriteOnce`-Volumes zugreifen. Ein Chart kann Migrationen mit Init-Containern oder durch Helm-Upgrade-Hooks gestarteten Jobs umsetzen. `dogu-upgrade.yaml` bildet den plattformweiten Vertrag für gültige Versionsübergänge; Hook-Annotationen allein ersetzen diesen Vertrag nicht. Die Plattform führt V2-`pre-upgrade.sh`- oder `post-upgrade.sh`-Skripte nicht automatisch aus.
 
 ### Reconciliation und Status
 
@@ -98,7 +98,7 @@ Behandeln Sie die `values.yaml` als öffentliche Konfigurationsschnittstelle des
 3. Validieren Sie die Struktur der endgültigen Values mit `values.schema.json`.
 4. Verwenden Sie `dogu-values-metadata.yaml` für CES-weit abgebildete Einstellungen wie den Root-Loglevel, wenn der V3-Vertrag dies verlangt.
 
-Instanzspezifische Overrides werden über die Dogu-Ressource geliefert und durch die Plattform zusammengeführt. Verlangen Sie nicht, dass Betreiber:innen nach der Installation Deployments, StatefulSets oder Helm-Release-Secrets patchen; Reconciliation kann solche Änderungen überschreiben.
+Instanzspezifische Overrides werden über die Dogu-Ressource geliefert und durch die Plattform zusammengeführt. Definieren Sie diese Overrides in einem Blueprint-verwalteten CES im Blueprint, statt die abgeleitete Dogu-Ressource zu verändern. Verlangen Sie nicht, dass Betreiber:innen nach der Installation Deployments, StatefulSets oder Helm-Release-Secrets patchen; Reconciliation kann solche Änderungen überschreiben.
 
 Passwörter, Token und private Schlüssel dürfen weder in `values.yaml` eingecheckt noch in ConfigMaps ausgegeben werden. Verwenden Sie ein namensraumgebundenes Kubernetes-Secret oder ein Credential-Secret eines CES-Integrationscontrollers. Die V3-Architektur definiert aktuell keinen einheitlichen Mechanismus für vertrauliche Values; dokumentieren Sie deshalb jeden Secret-Vertrag im Chart.
 
@@ -120,7 +120,7 @@ Tragen Sie keine clusterspezifische StorageClass fest ein. Legen Sie fest und te
 
 Eine Anwendung bleibt clusterintern, bis das Chart externen Zugriff deklariert. Erstellen Sie einen normalen Kubernetes-Service für den Ziel-Workload und eine oder mehrere [`Exposition`](https://github.com/cloudogu/k8s-exposition-lib)-Ressourcen mit den benötigten HTTP-, TCP- oder UDP-Routen. Erstellen Sie keine plattformspezifischen Ingress- oder Traefik-Ressourcen direkt.
 
-![Request-Routing von einem Client zu einem Dogu](../images/multinode-request-routing.svg)
+![Request-Routing von einem Client zu einem Dogu](../images/multinode-request-routing_de.svg)
 
 Bei HTTP-Routen bezeichnet die Exposition den Ziel-Service und -Port, den CES-relativen Pfad und ein optionales Path-Rewrite. Anwendungen müssen unter einem Pfad wie `/my-dogu` funktionieren; sie dürfen nicht voraussetzen, unter `/` zu laufen. Verwenden Sie TCP- oder UDP-Routen nur, wenn das Anwendungsprotokoll nicht über das HTTP-Gateway laufen kann. Angeforderte externe Ports können kollidieren; `LoadBalancerPortsAllocated` und dessen Begründung zeigen, ob die Zuweisung erfolgreich war.
 
@@ -147,11 +147,11 @@ Ein [`ServiceAccountRequest`](https://github.com/cloudogu/k8s-serviceaccount-lib
 Die konsumierende Anwendung und ihr Chart müssen:
 
 - den dokumentierten Parameter- und Secret-Key-Vertrag des Producers einhalten,
-- optionale Credential-Secrets mit `optional: true` einbinden,
+- das Credential-Secret mit `optional: true` einbinden, wenn `ServiceAccountRequest.spec.optional` den Wert `true` hat,
 - sicherstellen, dass die Anwendung rotierte Credentials neu lädt, oder den Workload neu starten und
 - das verwaltete Secret unverändert lassen.
 
-Ein Dogu, das Accounts anbietet, muss einen `ServiceAccountProducer` deklarieren und die [Producer-API](https://github.com/cloudogu/service-account-producer-sidecar) implementieren. Container desselben Dogus benötigen diesen CES-weiten Mechanismus normalerweise nicht. Wenn Credentials fehlen, prüfen Sie `ServiceAccountReady`.
+Ein Dogu, das Accounts anbietet, muss einen `ServiceAccountProducer` deklarieren und die darin konfigurierte Producer-Strategie implementieren. Die HTTP-Strategie wird üblicherweise über einen Adapter wie den [service-account-producer-Sidecar](https://github.com/cloudogu/service-account-producer-sidecar) bereitgestellt. Den vollständigen Vertrag beschreibt die [`ServiceAccountProducer`-API](https://github.com/cloudogu/k8s-serviceaccount-lib/tree/develop/api/v2). Container desselben Dogus benötigen diesen CES-weiten Mechanismus normalerweise nicht. Wenn Credentials fehlen, prüfen Sie `ServiceAccountReady`.
 
 ## Warp-Menü
 

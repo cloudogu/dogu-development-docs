@@ -1,0 +1,45 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam ActorBorderColor #00426B
+skinparam ActorFontColor #392A25
+skinparam NoteBackgroundColor #FCFAF4
+skinparam NoteBorderColor #23A3DD
+skinparam NoteFontColor #392A25
+skinparam sequence {
+  ArrowColor #00426B
+  ArrowFontColor #392A25
+  LifeLineBorderColor #1978A3
+  ParticipantBackgroundColor #23A3DD
+  ParticipantBorderColor #1978A3
+  ParticipantFontColor #FFFFFF
+}
+
+actor "Browser / API-Client" as client
+participant "CES-Gateway" as gateway
+participant "Kubernetes-Service" as service
+participant "Dogu-Pod" as pod
+participant "Exposition-CR" as exposition
+participant "Service Discovery" as discovery
+participant "Erzeugte Routen-\nkonfiguration" as route
+
+== Steuerungsebene: Routenabgleich ==
+exposition -> discovery : Service + Port + Pfad + Rewrite
+discovery -> route : abgleichen
+route -> gateway : Route konfigurieren
+discovery -> exposition : API-spezifische Conditions aktualisieren
+
+== Datenebene: Request-Verarbeitung ==
+client -> gateway : HTTPS-Request an /my-dogu/...
+gateway -> service : Route anwenden, weiterleiten / optional umschreiben
+service -> pod : Ziel-Port
+pod --> service : Response
+service --> gateway : Response
+gateway --> client : HTTPS-Response
+
+note over exposition,route
+Helm verwaltet Service + Exposition.
+Die Exposition steuert erzeugte Routen über die Controller-Verantwortung.
+end note
+
+@enduml
