@@ -45,7 +45,7 @@ Jede Mandantenumgebung erfordert somit ein dediziertes Kubernetes-Cluster, was e
 ## Lebenszyklus 
 
 Sowohl die oben genannte Dogu-CR als auch Component-CR beschreiben den Sollzustand aus der Sicht der Plattform. Der Lebenszyklus 
-des damit verbundenden Helm-Charts ist an die jeweilige CR gebunden. Wird die CR gelöscht, wird das entsprechende Dogu bzw. 
+des damit verbundenden Helm-Charts ist an die jeweilige CR gebunden. Wird die Dogu-Version innerhalb der CR hochgesetzt, so wird das das entsprechende Dogu aktualisiert (downgrades werden nicht unterstützt). Wird die CR gelöscht, wird das entsprechende Dogu bzw. 
 die Komponente gelöscht. 
 
 ## Konfiguration
