@@ -1,13 +1,18 @@
 # Understanding the Multinode Runtime Environment
 
+This document explains how the runtime environment of the Multinode variant of the Cloudogu EcoSystem (CES-MN) is structured and walks through its core concepts – from architecture and lifecycle to configuration, storage, networking, and the integration of Dogus into the platform.
+
 For the MultiNode variant of the Cloudogu EcoSystem (CES-MN), Kubernetes serves as a distributed, highly available runtime
 environment that ensures dynamic scaling and fault tolerance across multiple cluster nodes. The platform uses
 Custom Resource Definitions (CRDs) to create Kubernetes-native abstractions for managing the entire platform.
 They extend the Kubernetes API and allow Cloudogu's own operators to declaratively establish the desired target state of the platform.
 
-The three central top-tier CRDs of this architecture are:
+## Key components
 
-**1. Dogu CRD**  
+CES-MN primarily uses three key top-tier CRDs, which form the core of the architecture.
+
+### Dogu CRD
+
 The Dogu CRD describes a single application within the CES (such as SCM-Manager, Jenkins, Redmine, or SonarQube).
 
 - **Purpose**: It serves as the declaration for the installation, configuration, and lifecycle of a single Dogu in the Kubernetes cluster.
@@ -15,18 +20,20 @@ The Dogu CRD describes a single application within the CES (such as SCM-Manager,
 - **How it works**: When a Dogu object is created or modified in the cluster, the operator takes care of deploying the Helm chart associated with the Dogu into the cluster.
 The chart provides the workloads and can be integrated to the platform via CRDs, e.g. connection to SSO or integration into the central Warp menu.
 
-**2. Component CRD**  
-While a Dogu represents a user application, a Component represents system and infrastructure building blocks that are required to operate the platform itself.
+### Component CRD
+
+While a Dogu represents a user application, a Component represents a system and infrastructure building block that is required to operate the platform itself.
 
 - **Purpose**: Management of core services such as the Identity Provider, monitoring, or Cloudogu-internal operators for platform integration.
-- **Managed by**: The [Component Operator](https://github.com/cloudogu/k8s-dogu-operator/blob/main/docs/operations/overview_en.md).
+- **Managed by**: The [Component Operator](https://github.com/cloudogu/k8s-component-operator/blob/develop/docs/operations/managing_components_en.md).
 - **Difference from a Dogu**: Components are integrated more deeply into the cluster and form the foundation on which the Dogus can run in the first place.
 They encapsulate Helm charts in order to provide base functionality consistently.
 
 Component CRs are usually not installed by the end user, but are managed via the [Ecosystem Core](https://github.com/cloudogu/ecosystem-core/blob/main/docs/operations/configuration_en.md).
 Ecosystem Core is a Helm chart that installs the core components required to run the CES-MN.
 
-**3. Blueprint CRD**  
+### Blueprint CRD
+
 The Blueprint CRD sits hierarchically above the individual Dogus and represents the complete Dogu landscape of a tenant.
 
 - **Purpose**: It defines the desired overall system (a "blueprint"), i.e. which combinations of Dogus should be installed in which versions and configurations.
@@ -62,13 +69,13 @@ the desired state based on the provided CR and overwrites any changes to the res
 Operating CES-MN requires a CSI-compatible storage driver and support for PVC expansion in the cluster.
 In addition, a default storage class is already defined in the cluster, so it does not have to be defined in the PVC.
 
-A Dogu chart defines the required PVCs and volume mounts itself. Unlike V2, a Dogu can use multiple volumes,
+A Dogu chart defines the required PVCs and volume mounts itself. Unlike Dogu API V2, a Dogu can now use multiple volumes,
 for example separated for application and database.
 
 ## Networking
 
-For networking in CES-MN, a CNI-compatible network driver (Container Network Interface) is used.
-The platform has been successfully tested with Calico and Cilium. NetworkPolicies are used to secure the traffic between pods and namespaces.
+For networking in CES-MN, a [CNI](https://github.com/containernetworking/cni)-compatible network driver (Container Network Interface) is used.
+The platform has been successfully tested with [Calico](https://github.com/projectcalico/calico) and [Cilium](https://github.com/cilium/cilium). NetworkPolicies are used to secure the traffic between pods and namespaces.
 To ensure the portability of the platform and to avoid vendor lock-in regarding the CNI driver, only Kubernetes-native NetworkPolicies (`apiVersion: networking.k8s.io/v1`) may be used.
 The use of driver-specific CRDs for network rules should be avoided.
 
@@ -84,6 +91,8 @@ can be made without impairing the overall system. The following CRDs are availab
 - **Exposition**: Exposes the service of a Dogu so that routes or ports are reachable from the outside
 - **ServiceAccountRequest**: Requests technical credentials of another Dogu or a Component
 - **ServiceAccountProducer**: Defines how a ServiceAccount can be requested from your own Dogu
+
+The platform API and other artifacts are described in more detail in the [Dogu Artifacts](docs/v3/concepts/artifacts_en.md) document.
 
 ## Sources for Helm Charts and Dogu Container Images
 
@@ -107,7 +116,7 @@ workloads, the chart also contains the platform integration CRs, which are each 
 title: CES-MN
 ---
 flowchart TB
-    user["User"]
+    user["Admin"]
     developer["Dogu developer"]
 
     core["ecosystem-core<br/>(Helm chart)"]
