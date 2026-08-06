@@ -106,24 +106,63 @@ can be mirrored into an internal OCI registry within the isolated environment.
 
 ## System Diagram
 
-The following system diagram illustrates the interplay: The user installs `ecosystem-core`, which deploys the Component Operator
-and, via Component CRs, the platform-side operators (including the Dogu Operator). In parallel, the user creates a
-Dogu CR that is reconciled by the Dogu Operator. The latter retrieves the associated Helm chart from the OCI registry. In addition to the
-workloads, the chart also contains the platform integration CRs, which are each reconciled by the responsible operator.
+The following system diagrams illustrate the interplay between CRs in the cluster: The admin installs `ecosystem-core`, which deploys the Component Operator that installs the platform-side operators (including the Dogu Operator) via Component CRs. In parallel, the admin creates a Dogu CR that is reconciled by the Dogu Operator. The latter retrieves the associated Helm chart from the OCI registry. In addition to the workloads, the chart also contains the platform integration CRs, which are each reconciled by the responsible operator.
 
 ```mermaid
 ---
-title: CES-MN
+title: CES-MN - Component- and Dogu-CR
 ---
 flowchart TB
     user["Admin"]
-    developer["Dogu developer"]
+    developer["Dogu Developer"]
 
-    core["ecosystem-core<br/>(Helm chart)"]
-
+    core["ecosystem-core<br/>(Helm-Chart)"]
+    
     user -->|installs| core
 
-    subgraph ns["Dogu namespace"]
+    subgraph ns["Dogu-Namespace"]
+        compOp["Component-Operator"]
+        compCRs["Component-CRs"]
+        doguCR["Dogu-CR"]
+
+        compOp -->|reconciles| compCRs
+
+        subgraph components["Components"]
+            doguOp["Dogu-Operator"]
+        end
+
+        compOp -->|installs| components
+
+        chart@{ shape: doc, label: "Helm-Charts"}
+
+        doguOp -->|reconciles| doguCR
+        doguOp -->|installs| chart
+
+    end
+
+    core -->|deploys| compOp
+    core -->|deploys| compCRs
+
+    user -->|creates| doguCR
+
+    oci[("OCI-Registry")]
+    helmCharts@{ shape: docs, label: "Helm-Charts"}
+    developer -->|puplishes Dogu-Helm-Chart to| oci
+
+    oci -->|contains| helmCharts
+    chart -->|loaded from| oci
+
+```
+
+---
+
+```mermaid
+---
+title: CES-MN - Plattform API
+---
+flowchart TB
+
+    subgraph ns["Dogu-Namespace"]
         compOp["Component-Operator"]
         compCRs["Component-CRs"]
         doguCR["Dogu-CR"]
@@ -156,17 +195,5 @@ flowchart TB
         saOp -->|reconciles| sar
         idp -->|reconciles| authreg
     end
-
-    core -->|deploys| compOp
-    core -->|deploys| compCRs
-
-    user -->|creates| doguCR
-
-    oci[("OCI-Registry")]
-    helmCharts@{ shape: docs, label: "Helm Charts"}
-    developer -->|publishes Dogu Helm chart to| oci
-
-    oci -->|contains| helmCharts
-    chart -->|loaded from| oci
 
 ```
