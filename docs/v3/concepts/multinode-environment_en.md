@@ -49,6 +49,8 @@ In the current architecture of CES-MN, all Dogus and system components are deplo
 namespace. Since a cluster currently serves exactly one tenant, true multi-tenancy on the same cluster instance is currently not supported.
 Each tenant environment therefore requires a dedicated Kubernetes cluster, which ensures strict and secure tenant separation at the infrastructure level.
 
+Although the separation of namespaces may, at first glance, appear to promise efficient use of resources, this approach fails due to the lack of a genuine infrastructure boundary. Because resources are shared, risks such as container escapes or resource bottlenecks caused by other tenants continue to exist. For architectures such as CES-MN, the decision to use dedicated clusters per tenant therefore entails higher operational costs, but ensures uncompromising infrastructure-level isolation that both meets strict compliance requirements and minimises the risk of cross-tenant security incidents. 
+
 ## Lifecycle
 
 Both the Dogu CR and the Component CR mentioned above describe the desired state from the platform's perspective. The lifecycle

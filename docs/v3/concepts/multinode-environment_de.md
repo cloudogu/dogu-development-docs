@@ -45,9 +45,9 @@ Die Nutzung von Blueprints im CES ist optional.
 
 ## Namespace und Mandantentrennung
 
-In der aktuellen Architektur von CES-MN werden alle Dogus und Systemkomponenten gemeinsam in einem einzelnen 
-Namespace bereitgestellt. Da ein Cluster derzeit genau einen Mandanten bedient, ist echtes Multi-Tenancy auf derselben Cluster-Instanz aktuell ausgeschlossen. 
-Jede Mandantenumgebung erfordert somit ein dediziertes Kubernetes-Cluster, was eine strikte und sichere Mandantentrennung auf Infrastrukturebene gewährleistet.
+In der aktuellen Architektur von CES-MN werden alle Dogus und Systemkomponenten gemeinsam in einem einzelnen Namespace bereitgestellt. Da ein Cluster derzeit genau einen Mandanten bedient, ist echtes Multi-Tenancy auf derselben Cluster-Instanz aktuell ausgeschlossen. Jede Mandantenumgebung erfordert somit ein dediziertes Kubernetes-Cluster, was eine strikte und sichere Mandantentrennung auf Infrastrukturebene gewährleistet. 
+
+Obwohl eine Trennung hinsichtlich der Namespaces auf den ersten Blick eine effiziente Ressourcennutzung verspricht, scheitert sie am Fehlen einer echten Infrastrukturgrenze. Durch gemeinsam genutzte Ressourcen bleiben Risiken wie Container-Breakouts oder Ressourcen-Engpässe durch andere Mandanten bestehen. Für Architekturen wie dem CES-MN bedeutet die Entscheidung für dedizierte Cluster pro Mandant zwar einen höheren Betriebsaufwand, sichert jedoch eine kompromisslose, infrastrukturseitige Isolation, die sowohl strikte Compliance-Vorgaben erfüllt als auch das Risiko mandantenübergreifender Sicherheitsvorfälle minimiert.
 
 ## Lebenszyklus 
 
