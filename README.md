@@ -15,7 +15,7 @@ It has 3 main topics:
 
 ## Dogu V3
 
-The Dogu V3 documentation is being developed. The current skeleton defines its navigation and content boundaries. Technical content will be added once the necessary V3 foundations are defined.
+The Dogu V3 documentation is being developed incrementally. It contains the agreed structure and the first technical concepts; pages that depend on unfinished V3 contracts are added as those contracts become available.
 
 - [Dogu V3 documentation — English](docs/v3/README.md)
 - [Dogu-V3-Dokumentation — Deutsch](docs/v3/README_de.md)

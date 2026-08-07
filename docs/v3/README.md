@@ -13,6 +13,10 @@ The documentation will guide developers from a minimal working Dogu to more deta
 5. add CES integrations in focused guides; and
 6. consult release, migration, or troubleshooting information when needed.
 
+## Available concepts
+
+- [Understand the Multinode runtime environment](concepts/multinode-environment_en.md)
+
 ## Content boundaries
 
 - **Getting started** contains executable end-to-end instructions. The quick start covers only the smallest working happy path.
