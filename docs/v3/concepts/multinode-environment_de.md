@@ -106,7 +106,7 @@ in eine interne OCI-Registry innerhalb der isolierten Umgebung gespiegelt werden
 
 ## Systemdiagramm
 
-Das folgenden Systemdiagramme veranschaulichen das Zusammenspiel einzelne CRs im Cluster: Der Admin installiert `ecosystem-core`, wodurch der Component-Operator
+Die folgenden Systemdiagramme veranschaulichen das Zusammenspiel einzelne CRs im Cluster: Der Admin installiert `ecosystem-core`, wodurch der Component-Operator
 über Component-CRs die plattformseitigen Operatoren (inkl. Dogu-Operator) ausbringt. Parallel dazu erstellt der Admin eine
 Dogu-CR, die vom Dogu-Operator reconciled wird. Dieser bezieht das zugehörige Helm-Chart aus der OCI-Registry. Das Chart enthält neben den Workloads auch die Plattform-API in Form von CRs, die jeweils vom zuständigen Operator reconciled werden.
 
