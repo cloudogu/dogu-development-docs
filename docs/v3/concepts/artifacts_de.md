@@ -77,7 +77,7 @@ Für die `values.yaml` kann mithilfe der `values.schema.json` ein Schema in Form
 
 ### `dogu-values-metadata.yaml`
 
-Für die Plattform können globale Konfigurationparameter existieren, die nicht immer durch bestehende Werte aus der `values.yaml` eines Helm-Charts abgebildet werden können. So kann für die Plattform bespielsweise ein globales Log-Level gesetzt werden, welches für alle Dogus angewendet wird. Um diesem Umstand Rechnug zu tragen, wurde die `dogu-values-metadata.yaml` eingeführt. Durch sie können plattformspezifische Konfigurationen auf die Werte des Helm-Charts eines Dogus angewendet werden, indem in ihr das Mapping zwischen einzelnen Werten definiert wird. Plattformspezifische Konfigurationen werden in der Dogu-CR definiert und durch den Dogu-Operator angewendet. Folgend wird exemplarisch das Mapping des Log-Levels auf zwei Anwendungen eines Helm-Charts gezeigt:
+Für die Plattform können globale Konfigurationsparameter existieren, die nicht immer durch bestehende Werte aus der `values.yaml` eines Helm-Charts abgebildet werden können. So kann für die Plattform bspw. ein globales Log-Level gesetzt werden, welches für alle Dogus angewendet wird. Um diesem Umstand Rechnung zu tragen, wurde die `dogu-values-metadata.yaml` eingeführt. Durch sie können plattformspezifische Konfigurationen auf die Werte des Helm-Charts eines Dogus angewendet werden, indem in ihr das Mapping zwischen einzelnen Werten definiert wird. Plattformspezifische Konfigurationen werden in der Dogu-CR definiert und durch den Dogu-Operator angewendet. Folgend wird exemplarisch das Mapping des Log-Levels auf zwei Anwendungen eines Helm-Charts gezeigt:
 
 ```yaml
 apiVersion: v1
