@@ -32,7 +32,7 @@ Neben den [Helm-Standardfeldern](https://helm.sh/docs/topics/charts/#the-chartya
 - `display-name`: Der Anzeigename eines Dogus falls `name` Attribut der `Chart.yaml` nicht zur Anzeige verwendet werden soll
 - `application.<name>`: Definiert weitere Anwendungen, die im Chart enthalten sind. `<name>` entspricht dem technischen Namen der enthaltenen Anwendung, wobei der Annotation-Wert eine nicht leere Versionsangabe als String enthält
 
-Unbekannte Annotations mit dem Prefix `dogu.cloudogu.com/` sind zulässig, werden jedoch von plattformspezischen Komponenten ignoriert, sofern sie nicht Teil der festgelegten Pflichtmetadaten sind. Als Pflichtfelder in der `Chart.yaml` gelten die Felder:
+Unbekannte Annotations mit dem Prefix `dogu.cloudogu.com/` sind zulässig, werden jedoch von plattformspezifischen Komponenten ignoriert, sofern sie nicht Teil der festgelegten Pflichtmetadaten sind. Als Pflichtfelder in der `Chart.yaml` gelten die Felder:
 
 - `name`
 - `version`
