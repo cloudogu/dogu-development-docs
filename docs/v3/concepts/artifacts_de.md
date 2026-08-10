@@ -206,7 +206,7 @@ Bietet ein Dogu eine Schnittstelle an, die von anderen Dogus genutzt werden kann
 
 **`ServiceAccountRequest`**
 
-Benötigt ein Dogu einen Service-Account bei einem anderen Dogu, muss es diesen über die `ServiceAccountRequest-CR` anfordern indem ein Producer benannt wird und optional Parameter übergeben werden. Die resultieren Credentials des Requests werden durch den Operator in ein referenziertes Kubernetes-Secret des konsumierenden Dogus geschrieben. Ist keine Referenz zu einem Secret im `ServiceAccountRequest` deklariert, wird ein Secret mit dem Name der ServiceAccountRequest-Ressource erstellt. Die CR bildet das Gegenstück zum `ServiceAccountProducer`. 
+Benötigt ein Consumer einen Service-Account bei einem Producer, muss es diesen über die `ServiceAccountRequest-CR` anfordern, indem ein Producer benannt wird und optional Parameter übergeben werden. Die resultieren Credentials des Requests werden durch den Operator in ein referenziertes Kubernetes-Secret des konsumierenden Dogus geschrieben. Ist keine Referenz zu einem Secret im `ServiceAccountRequest` deklariert, wird ein Secret mit dem Namen der ServiceAccountRequest-Ressource erstellt. Die CR bildet das Gegenstück zum `ServiceAccountProducer`. 
 
 ## Abgrenzung zu Dogu V2
 
