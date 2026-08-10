@@ -21,6 +21,8 @@ k8s/
    └─ values.schema.json
 ```
 
+These artifacts are described in order of relevance.
+
 ### `Chart.yaml`
 
 The `Chart.yaml` contains metadata that describe a Dogu. Two versions are distinguished within the chart.
@@ -176,7 +178,7 @@ The `chart-patch-tpl.yaml` should always be part of the Dogu Helm chart in order
 
 ## Templates and the Connection to the Platform
 
-The Helm chart's templates provide all Kubernetes resources required to make the application runnable on the platform. These resources also include Custom Resource Definitions (CRDs) that are provided by Cloudogu and serve as the API for the platform. This section describes the individual CRDs in more detail.
+The Helm chart's templates provide all Kubernetes resources required to make the application runnable on the platform. These resources also include Custom Resource Definitions (CRDs) that are provided by Cloudogu and serve as the API for the platform. This section describes the individual CRDs for the CES integration in more detail.
 
 ### AuthRegistration
 
@@ -196,17 +198,17 @@ If a Dogu is supposed to be reachable from the outside, one or more [`Exposition
 
 ### ServiceAccountRequest / ServiceAccountProducer
 
-In the CES it is possible for different Dogus to interact with each other. For this, an appropriate ServiceAccount must be created at the target Dogu (Producer) for an accessing Dogu (Consumer).
+In the CES it is possible for different Dogus/Components to interact with each other. For this, an appropriate ServiceAccount must be created at the target Dogu/Component (Producer) for an accessing Dogu/Component (Consumer). This service-account relationship can therefore be freely chosen and is not limited to Dogus only. This mechanism also allows cyclical dependencies between producers and consumers.
 
 ServiceAccount creation can be controlled declaratively via the CRDs [`ServiceAccountRequest`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/main/docs/operations/serviceaccountrequest_cr_en.md) and [`ServiceAccountProducer`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/main/docs/operations/serviceaccountproducer_cr_en.md).
 
 **`ServiceAccountProducer`**
 
-If a Dogu offers an interface that can be used by other Dogus, it must provide a `ServiceAccountProducer-CR`. The `ServiceAccountProducer` defines how service accounts are created for the Dogu and which parameters are supported. Furthermore, the CR describes values that the Dogu – the Producer – returns after creating a service account. Each returned value is written as a key into the Secret referenced by the requesting Dogu – the Consumer.
+If a Producer offers an interface that can be used by other Dogus, it must provide a `ServiceAccountProducer-CR`. The `ServiceAccountProducer`-CR defines how service accounts are created for the Consumer and which parameters are supported. Furthermore, the CR describes values that the Producer returns after creating a service account. Each returned value is written as a key into the Secret referenced by the requesting the Consumer.
 
 **`ServiceAccountRequest`**
 
-If a Dogu needs a service account for another Dogu, it must request this via the `ServiceAccountRequest-CR` by naming a producer and optionally passing parameters. The resulting credentials of the request are written by the operator into a referenced Kubernetes Secret of the consuming Dogu. If no reference to a Secret is declared in the `ServiceAccountRequest`, a Secret with the name of the ServiceAccountRequest resource is created. The CR is the counterpart to the `ServiceAccountProducer`.
+If a Consumer needs a service account for a Producer, it must request this via the `ServiceAccountRequest-CR` by naming a producer and optionally passing parameters. The resulting credentials of the request are written by the operator into a referenced Kubernetes Secret of the Consumer. If no reference to a Secret is declared in the `ServiceAccountRequest`, a Secret with the name of the ServiceAccountRequest resource is created. The CR is the counterpart to the `ServiceAccountProducer`.
 
 ## Distinction from Dogu V2
 

@@ -4,7 +4,7 @@ This document describes the best practices to follow when creating Dogu Helm cha
 
 ## Take care when renaming Kubernetes resources
 
-Changing `metadata.name` creates a different Kubernetes object. The impact depends on the resource and its controller: references can break, a controller can issue new credentials, and stateful resources can become disconnected or orphaned. A rename does not by itself mean that Kubernetes deletes the underlying data.
+Changing `metadata.name` creates a different Kubernetes object. The impact depends on the resource and its controller: references can break, a controller can issue new credentials, and stateful resources can become disconnected or orphaned. A rename does not by itself mean that Kubernetes deletes the underlying data. If one or more of the above-mentioned issues occur, this can lead to a significant operational disruption.
 
 Before changing a name, check these relationships:
 

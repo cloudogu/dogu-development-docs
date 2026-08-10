@@ -21,6 +21,8 @@ k8s/
    └─ values.schema.json
 ```
 
+Diese Artefakte werden hier in Reihenfolge der Relevanz beschrieben.
+
 ### `Chart.yaml`
 
 In der `Chart.yaml` befinden sich Metadaten, die ein Dogu beschreiben. Im Chart werden zwei Versionen unterschieden. 
@@ -176,7 +178,7 @@ Die `chart-patch-tpl.yaml` sollte stets Bestandteil des Dogu-Helm-Charts sein, u
 
 ## Templates und die Anbindung an die Plattform
 
-In den Templates des Helm-Charts werden alle Kubernetes-Ressourcen zur Verfügung gestellt, um die Anwendung auf der Plattform ausführbar zu machen. Zu diesen Ressourcen zählen auch Custom Resources Definitions (CRDs), die von Cloudogu bereitgestellt werden und als API für die Plattform dienen. In diesem Abschnitt werden die einzelnen CRDs genauer beschrieben.
+In den Templates des Helm-Charts werden alle Kubernetes-Ressourcen zur Verfügung gestellt, um die Anwendung auf der Plattform ausführbar zu machen. Zu diesen Ressourcen zählen auch Custom Resources Definitions (CRDs), die von Cloudogu bereitgestellt werden und als API für die Plattform dienen. In diesem Abschnitt werden die einzelnen CRDs für die Integration in das CES genauer beschrieben.
 
 ### AuthRegistration
 

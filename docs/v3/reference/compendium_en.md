@@ -1,6 +1,6 @@
 # Dogu V3 Artifact Compendium
 
-This compendium provides an overview of the artifacts and APIs of Dogu V3. For an introduction to how they work together, read [Dogu Artifacts](../concepts/artifacts_en.md).
+This compendium provides an overview of the artifacts and APIs - the CES integration resources - of Dogu V3. For an introduction to how they work together, read [Dogu Artifacts](../concepts/artifacts_en.md).
 
 ## Chart artifacts and APIs
 

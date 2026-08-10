@@ -1,6 +1,6 @@
 # Kompendium der Dogu-V3-Artefakte
 
-Dieses Kompendium gibt einen Überblick über die Artefakte und APIs von Dogu V3. Eine Einführung in ihr Zusammenspiel finden Sie unter [Dogu- Artefakte](../concepts/artifacts_de.md).
+Dieses Kompendium gibt einen Überblick über die Artefakte und APIs - den CES-Integrationsressourcen - von Dogu V3. Eine Einführung in ihr Zusammenspiel finden Sie unter [Dogu-Artefakte](../concepts/artifacts_de.md).
 
 ## Chart-Artefakte und APIs
 

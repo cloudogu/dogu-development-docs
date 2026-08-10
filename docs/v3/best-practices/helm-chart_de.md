@@ -4,7 +4,7 @@ Dieses Dokument beschreibt die Best-Practices, die es bei der Erstellung von Dog
 
 ## Vorsicht beim Umbenennen von Kubernetes-Ressourcen
 
-Eine Änderung von `metadata.name` erzeugt ein anderes Kubernetes-Objekt. Die Auswirkungen hängen von Ressourcenart und Controller ab: Referenzen können ungültig werden, ein Controller kann neue Credentials ausstellen und zustandsbehaftete Ressourcen können getrennt oder verwaist werden. Aus einer Umbenennung folgt nicht automatisch, dass Kubernetes die zugrunde liegenden Daten löscht.
+Eine Änderung von `metadata.name` erzeugt ein anderes Kubernetes-Objekt. Die Auswirkungen hängen von Ressourcenart und Controller ab: Referenzen können ungültig werden, ein Controller kann neue Credentials ausstellen und zustandsbehaftete Ressourcen können getrennt oder verwaist werden. Aus einer Umbenennung folgt nicht automatisch, dass Kubernetes die zugrunde liegenden Daten löscht. Tritt eine oder mehrere der oben genannte Punkte ein, kann dies zu einer erheblichen Betriebsstörung führen.
 
 Prüfen Sie vor einer Namensänderung diese Beziehungen:
 
