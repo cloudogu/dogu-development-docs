@@ -186,7 +186,7 @@ Eine `AuthRegistration` provisioniert nur die serverseitige Integration beim IdP
 
 ### WarpMenuEntry
 
-Für die zentrale Navigation auf der Plattform wird das Warp-Menü verwendet. Wenn ein Dogu im Warp-Menü angezeigt werden soll, muss für jeden internen, für Anwender:innnen sichtbaren Einstiegspunkt eine [`WarpMenuEntry-CR`](https://github.com/cloudogu/k8s-warp-menu-entry-lib/blob/main/docs/operations/warp_menu_entry_de.md) bereitgestellt werden. Je nach Bedarf kann ein Dogu keinen, einen oder mehrere Einträge definieren.
+Für die zentrale Navigation auf der Plattform wird das Warp-Menü verwendet. Wenn ein Dogu im Warp-Menü angezeigt werden soll, muss für jeden internen, für Anwender:innen sichtbaren Einstiegspunkt eine [`WarpMenuEntry-CR`](https://github.com/cloudogu/k8s-warp-menu-entry-lib/blob/main/docs/operations/warp_menu_entry_de.md) bereitgestellt werden. Je nach Bedarf kann ein Dogu keinen, einen oder mehrere Einträge definieren.
 
 Jeder Eintrag enthält einen deutschen und englischen Anzeigenamen, eine Kategorie sowie einen relativen Pfad zum Dogu. Das Warp-Menü macht die Anwendung nicht grundsätzlich erreichbar. Der relative Pfad muss zu einer unabhängig funktionierenden HTTP-Exposition passen.
 
