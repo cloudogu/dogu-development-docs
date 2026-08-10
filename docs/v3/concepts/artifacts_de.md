@@ -196,7 +196,7 @@ Soll ein Dogu von außen erreichbar sein, muss hierfür eine oder mehrere [`Expo
 
 ### ServiceAccountRequest / ServiceAccountProducer
 
-Im CES (Cloudogu EcoSystem) ist es möglich, dass verschiedene Dogus miteinander interagieren. Hierfür muss für ein zugreifendes Dogu (Consumer) ein entsprechender ServiceAccount beim Ziel-Dogu (Producer) erstellt werden.
+Im CES ist es möglich, dass verschiedene Dogus/Components miteinander interagieren. Hierfür muss für ein zugreifendes Dogu/Component (Consumer) ein entsprechender ServiceAccount beim Ziel-Dogu/-Component (Producer) erstellt werden. Diese Service-Account-Beziehung ist also frei wählbar und ist nicht nur auf Dogus unter sich fest gelegt. Dieser Mechanismus erlaubt auch Ringabhängigkeiten zwischen Producer und Consumer.
 
 Die ServiceAccount-Erstellung lässt sich deklarativ über die CRDs [`ServiceAccountRequest`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/main/docs/operations/serviceaccountrequest_cr_de.md) und [`ServiceAccountProducer`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/main/docs/operations/serviceaccountproducer_cr_de.md) steuern.
 
