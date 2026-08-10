@@ -118,7 +118,7 @@ spec:
     mainLogLevel: ERROR
 ```
 
-Um plattformspezische Konfigurationen treffen zu können, sollte ein Dogu-Helm-Chart die `dogu-values-metadata.yaml` stets mit ausliefern. Für konfigurationslose Dogus ist diese Datei optional. 
+Um plattformspezifische Konfigurationen treffen zu können, sollte ein Dogu-Helm-Chart die `dogu-values-metadata.yaml` stets mit ausliefern. Für konfigurationslose Dogus ist diese Datei optional. 
 
 ### `dogu-upgrade.yaml`
 
