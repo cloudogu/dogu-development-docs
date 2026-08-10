@@ -26,7 +26,7 @@ k8s/
 In der `Chart.yaml` befinden sich Metadaten, die ein Dogu beschreiben. Im Chart werden zwei Versionen unterschieden. 
 Die Dogu-Version entspricht der Version des Charts (`version`), während die App-Version (`appVersion`) die Version der fachlichen Anwendung innerhalb des Dogus beschreibt. Beide Versionen sind voneinander unabhängig und dürfen sich unterscheiden. So könnte beispielsweise Redmine als Dogu in Version `45.7.0` veröffentlicht werden, während die enthaltene Redmine-Anwendung die App-Version `6.1.2` besitzt. 
 
-Neben den [Helm-Standardfeldern](https://helm.sh/docs/topics/charts/#the-chartyaml-file) werden in der `Chart.yaml` plattformspezfische Annotations verwendet, die durch den Prefix `dogu.cloudogu.com/` gekenntzeichnet sind. Dieser Prefix kennzeichnet Dogu-Metadaten im Helm-Chart und grenzt sie von allgemeinen Kubernetes- oder Helm-Annotations ab. Folgende plattformspezische Annotations werden aktuell unterstützt:
+Neben den [Helm-Standardfeldern](https://helm.sh/docs/topics/charts/#the-chartyaml-file) werden in der `Chart.yaml` plattformspezfische Annotations verwendet, die durch den Prefix `dogu.cloudogu.com/` gekennzeichnet sind. Dieser Prefix kennzeichnet Dogu-Metadaten im Helm-Chart und grenzt sie von allgemeinen Kubernetes- oder Helm-Annotations ab. Folgende plattformspezifische Annotations werden aktuell unterstützt:
 
 - `api-version`: Die Dogu-API-Version, z.b. `v3`
 - `display-name`: Der Anzeigename eines Dogus falls `name` Attribut der `Chart.yaml` nicht zur Anzeige verwendet werden soll
