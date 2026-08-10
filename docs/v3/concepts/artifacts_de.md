@@ -202,7 +202,7 @@ Die ServiceAccount-Erstellung lässt sich deklarativ über die CRDs [`ServiceAcc
 
 **`ServiceAccountProducer`**
 
-Bietet ein Dogu eine Schnittstelle an, die von anderen Dogus genutzt werden kann, muss es eine `ServiceAccountProducer-CR` bereitstellen. Die `ServiceAccountProducer` definiert, wie Service-Accounts für das Dogu erstellt werden und welche Parameter unterstützt werden. Ferner beschreibt die CR Werte, die das Dogu - der Producer - nach dem Erstellen eines Service-Accounts zurückgibt. Jeder zurückgegebene Wert wird als Schlüssel in das vom anfragenden Dogu - dem Consumer - referenzierte Secret geschrieben.
+Bietet ein Producer eine Schnittstelle an, die von anderen Dogus genutzt werden kann, muss es eine `ServiceAccountProducer-CR` bereitstellen. Die `ServiceAccountProducer`-CR definiert, wie Service-Accounts für Consumer erstellt werden und welche Parameter unterstützt werden. Ferner beschreibt die CR die Struktur, wie die Werte nach dem Erstellen eines Service-Accounts vom Producer zurückgegeben werden. Jeder zurückgegebene Wert wird als Schlüssel in das vom anfragenden Consumer referenzierte Secret geschrieben.
 
 **`ServiceAccountRequest`**
 
