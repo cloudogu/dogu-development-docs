@@ -82,7 +82,7 @@ Für die Plattform können globale Konfigurationparameter existieren, die nicht 
 ```yaml
 apiVersion: v1
 metavalues:
-  # Plattformspezische Konfigurationwert
+  # Plattformspezifische Konfigurationwert
   mainLogLevel:
     keys:
       # ohne Mapping wird der Konfigurationswert ohne Änderung an die values.yaml durchgereicht 
