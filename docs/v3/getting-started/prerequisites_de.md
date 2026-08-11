@@ -29,7 +29,7 @@ Die Installation kann einige Minuten dauern. Der Name `quickstart` ist fest, wei
 
 ## Cluster verwenden
 
-Die Kubeconfig der Umgebung aktivieren:
+Die Kubeconfig der Umgebung aktivieren (kann z. B. auch in die `.bashrc` oder `.zshenv` eingetragen werden):
 
 ```shell
 export KUBECONFIG="${HOME}/.kube/quickstart.k3ces.localdomain"

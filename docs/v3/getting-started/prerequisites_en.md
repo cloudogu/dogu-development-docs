@@ -29,7 +29,7 @@ The installation can take several minutes. The name `quickstart` is fixed becaus
 
 ## Use the cluster
 
-Select the environment's dedicated kubeconfig:
+Select the environment's dedicated kubeconfig (can also be added to e.g. `.bashrc` or `.zshenv`):
 
 ```shell
 export KUBECONFIG="${HOME}/.kube/quickstart.k3ces.localdomain"
