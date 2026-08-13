@@ -1,16 +1,141 @@
-# Package the chart and investigate problems
+# Integrate XWiki into the CES
 
-This page extends [From a Helm chart to a Dogu V3](quickstart_en.md). It covers the local OCI workflow and some diagnostic commands.
+This guide extends [From a Helm chart to a Dogu V3](quickstart_en.md). It adds XWiki to the Warp menu, registers it for central CES authentication, and prepares the chart for distribution.
 
-## Push the chart to the local OCI registry
+## Add XWiki to the Warp menu
 
-In a new terminal, first change to the `xwiki-dogu` directory. Then set the chart version:
+A `WarpMenuEntry` adds XWiki to the central CES navigation. Create `warp-menu-entry.yaml` in the `templates` directory:
 
-```shell
-export CHART_VERSION='1.7.1-1'
+```yaml
+apiVersion: k8s.cloudogu.com/v1
+kind: WarpMenuEntry
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: xwiki
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  category: Development Apps
+  displayName:
+    de: XWiki
+    en: XWiki
+  path: /xwiki
 ```
 
-Download the dependencies and package the chart:
+Update the chart:
+
+```shell
+helm upgrade --install xwiki . \
+  --namespace ecosystem \
+  --wait \
+  --timeout 15m
+```
+
+Wait for the entry and check the result:
+
+```shell
+kubectl wait \
+  --for=jsonpath='{.status.conditions[?(@.type=="Ready")].status}'=True \
+  warpmenuentry/xwiki \
+  --namespace ecosystem \
+  --timeout 2m
+
+kubectl get warpmenuentry xwiki --namespace ecosystem --output wide
+```
+
+Reload the CES page. XWiki now appears in the Warp menu.
+
+## Register XWiki for CES authentication
+
+An `AuthRegistration` registers XWiki with the CES identity provider (CAS). Create `auth-registration.yaml` in the `templates` directory:
+
+```yaml
+apiVersion: k8s.cloudogu.com/v1
+kind: AuthRegistration
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  consumer: {{ .Release.Name }}
+  protocol: OIDC
+  secretRef: xwiki-oidc-credentials
+```
+
+The Auth Registration Operator registers XWiki with CAS. It then writes the client ID, client secret, and issuer URL to the `xwiki-oidc-credentials` Secret.
+
+Update the chart again:
+
+```shell
+helm upgrade --install xwiki . \
+  --namespace ecosystem \
+  --wait \
+  --timeout 15m
+```
+
+Wait for the registration:
+
+```shell
+kubectl wait \
+  --for=condition=Completed \
+  authregistration/xwiki \
+  --namespace ecosystem \
+  --timeout 2m
+```
+
+## Authentication and permissions
+
+The `AuthRegistration` provides the credentials. XWiki also needs a suitable authenticator to use authentication through CAS.
+
+Installing the authenticator and mapping LDAP groups to XWiki permissions are not part of this guide yet. These steps depend on the application and must be defined before publishing the Dogu.
+
+Further information:
+
+- [Multinode environment and Dogu V3 resources](../concepts/multinode-environment_en.md)
+- [XWiki OpenID Connect Authenticator](https://extensions.xwiki.org/xwiki/bin/view/Extension/OpenID%20Connect/OpenID%20Connect%20Authenticator/)
+- [CAS as an OpenID Connect provider](https://apereo.github.io/cas/development/authentication/OIDC-Authentication.html)
+
+## Prepare images for later mirroring
+
+The chart uses an XWiki image and a MySQL image. The `chart-patch-tpl.yaml` file describes these images for `ces-mirror`. The tool can later copy them to another registry and adjust the image addresses in `values.yaml`.
+
+Create `chart-patch-tpl.yaml` in the same directory as `Chart.yaml`:
+
+```yaml
+apiVersion: v1
+values:
+  # All container images used by the chart
+  images:
+    xwiki: "docker.io/library/xwiki:18.6.0-mysql-tomcat"
+    mysql: "docker.io/bitnamilegacy/mysql:8.4.4-debian-12-r7"
+
+patches:
+  # Adjust the image addresses in values.yaml for the target registry
+  values.yaml:
+    xwiki:
+      image:
+        # Use the registry and repository of the XWiki image
+        name: "{{ registryFrom .images.xwiki }}/{{ repositoryFrom .images.xwiki }}"
+        tag: "{{ tagFrom .images.xwiki }}"
+      mysql:
+        image:
+          # The MySQL chart stores the registry and repository separately
+          registry: "{{ registryFrom .images.mysql }}"
+          repository: "{{ repositoryFrom .images.mysql }}"
+          tag: "{{ tagFrom .images.mysql }}"
+```
+
+The functions split the image address into its parts:
+
+- `registryFrom` returns the registry, for example `docker.io`.
+- `repositoryFrom` returns the repository, for example `library/xwiki`.
+- `tagFrom` returns the tag, for example `18.6.0-mysql-tomcat`.
+
+The file is not evaluated during the local Helm installation. You do not need to run `ces-mirror` for this guide.
+
+## Push the chart to the local registry
+
+The local registry was set up together with the quickstart environment. It is available at `localhost:5001`.
+
+First, download the dependencies and package the chart:
 
 ```shell
 helm dependency build .
@@ -20,164 +145,49 @@ mkdir -p dist
 helm package . --destination dist
 ```
 
-Push the package to the local registry:
+Push the generated package to the local OCI registry:
 
 ```shell
-helm push "dist/xwiki-${CHART_VERSION}.tgz" \
+helm push dist/xwiki-1.7.1-1.tgz \
   oci://localhost:5001/quickstart/charts \
   --plain-http
 ```
 
-Pull the chart again to check the result:
+The chart can now also be installed directly from the local registry:
 
 ```shell
-mkdir -p /tmp/xwiki-chart
-
-helm pull oci://localhost:5001/quickstart/charts/xwiki \
-  --version "${CHART_VERSION}" \
-  --plain-http \
-  --destination /tmp/xwiki-chart
-```
-
-This verifies that the local registry can store the Helm chart. Releasing it to the Cloudogu registry is outside the scope of this guide.
-
-## Install from the OCI registry
-
-The pushed chart can be installed directly with Helm:
-
-```shell
-export KUBECONFIG="${HOME}/.kube/quickstart.k3ces.localdomain"
-
 helm upgrade --install xwiki \
   oci://localhost:5001/quickstart/charts/xwiki \
-  --version "${CHART_VERSION}" \
+  --version 1.7.1-1 \
   --plain-http \
   --namespace ecosystem \
   --wait \
   --timeout 15m
 ```
 
-The package contains the parent chart, its values, and the XWiki chart dependency.
+## Publish the chart
 
-This command also installs the chart directly with Helm. The Dogu operator does not manage this release yet.
+Agree on the target namespace and credentials with Cloudogu before publication. Partners receive their own namespace in `registry.cloudogu.com`.
 
-## Investigate problems
-
-Start with the Helm release and pod status:
-
-```shell
-helm status xwiki --namespace ecosystem
-helm get values xwiki --namespace ecosystem
-
-kubectl get pods --namespace ecosystem \
-  --selector app.kubernetes.io/instance=xwiki
-kubectl get events --namespace ecosystem --sort-by=.lastTimestamp
-```
-
-### The XWiki image cannot be pulled
-
-```shell
-kubectl describe pod xwiki-0 --namespace ecosystem
-```
-
-The parent chart pulls the public image directly from Docker Hub:
+This example uses public images from Docker Hub. No custom images therefore need to be published. If a Dogu contains custom images, store them under this path:
 
 ```text
-docker.io/library/xwiki:18.6.0-mysql-tomcat
+registry.cloudogu.com/<namespace>/dogu/v3/images/<image>:<tag>
 ```
 
-The cluster needs access to Docker Hub.
-
-### MySQL or the database check does not start
+Log in to the Cloudogu registry:
 
 ```shell
-kubectl describe pod xwiki-mysql-0 --namespace ecosystem
-kubectl logs xwiki-mysql-0 --namespace ecosystem
-kubectl logs xwiki-0 --container wait-for-db --namespace ecosystem
+helm registry login registry.cloudogu.com
 ```
 
-The `xwiki-mysql-0` pod must be ready before XWiki can start.
-
-The randomly generated database passwords are stored in the `xwiki-mysql` Secret. To show the user password for diagnostics:
+Then push the chart package created earlier:
 
 ```shell
-kubectl get secret xwiki-mysql \
-  --namespace ecosystem \
-  --output jsonpath='{.data.mysql-password}' | base64 --decode
-echo
+helm push dist/xwiki-1.7.1-1.tgz \
+  oci://registry.cloudogu.com/<namespace>/dogu/v3/charts
 ```
 
-### A PVC is not bound
+Replace `<namespace>` with the agreed partner namespace. Do not store credentials in the chart or Git repository.
 
-```shell
-kubectl get persistentvolumeclaim --namespace ecosystem
-kubectl describe persistentvolumeclaim xwiki-data-xwiki-0 --namespace ecosystem
-kubectl describe persistentvolumeclaim data-xwiki-mysql-0 --namespace ecosystem
-```
-
-Both PVCs must have the `Bound` status. The local quickstart environment provides the required storage through the `local-path` StorageClass.
-
-### The URL returns `502 Bad Gateway`
-
-Check the Service, endpoints, and NetworkPolicy:
-
-```shell
-kubectl get service,endpointslice --namespace ecosystem \
-  --selector app.kubernetes.io/instance=xwiki
-
-kubectl get networkpolicy xwiki-gateway \
-  --namespace ecosystem \
-  --output yaml
-```
-
-The CES gateway needs access to port `8080` of the XWiki pod.
-
-### XWiki does not become ready
-
-```shell
-kubectl describe pod xwiki-0 --namespace ecosystem
-kubectl logs xwiki-0 --namespace ecosystem
-```
-
-The startup, readiness, and liveness probe paths must start with `/xwiki`. The pod must also have `CONTEXT_PATH=xwiki`:
-
-```shell
-kubectl get statefulset xwiki --namespace ecosystem \
-  --output jsonpath='{.spec.template.spec.containers[0].env}'
-echo
-```
-
-### The Exposition is not processed
-
-```shell
-kubectl describe exposition xwiki --namespace ecosystem
-kubectl logs deployment/k8s-service-discovery-controller-manager \
-  --namespace ecosystem
-```
-
-The `Valid` and `IngressesReady` conditions must be `True`.
-
-## Clean up
-
-Remove only XWiki and MySQL:
-
-```shell
-helm uninstall xwiki --namespace ecosystem
-```
-
-The PVCs remain. Delete them only when the stored data should be removed as well:
-
-```shell
-kubectl delete persistentvolumeclaim \
-  xwiki-data-xwiki-0 \
-  data-xwiki-mysql-0 \
-  --namespace ecosystem
-```
-
-Remove the complete cluster from the `k8s-ecosystem` directory:
-
-```shell
-./k3d/ces-k3d delete quickstart
-```
-
-The registry containers and registry storage remain. Other local CES environments can reuse them.
+The partner namespace is mapped to the OCI chart repository in the Dogu Registry. This makes the published Dogu available through the Dogu Registry.
