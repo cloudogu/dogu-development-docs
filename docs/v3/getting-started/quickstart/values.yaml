@@ -1,0 +1,38 @@
+# Values for the included XWiki chart
+xwiki:
+  fullnameOverride: xwiki
+
+  # Pull the public XWiki image directly from Docker Hub
+  image:
+    name: docker.io/library/xwiki
+    tag: 18.6.0-mysql-tomcat
+    pullPolicy: IfNotPresent
+
+  # Make XWiki available below /xwiki
+  extraEnvVars:
+    - name: CONTEXT_PATH
+      value: xwiki
+
+  # Start XWiki only after MySQL is available
+  initContainers:
+    database:
+      enabled: true
+
+  # Adjust the Kubernetes probes to the /xwiki path
+  probes:
+    startup:
+      httpGet:
+        path: /xwiki/rest
+    liveness:
+      httpGet:
+        path: /xwiki/rest
+    readiness:
+      httpGet:
+        path: /xwiki/rest/wikis/xwiki/spaces
+
+  mysql:
+    auth:
+      rootPassword: ""
+      username: xwiki
+      password: ""
+      database: xwiki

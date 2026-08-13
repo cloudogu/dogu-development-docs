@@ -6,6 +6,8 @@ At the end, XWiki is available at `https://quickstart.k3ces.localdomain/xwiki/`.
 
 CES authentication, the Warp menu, backups, and upgrades are outside the scope of this guide.
 
+The result of this guide can be found in the [quickstart folder](quickstart).
+
 ## Prerequisites
 
 First, set up the [local development environment](prerequisites_en.md). Then select its kubeconfig:
@@ -86,20 +88,12 @@ xwiki:
       httpGet:
         path: /xwiki/rest/wikis/xwiki/spaces
 
-  # Store XWiki data persistently
-  persistence:
-    enabled: true
-
   mysql:
     auth:
       rootPassword: ""
       username: xwiki
       password: ""
       database: xwiki
-    primary:
-      # Store MySQL data persistently
-      persistence:
-        enabled: true
 ```
 
 The XWiki chart already enables MySQL as its default database. The user and database are still named `xwiki`. When both password fields are empty, the included MySQL chart generates random passwords during the first installation. It stores them in the `xwiki-mysql` Kubernetes Secret. XWiki reads the user password from the same Secret.
