@@ -22,7 +22,7 @@ Partners receive the credentials from their Cloudogu contact. The installation d
 ## Create the EcoSystem
 
 ```shell
-./code/init_ecosystem
+./prerequisites/init_ecosystem
 ```
 
 The installation can take several minutes. The name `quickstart` is fixed because it must match the address in the two configuration files.
@@ -75,14 +75,14 @@ Run these commands in the `k8s-ecosystem` directory:
 
 ```shell
 # stop and start the cluster
-./code/k8s-ecosystem/k3d/ces-k3d stop quickstart
-./code/k8s-ecosystem/k3d/ces-k3d start quickstart
+./prerequisites/k8s-ecosystem/k3d/ces-k3d stop quickstart
+./prerequisites/k8s-ecosystem/k3d/ces-k3d start quickstart
 # list all clusters
-./code/k8s-ecosystem/k3d/ces-k3d list
+./prerequisites/k8s-ecosystem/k3d/ces-k3d list
 # remove the cluster
-./code/k8s-ecosystem/k3d/ces-k3d delete quickstart
+./prerequisites/k8s-ecosystem/k3d/ces-k3d delete quickstart
 # (re)create the cluster
-./code/k8s-ecosystem/k3d/ces-k3d create quickstart
+./prerequisites/k8s-ecosystem/k3d/ces-k3d create quickstart
 ```
 
 After deletion, remove the `quickstart.k3ces.localdomain` entry from `/etc/hosts`. The shared registry containers and their storage remain in place.
