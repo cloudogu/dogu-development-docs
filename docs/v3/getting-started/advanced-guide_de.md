@@ -77,9 +77,10 @@ Der Auth-Registration-Operator registriert XWiki bei CAS. Danach schreibt er Cli
 
 ## Images für die spätere Spiegelung vorbereiten
 
-Das Chart verwendet ein XWiki-Image und ein MySQL-Image. Die Datei `chart-patch-tpl.yaml` beschreibt diese Images für `ces-mirror`. Das Werkzeug kann sie später in eine andere Registry kopieren und die Image-Adressen in `values.yaml` anpassen.
+Da das EcoSystem auch in Air-Gapped-Umgebungen lauffähig sein soll, müssen in der `chart-patch-tpl.yaml` Image-Referenzen und deren Nutzung in der `values.yaml` gepflegt werden. Diese können dann gespiegelt, und die Image-Referenzen in der `values.yaml` angepasst werden.
 
-Im selben Verzeichnis wie `Chart.yaml` die Datei `chart-patch-tpl.yaml` erstellen:
+Das Chart verwendet ein XWiki-Image und ein MySQL-Image.
+Deswegen sieht die `chart-patch-tpl.yaml` wie folgt aus und wird im selben Verzeichnis wie die `Chart.yaml` abgelegt:
 
 ```yaml
 apiVersion: v1
@@ -105,13 +106,12 @@ patches:
           tag: "{{ tagFrom .images.mysql }}"
 ```
 
-Die Funktionen teilen die Image-Adresse auf:
+Die Patches für die `values.yaml` werden dabei als Go-Templates angegeben.
+Dabei werden für das Verarbeiten von Image-Referenzen folgende zusätzliche Funktionen zur Verfügung gestellt:
 
 - `registryFrom` liefert die Registry, zum Beispiel `docker.io`.
 - `repositoryFrom` liefert das Repository, zum Beispiel `library/xwiki`.
 - `tagFrom` liefert den Tag, zum Beispiel `18.6.0-mysql-tomcat`.
-
-Die Datei wird bei der lokalen Helm-Installation nicht ausgewertet. Für diese Anleitung muss `ces-mirror` nicht ausgeführt werden.
 
 ## Chart in die lokale Registry pushen
 
