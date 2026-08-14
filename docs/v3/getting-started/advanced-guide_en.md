@@ -1,6 +1,6 @@
 # Integrate XWiki into the CES
 
-This guide extends [From a Helm chart to a Dogu V3](quickstart_en.md). It adds XWiki to the Warp menu, registers it for central CES authentication, and prepares the chart for distribution.
+This guide extends [From a Helm chart to a Dogu V3](quickstart_en.md). It adds XWiki to the Warp menu, describes requirements for central CES authentication, and prepares the chart for distribution.
 
 ## Add XWiki to the Warp menu
 
