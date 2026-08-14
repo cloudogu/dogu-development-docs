@@ -15,7 +15,12 @@ Die Dokumentation wird Entwickler:innen von einem minimalen lauffähigen Dogu zu
 
 ## Verfügbare Konzepte
 
+- [Dogu-V3-Artefakte verstehen](concepts/artifacts_de.md)
 - [Die Multinode-Laufzeitumgebung verstehen](concepts/multinode-environment_de.md)
+
+## Verfügbare Referenz
+
+- [Kompendium der Dogu-V3-Artefakte](reference/compendium_de.md)
 
 ## Inhaltliche Abgrenzung
 
