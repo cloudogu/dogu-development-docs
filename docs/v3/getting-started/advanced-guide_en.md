@@ -45,9 +45,22 @@ kubectl get warpmenuentry xwiki --namespace ecosystem --output wide
 
 Reload the CES page. XWiki now appears in the Warp menu.
 
-## Register XWiki for CES authentication
+## Authentication and permissions
 
-An `AuthRegistration` registers XWiki with the CES identity provider (CAS). Create `auth-registration.yaml` in the `templates` directory:
+An `AuthRegistration` registers XWiki with the CES identity provider (CAS).
+XWiki also needs a suitable authenticator to use authentication through CAS.
+
+Installing the authenticator and mapping LDAP groups to XWiki permissions are not part of this guide yet. These steps depend on the application and must be defined before publishing the Dogu.
+
+It must be ensured that the admin group configured in the global config is synchronized into the Dogu and receives admin permissions there. The Dogu must also react to changes to the admin group and synchronize them at the latest after a restart.
+
+Further information:
+
+- [Multinode environment and Dogu V3 resources](../concepts/multinode-environment_en.md)
+- [XWiki OpenID Connect Authenticator](https://extensions.xwiki.org/xwiki/bin/view/Extension/OpenID%20Connect/OpenID%20Connect%20Authenticator/)
+- [CAS as an OpenID Connect provider](https://apereo.github.io/cas/development/authentication/OIDC-Authentication.html)
+
+In principle, the `AuthRegistration` for XWiki could look as follows:
 
 ```yaml
 apiVersion: k8s.cloudogu.com/v1
@@ -61,37 +74,6 @@ spec:
 ```
 
 The Auth Registration Operator registers XWiki with CAS. It then writes the client ID, client secret, and issuer URL to the `xwiki-oidc-credentials` Secret.
-
-Update the chart again:
-
-```shell
-helm upgrade --install xwiki . \
-  --namespace ecosystem \
-  --wait \
-  --timeout 15m
-```
-
-Wait for the registration:
-
-```shell
-kubectl wait \
-  --for=condition=Completed \
-  authregistration/xwiki \
-  --namespace ecosystem \
-  --timeout 2m
-```
-
-## Authentication and permissions
-
-The `AuthRegistration` provides the credentials. XWiki also needs a suitable authenticator to use authentication through CAS.
-
-Installing the authenticator and mapping LDAP groups to XWiki permissions are not part of this guide yet. These steps depend on the application and must be defined before publishing the Dogu.
-
-Further information:
-
-- [Multinode environment and Dogu V3 resources](../concepts/multinode-environment_en.md)
-- [XWiki OpenID Connect Authenticator](https://extensions.xwiki.org/xwiki/bin/view/Extension/OpenID%20Connect/OpenID%20Connect%20Authenticator/)
-- [CAS as an OpenID Connect provider](https://apereo.github.io/cas/development/authentication/OIDC-Authentication.html)
 
 ## Prepare images for later mirroring
 

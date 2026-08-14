@@ -45,9 +45,22 @@ kubectl get warpmenuentry xwiki --namespace ecosystem --output wide
 
 Nach dem Neuladen der CES-Seite erscheint XWiki im Warp-Menü.
 
-## XWiki für die CES-Anmeldung registrieren
+## Anmeldung und Berechtigungen
 
-Eine `AuthRegistration` registriert XWiki beim Identity Provider des CES (CAS). Im Verzeichnis `templates` die Datei `auth-registration.yaml` erstellen:
+Eine `AuthRegistration` registriert XWiki beim Identity Provider des CES (CAS).
+XWiki benötigt zusätzlich einen passenden Authenticator, um die Anmeldung über CAS zu verwenden.
+
+Die Einrichtung des Authenticators sowie die Übernahme von LDAP-Gruppen und XWiki-Rechten gehören noch nicht zu dieser Anleitung. Diese Punkte hängen von der jeweiligen Anwendung ab und müssen vor der Veröffentlichung des Dogus festgelegt werden.
+
+Hier muss sichergestellt werden, dass die in der Globalen Config hinterlegte Admin-Gruppe in das Dogu synchronisiert wird und dort Admin-Berechtigungen erhält. Außerdem muss das Dogu auch auf Änderungen der Admin-Gruppe reagieren bzw. diese spätestens nach einem Neustart synchronisieren.
+
+Weitere Informationen:
+
+- [Multinode-Umgebung und Dogu-V3-Ressourcen](../concepts/multinode-environment_de.md)
+- [XWiki OpenID Connect Authenticator](https://extensions.xwiki.org/xwiki/bin/view/Extension/OpenID%20Connect/OpenID%20Connect%20Authenticator/)
+- [CAS als OpenID-Connect-Anbieter](https://apereo.github.io/cas/development/authentication/OIDC-Authentication.html)
+
+Grundsätzlich könnte die `AuthRegistration` für XWiki wie folgt aussehen:
 
 ```yaml
 apiVersion: k8s.cloudogu.com/v1
@@ -61,37 +74,6 @@ spec:
 ```
 
 Der Auth-Registration-Operator registriert XWiki bei CAS. Danach schreibt er Client-ID, Client-Secret und Issuer-URL in das Secret `xwiki-oidc-credentials`.
-
-Das Chart erneut aktualisieren:
-
-```shell
-helm upgrade --install xwiki . \
-  --namespace ecosystem \
-  --wait \
-  --timeout 15m
-```
-
-Auf die Registrierung warten:
-
-```shell
-kubectl wait \
-  --for=condition=Completed \
-  authregistration/xwiki \
-  --namespace ecosystem \
-  --timeout 2m
-```
-
-## Anmeldung und Berechtigungen
-
-Die `AuthRegistration` stellt die Zugangsdaten bereit. XWiki benötigt zusätzlich einen passenden Authenticator, um die Anmeldung über CAS zu verwenden.
-
-Die Einrichtung des Authenticators sowie die Übernahme von LDAP-Gruppen und XWiki-Rechten gehören noch nicht zu dieser Anleitung. Diese Punkte hängen von der jeweiligen Anwendung ab und müssen vor der Veröffentlichung des Dogus festgelegt werden.
-
-Weitere Informationen:
-
-- [Multinode-Umgebung und Dogu-V3-Ressourcen](../concepts/multinode-environment_de.md)
-- [XWiki OpenID Connect Authenticator](https://extensions.xwiki.org/xwiki/bin/view/Extension/OpenID%20Connect/OpenID%20Connect%20Authenticator/)
-- [CAS als OpenID-Connect-Anbieter](https://apereo.github.io/cas/development/authentication/OIDC-Authentication.html)
 
 ## Images für die spätere Spiegelung vorbereiten
 
