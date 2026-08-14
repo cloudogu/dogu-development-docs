@@ -6,7 +6,7 @@ At the end, XWiki is available at `https://quickstart.k3ces.localdomain/xwiki/`.
 
 CES authentication, the Warp menu, backups, and upgrades are outside the scope of this guide.
 
-The result of this guide can be found in the [quickstart folder](quickstart).
+The result of this guide (including the [advanced guide](advanced-guide_en.md)) can be found in the [xwiki-dogu folder](xwiki-dogu).
 
 ## Prerequisites
 
