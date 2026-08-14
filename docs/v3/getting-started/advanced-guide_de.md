@@ -151,7 +151,7 @@ helm upgrade --install xwiki \
 
 Vor der Veröffentlichung müssen der Ziel-Namespace und die Zugangsdaten mit Cloudogu abgestimmt werden. Partner erhalten dafür einen eigenen Namespace in `registry.cloudogu.com`.
 
-Dieses Beispiel verwendet öffentliche Images von Docker Hub. Deshalb müssen keine eigenen Images veröffentlicht werden. Enthält ein Dogu eigene Images, werden sie unter diesem Pfad abgelegt:
+Dieses Beispiel verwendet öffentliche Images von Docker Hub. Deshalb müssen keine Images in unsere Registry gepusht werden. Enthält ein Dogu nicht-öffentliche Images, werden sie unter diesem Pfad abgelegt:
 
 ```text
 registry.cloudogu.com/<namespace>/dogu/v3/images/<image>:<tag>

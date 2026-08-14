@@ -151,7 +151,7 @@ helm upgrade --install xwiki \
 
 Agree on the target namespace and credentials with Cloudogu before publication. Partners receive their own namespace in `registry.cloudogu.com`.
 
-This example uses public images from Docker Hub. No custom images therefore need to be published. If a Dogu contains custom images, store them under this path:
+This example uses public images from Docker Hub. No images therefore need to be pushed to our registry. If a Dogu contains non-public images, store them under this path:
 
 ```text
 registry.cloudogu.com/<namespace>/dogu/v3/images/<image>:<tag>
