@@ -92,8 +92,6 @@ ohne Beeinträchtigung des Gesamtsystems vorgenommen werden können. Folgende CR
 - **ServiceAccountRequest**: Fordert technische Credentials eines anderen Dogus oder einer Komponente an
 - **ServiceAccountProducer**: Definiert, wie ein ServiceAccount beim eigenen Dogu angefordert werden kann
 
-Die Plattform-API sowie weitere Artefakte werden Dokument [Dogu Artefakte](docs/v3/concepts/artifacts_de.md) genauer beschrieben. 
-
 ## Bezugsquellen für Helm-Charts und Dogu Container Images
 
 Die Helm-Charts für CES-MN sowie die benötigten Dogu Container Images stehen derzeit ausschließlich über

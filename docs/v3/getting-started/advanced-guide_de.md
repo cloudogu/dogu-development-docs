@@ -57,7 +57,7 @@ Hier muss sichergestellt werden, dass die in der Globalen Config hinterlegte Adm
 Weitere Informationen:
 
 - [Multinode-Umgebung und Dogu-V3-Ressourcen](../concepts/multinode-environment_de.md)
-- [XWiki OpenID Connect Authenticator](https://extensions.xwiki.org/xwiki/bin/view/Extension/OpenID%20Connect/OpenID%20Connect%20Authenticator/)
+- [XWiki OpenID Connect Authenticator](https://github.com/xwiki-contrib/oidc/tree/master/oidc-authenticator)
 - [CAS als OpenID-Connect-Anbieter](https://apereo.github.io/cas/development/authentication/OIDC-Authentication.html)
 
 Grundsätzlich könnte die `AuthRegistration` für XWiki wie folgt aussehen:

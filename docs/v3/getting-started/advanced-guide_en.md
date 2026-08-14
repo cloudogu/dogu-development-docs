@@ -57,7 +57,7 @@ It must be ensured that the admin group configured in the global config is synch
 Further information:
 
 - [Multinode environment and Dogu V3 resources](../concepts/multinode-environment_en.md)
-- [XWiki OpenID Connect Authenticator](https://extensions.xwiki.org/xwiki/bin/view/Extension/OpenID%20Connect/OpenID%20Connect%20Authenticator/)
+- [XWiki OpenID Connect Authenticator](https://github.com/xwiki-contrib/oidc/tree/master/oidc-authenticator)
 - [CAS as an OpenID Connect provider](https://apereo.github.io/cas/development/authentication/OIDC-Authentication.html)
 
 In principle, the `AuthRegistration` for XWiki could look as follows:
