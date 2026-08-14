@@ -1,0 +1,13 @@
+apiVersion: k8s.cloudogu.com/v1
+kind: WarpMenuEntry
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: xwiki
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  category: Development Apps
+  displayName:
+    de: XWiki
+    en: XWiki
+  path: /xwiki
