@@ -15,7 +15,7 @@ metadata:
     app.kubernetes.io/name: xwiki
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
-  category: Development Apps
+  category: Documentation
   displayName:
     de: XWiki
     en: XWiki
