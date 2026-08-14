@@ -94,8 +94,6 @@ can be made without impairing the overall system. The following CRDs are availab
 - **ServiceAccountRequest**: Requests technical credentials of another Dogu or a Component
 - **ServiceAccountProducer**: Defines how a ServiceAccount can be requested from your own Dogu
 
-The platform API and other artifacts are described in more detail in the [Dogu Artifacts](docs/v3/concepts/artifacts_en.md) document.
-
 ## Sources for Helm Charts and Dogu Container Images
 
 The Helm charts for CES-MN as well as the required Dogu container images are currently available exclusively via

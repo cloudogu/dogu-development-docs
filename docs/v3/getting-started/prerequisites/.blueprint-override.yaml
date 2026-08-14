@@ -1,0 +1,25 @@
+apiVersion: k8s.cloudogu.com/v3
+kind: Blueprint
+metadata:
+  labels:
+    app: ces
+    app.kubernetes.io/name: k8s-blueprint-lib
+  name: blueprint
+spec:
+  displayName: "k3ces.localdomain"
+  stopped: false
+  blueprint:
+    dogus: []
+    config:
+      dogus: {}
+      global:
+        - key: "fqdn"
+          value: "quickstart.k3ces.localdomain"
+        - key: "domain"
+          value: "k3ces.localdomain"
+        # should be set to "external" for mk-cert
+        - key: "certificate/type"
+          value: "selfsigned"
+  blueprintMask:
+    manifest:
+      dogus: []

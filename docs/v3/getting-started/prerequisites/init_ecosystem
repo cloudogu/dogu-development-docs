@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ECOSYSTEM_DIR="${SCRIPT_DIR}/k8s-ecosystem"
+
+mkdir "${ECOSYSTEM_DIR}"
+git clone https://github.com/cloudogu/k8s-ecosystem.git "${ECOSYSTEM_DIR}"
+cp "${SCRIPT_DIR}/.blueprint-override.yaml" "${ECOSYSTEM_DIR}"
+cp "${SCRIPT_DIR}/.ecosystem-core-values-patch.yaml" "${ECOSYSTEM_DIR}"
+
+echo "Please enter your Cloudogu registry credentials"
+read -p "Enter username: " USERNAME
+read -sp "Enter password: " PASSWORD
+
+ENCODED_PASSWORD="$(printf '%s' "${PASSWORD}" | base64 -w0)"
+sed -e "s/%username%/$USERNAME/g; s/%password%/$ENCODED_PASSWORD/g" "${SCRIPT_DIR}/config.env.template" > "${ECOSYSTEM_DIR}/k3d/config.env"
+
+"${ECOSYSTEM_DIR}/k3d/ces-k3d" create quickstart

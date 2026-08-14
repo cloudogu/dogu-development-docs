@@ -1,0 +1,10 @@
+# This just registers the OIDC application with CAS and creates the credentials secret.
+# Integration with XWiki is not included in this example.
+apiVersion: k8s.cloudogu.com/v1
+kind: AuthRegistration
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  consumer: {{ .Release.Name }}
+  protocol: OIDC
+  secretRef: xwiki-oidc-credentials
