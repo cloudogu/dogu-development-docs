@@ -17,6 +17,11 @@ Die Dokumentation wird Entwickler:innen von einem minimalen lauffähigen Dogu zu
 
 - [Die Multinode-Laufzeitumgebung verstehen](concepts/multinode-environment_de.md)
 
+## Verfügbare Anleitungen
+
+- [Vom Helm-Chart zum Dogu V3](getting-started/quickstart_de.md)
+- [Ein Dogu V3 releasen](guides/release_de.md)
+
 ## Inhaltliche Abgrenzung
 
 - **Erste Schritte** enthalten ausführbare, durchgängige Anleitungen. Der Quickstart behandelt nur den kleinsten lauffähigen Happy Path.

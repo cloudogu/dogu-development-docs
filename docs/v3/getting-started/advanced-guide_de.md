@@ -147,29 +147,6 @@ helm upgrade --install xwiki \
   --timeout 15m
 ```
 
-## Chart veröffentlichen
+## Nächster Schritt
 
-Vor der Veröffentlichung müssen der Ziel-Namespace und die Zugangsdaten mit Cloudogu abgestimmt werden. Partner erhalten dafür einen eigenen Namespace in `registry.cloudogu.com`.
-
-Dieses Beispiel verwendet öffentliche Images von Docker Hub. Deshalb müssen keine Images in unsere Registry gepusht werden. Enthält ein Dogu nicht-öffentliche Images, werden sie unter diesem Pfad abgelegt:
-
-```text
-registry.cloudogu.com/<namespace>/dogu/v3/images/<image>:<tag>
-```
-
-An der Cloudogu-Registry anmelden:
-
-```shell
-helm registry login registry.cloudogu.com
-```
-
-Danach das bereits paketierte Chart pushen:
-
-```shell
-helm push dist/xwiki-1.7.1-1.tgz \
-  oci://registry.cloudogu.com/<namespace>/dogu/v3/charts
-```
-
-`<namespace>` durch den vereinbarten Partner-Namespace ersetzen. Zugangsdaten gehören nicht in das Chart oder in das Git-Repository.
-
-Der Partner-Namespace wird in der Dogu-Registry dem OCI-Chart-Repository zugeordnet. Dadurch kann das veröffentlichte Dogu über die Dogu-Registry gefunden werden.
+Das Chart kann jetzt weitergegeben werden. [Ein Dogu V3 releasen](../guides/release_de.md) erklärt, wie der Registry-Zugang beantragt, das Chart veröffentlicht und das Release geprüft wird.

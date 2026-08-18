@@ -17,6 +17,11 @@ The documentation will guide developers from a minimal working Dogu to more deta
 
 - [Understand the Multinode runtime environment](concepts/multinode-environment_en.md)
 
+## Available guides
+
+- [From a Helm chart to a Dogu V3](getting-started/quickstart_en.md)
+- [Release a Dogu V3](guides/release_en.md)
+
 ## Content boundaries
 
 - **Getting started** contains executable end-to-end instructions. The quick start covers only the smallest working happy path.

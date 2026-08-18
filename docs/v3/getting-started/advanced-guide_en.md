@@ -147,29 +147,6 @@ helm upgrade --install xwiki \
   --timeout 15m
 ```
 
-## Publish the chart
+## Next step
 
-Agree on the target namespace and credentials with Cloudogu before publication. Partners receive their own namespace in `registry.cloudogu.com`.
-
-This example uses public images from Docker Hub. No images therefore need to be pushed to our registry. If a Dogu contains non-public images, store them under this path:
-
-```text
-registry.cloudogu.com/<namespace>/dogu/v3/images/<image>:<tag>
-```
-
-Log in to the Cloudogu registry:
-
-```shell
-helm registry login registry.cloudogu.com
-```
-
-Then push the chart package created earlier:
-
-```shell
-helm push dist/xwiki-1.7.1-1.tgz \
-  oci://registry.cloudogu.com/<namespace>/dogu/v3/charts
-```
-
-Replace `<namespace>` with the agreed partner namespace. Do not store credentials in the chart or Git repository.
-
-The partner namespace is mapped to the OCI chart repository in the Dogu Registry. This makes the published Dogu available through the Dogu Registry.
+The chart is now ready for distribution. [Release a Dogu V3](../guides/release_en.md) explains how to request registry access, publish the chart and verify the release.
