@@ -19,8 +19,12 @@ The documentation will guide developers from a minimal working Dogu to more deta
 
 ## Available guides
 
-- [From a Helm chart to a Dogu V3](getting-started/quickstart_en.md)
-- [Release a Dogu V3](guides/release_en.md)
+- Getting started:
+  - [Prerequisites for Dogu development](getting-started/prerequisites_en.md)
+  - [From a Helm chart to a Dogu V3](getting-started/quickstart_en.md)
+  - [Advanced guide](getting-started/advanced-guide_en.md)
+- Guides:
+  - [Release a Dogu V3](guides/release_en.md)
 
 ## Content boundaries
 

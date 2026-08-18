@@ -58,6 +58,8 @@ Vor jedem Release muss die `Chart.yaml` aktualisiert werden:
 - `appVersion` ist die Version der enthaltenen Anwendung und
 - `annotations.dogu.cloudogu.com/api-version` muss `v3` sein.
 
+`version` und `appVersion` sind zwei voneinander unabhängige Versionen und können daher unterschiedlich sein.
+
 Chartname und Version identifizieren das veröffentlichte Artefakt. Eine bereits veröffentlichte Version darf nicht erneut verwendet werden.
 
 Abhängigkeiten laden, Chart prüfen und Paket erstellen:
@@ -72,7 +74,7 @@ helm package . --destination dist
 
 Vor der Veröffentlichung sollte das Chart außerdem im unterstützten Multinode EcoSystem installiert und getestet werden. Die [Dogu-V3-Release-Checkliste](../concepts/multinode-environment_de.md#checkliste-vor-einem-release) nennt die wichtigen Tests.
 
-Bei einem öffentlichen Quellcode-Repository muss der Commit des Releases getaggt werden:
+Bei einem öffentlichen Quellcode-Repository empfiehlt es sich, den Commit des Releases zu taggen:
 
 ```shell
 git tag -a "release/chart/<version>" -m "<version>
@@ -84,8 +86,6 @@ this is a Dogu API v3 release"
 
 git push origin "release/chart/<version>"
 ```
-
-Wenn das Quellcode-Repository einen eigenen Release-Ablauf vorgibt, gelten dessen Regeln. Falls der Push des Tags ein automatisches Release startet, dürfen dieselben Artefakte nicht zusätzlich manuell veröffentlicht werden.
 
 ## Dogu-eigene Container-Images veröffentlichen
 
