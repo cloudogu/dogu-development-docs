@@ -530,7 +530,7 @@ Exposed ports provide a way to route traffic from outside the Cloudogu EcoSystem
 Examples:
 
 ```
-[ { "Type": "tcp", "Container": "2222", "Host":"2222" } ]
+[ { "Type": "tcp", "Container": 2222, "Host": 2222 } ]
 ```
 
 ### ExposedCommands
@@ -886,8 +886,8 @@ ExposedPort struct is used to define ports which are exported to the host.
 Example:
 
 ```
-{ "Type": "tcp", "Container": "2222", "Host":"2222" }
-{ "Container": "2222", "Host":"2222" }
+{ "Type": "tcp", "Container": 2222, "Host": 2222 }
+{ "Container": 2222, "Host": 2222 }
 ```
 
 ```go
