@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-gateway
+  labels:
+    app.kubernetes.io/name: xwiki
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  # Apply the NetworkPolicy to the XWiki pod
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: xwiki
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  # Control incoming connections
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow access from the CES gateway
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              k8s.cloudogu.com/component.name: k8s-ces-gateway
+      # Allow the internal XWiki port
+      ports:
+        - port: {{ .Values.xwiki.service.internalPort }}
+          protocol: TCP

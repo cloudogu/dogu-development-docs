@@ -1,0 +1,15 @@
+apiVersion: v2
+name: xwiki
+description: XWiki as a Dogu V3
+type: application
+# Version of the Dogu chart
+version: 1.7.1-1
+# XWiki version
+appVersion: "18.6.0"
+annotations:
+  # Dogu API version
+  dogu.cloudogu.com/api-version: v3
+dependencies:
+  - name: xwiki
+    version: 1.7.1
+    repository: https://xwiki-contrib.github.io/xwiki-helm
