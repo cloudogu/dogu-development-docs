@@ -18,6 +18,15 @@ Die Dokumentation wird Entwickler:innen von einem minimalen lauffähigen Dogu zu
 - [Dogu-V3-Artefakte verstehen](concepts/artifacts_de.md)
 - [Die Multinode-Laufzeitumgebung verstehen](concepts/multinode-environment_de.md)
 
+## Verfügbare Anleitungen
+
+- Erste Schritte:
+  - [Voraussetzungen für die Dogu-Entwicklung](getting-started/prerequisites_de.md)
+  - [Vom Helm-Chart zum Dogu V3](getting-started/quickstart_de.md)
+  - [Erweiterter Guide](getting-started/advanced-guide_de.md)
+- Guides:
+  - [Ein Dogu V3 releasen](guides/release_de.md)
+
 ## Verfügbare Referenz
 
 - [Kompendium der Dogu-V3-Artefakte](reference/compendium_de.md)

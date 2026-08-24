@@ -1,0 +1,13 @@
+apiVersion: k8s.cloudogu.com/v1
+kind: Exposition
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: xwiki
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  http:
+    - name: web
+      service: {{ .Values.xwiki.fullnameOverride }}
+      port: {{ .Values.xwiki.service.externalPort }}
+      path: /xwiki

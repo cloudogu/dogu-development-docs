@@ -1,0 +1,6 @@
+dependencies:
+- name: xwiki
+  repository: https://xwiki-contrib.github.io/xwiki-helm
+  version: 1.7.1
+digest: sha256:d7631a66f57adb4cc3fdc7bae97b806dc28e2744115d73a8a3f750d82facd965
+generated: "2026-08-13T09:13:37.784552484+02:00"
