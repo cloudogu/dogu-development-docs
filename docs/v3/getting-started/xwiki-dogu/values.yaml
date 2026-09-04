@@ -1,3 +1,7 @@
+global:
+  cesconfig:
+    fqdn: ecosystem.localdomain
+
 # Values for the included XWiki chart
 xwiki:
   fullnameOverride: xwiki
@@ -36,3 +40,29 @@ xwiki:
       username: xwiki
       password: ""
       database: xwiki
+
+  customConfigs:
+    xwiki.cfg:
+      xwiki.authentication.authclass: org.xwiki.contrib.oidc.auth.OIDCAuthServiceImpl
+    xwiki.properties:
+      oidc.endpoint.token.auth_method: "client_secret_basic"
+      oidc.endpoint.userinfo.method: "GET"
+      oidc.logoutMechanism: "rpInitiated"
+      # hard-code for now
+      oidc.provider: https://quickstart.k3ces.localdomain/cas/oidc
+      oidc.skipped: false
+      # so können wir gruppen nach XWiki spiegeln
+      oidc.groups.claim: customobject.customgroups
+      # hard-code for now
+      oidc.groups.mapping: "XWikiAdminGroup=admin"
+
+  customConfigSecrets:
+    xwiki.properties:
+      oidc.clientid:
+        secret:
+          name: xwiki-oidc-credentials
+          key: oidc_client_id
+      oidc.secret:
+        secret:
+          name: xwiki-oidc-credentials
+          key: oidc_client_secret
