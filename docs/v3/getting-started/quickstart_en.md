@@ -35,7 +35,7 @@ name: xwiki
 description: XWiki as a Dogu V3
 type: application
 # Version of the Dogu chart
-version: 1.7.1-1
+version: 1.7.1
 # XWiki version
 appVersion: "18.6.0"
 annotations:
