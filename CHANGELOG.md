@@ -7,3 +7,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- [#98] Document runtime patches, CES global configuration access, template functions, validation, and mirroring compatibility in German and English.

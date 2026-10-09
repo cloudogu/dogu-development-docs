@@ -145,6 +145,8 @@ upgrades:
 
 Eine besondere Herausforderung für den Betrieb der Plattform sind sogenannte Air-Gapped-Umgebungen, die isoliert von anderen Umgebungen – insbesondere dem Internet – betrieben werden. Für solche Umgebungen werden sowohl die benötigten Helm-Charts als auch Container Images in eine interne OCI-Registry innerhalb der isolierten Umgebung gespiegelt, wodurch sich die Bezugsquellen der Images aus dem Helm-Chart ändern. Mit Hilfe der `chart-patch-tpl.yaml` können die Referenzen der Images durch ein Mirroring-Tool für die Zielumgebung aufgelöst und überschrieben werden.
 
+Lege `chart-patch-tpl.yaml` neben `Chart.yaml` ab. Neben Patches für die Image-Spiegelung kann die Datei Runtime-Patches enthalten, mit denen der Dogu-Operator globale CES-Konfiguration in Chart-Values einsetzt. Ein Beispiel und die Voraussetzungen findest du unter [CES-Konfiguration über Runtime-Patches einbinden](../getting-started/advanced-guide_de.md#ces-konfiguration-über-runtime-patches-einbinden).
+
 **`chart-patch-tpl.yaml` am Beispiel des Nexus-Dogus**
 
 ```yaml

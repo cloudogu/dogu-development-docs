@@ -145,6 +145,8 @@ upgrades:
 
 A particular challenge for operating the platform are so-called air-gapped environments, which are run in isolation from other environments – in particular the internet. For such environments, both the required Helm charts and container images are mirrored into an internal OCI registry within the isolated environment, which changes the sources from which the images are obtained in the Helm chart. With the help of the `chart-patch-tpl.yaml`, the image references can be resolved and overwritten for the target environment by a mirroring tool.
 
+Place `chart-patch-tpl.yaml` next to `Chart.yaml`. In addition to image-mirroring patches, it can contain runtime patches that the Dogu Operator uses to insert CES global configuration into chart values. See [Inject CES configuration with runtime patches](../getting-started/advanced-guide_en.md#inject-ces-configuration-with-runtime-patches) for an example and prerequisites.
+
 **`chart-patch-tpl.yaml` using the Nexus Dogu as an example**
 
 ```yaml
