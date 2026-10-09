@@ -113,6 +113,56 @@ The following additional functions are available for processing image references
 - `repositoryFrom` returns the repository, for example `library/xwiki`.
 - `tagFrom` returns the tag, for example `18.6.0-mysql-tomcat`.
 
+## Inject CES configuration with runtime patches
+
+Runtime patches let the Dogu Operator insert CES global configuration into chart values without changing upstream chart templates.
+
+Add a top-level `runtimePatches` section to `chart-patch-tpl.yaml`, next to `Chart.yaml`. Keep the existing `values` and `patches` sections for image mirroring.
+
+### Add a runtime patch
+
+This example omits the image sections and uses illustrative chart values. Adapt the target keys to your chart's `values.yaml`. For a dependency, nest the overrides below its chart name or alias (`backend` here).
+
+```yaml
+apiVersion: v1
+runtimePatches:
+  values.yaml:
+    {{ if empty (globalConfig "fqdn") }}{{ fail "CES fqdn must be configured" }}{{ end }}
+    application:
+      host: {{ globalConfig "fqdn" | quote }}
+      proxyHost: {{ globalConfig "proxy/host" | default "" | quote }}
+      certificate: {{ globalConfig "certificates/server.crt" | default "" | quote }}
+      certificates:
+        {{ globalConfig "certificates" | default dict | toYaml | nindent 8 }}
+    backend:
+      applicationHost: {{ globalConfig "fqdn" | quote }}
+```
+
+Currently only `values.yaml` is supported as a runtime-patch target. Keep the mapping structure shown above, not a `|` block string. Do not use YAML anchors or multiple YAML documents. An absent file or `runtimePatches: {}` is allowed, but a present empty, comments-only, or invalid file causes an error.
+
+### Read configuration and format values
+
+- `globalConfig` reads `config.yaml` from the `global-config` ConfigMap in the Dogu's namespace. `/` separates path segments; dots remain part of a key. `certificates/server.crt` reads one value, while `certificates` returns the entire subtree.
+- Missing paths return `nil`. Use `default` for optional values.
+- `default` also replaces empty strings, empty maps/lists, `false`, and numeric `0`.
+- `quote` emits a safely quoted YAML string, including for multiline certificates.
+- `toYaml | nindent 8` inserts a subtree with eight spaces of indentation here; adjust this for different nesting.
+- `fail` stops evaluation with your error message. The example uses it to require a non-empty `fqdn`.
+
+The [Sprig functions](https://masterminds.github.io/sprig/) are available except `env`, `expandenv`, and `getHostByName`.
+
+Runtime patches are not Helm templates: `.Values`, `.Release`, `.images`, Helm helpers such as `include`, `tpl`, `lookup`, and `required`, and the image-mirroring helpers are unavailable. `globalConfig` is available only in runtime patches.
+
+### Overrides and configuration changes
+
+Precedence increases from left to right:
+
+`Chart defaults → global.cesConfig → runtimePatches → spec.values → spec.mappedValues`
+
+Changes to `global-config` trigger reevaluation. Whether the application reloads the configuration or needs a restart depends on the chart and application.
+
+**Testing:** Use an operator-managed Dogu in a CES with V3 processing enabled. Plain `helm template` and `helm install`, including the Helm commands later in this guide, do not evaluate runtime patches.
+
 ## Push the chart to the local registry
 
 The local registry was set up together with the quickstart environment. It is available at `localhost:5001`.

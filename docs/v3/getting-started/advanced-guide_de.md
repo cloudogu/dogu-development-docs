@@ -113,6 +113,56 @@ Dabei werden für das Verarbeiten von Image-Referenzen folgende zusätzliche Fun
 - `repositoryFrom` liefert das Repository, zum Beispiel `library/xwiki`.
 - `tagFrom` liefert den Tag, zum Beispiel `18.6.0-mysql-tomcat`.
 
+## CES-Konfiguration über Runtime-Patches einbinden
+
+Mit Runtime-Patches kann der Dogu-Operator globale CES-Konfiguration in Chart-Values einsetzen, ohne die Templates eines Upstream-Charts zu verändern.
+
+Ergänze in `chart-patch-tpl.yaml` einen Abschnitt `runtimePatches` auf oberster Ebene. Die Datei liegt neben `Chart.yaml`. Behalte die bestehenden Abschnitte `values` und `patches` für die Image-Spiegelung bei.
+
+### Einen Runtime-Patch ergänzen
+
+Dieses Beispiel lässt die Image-Abschnitte aus und verwendet beispielhafte Chart-Values. Passe die Zielschlüssel an die `values.yaml` deines Charts an. Für Abhängigkeiten stehen die Overrides unter dem Namen oder Alias des Subcharts (hier `backend`).
+
+```yaml
+apiVersion: v1
+runtimePatches:
+  values.yaml:
+    {{ if empty (globalConfig "fqdn") }}{{ fail "CES fqdn muss gesetzt sein" }}{{ end }}
+    application:
+      host: {{ globalConfig "fqdn" | quote }}
+      proxyHost: {{ globalConfig "proxy/host" | default "" | quote }}
+      certificate: {{ globalConfig "certificates/server.crt" | default "" | quote }}
+      certificates:
+        {{ globalConfig "certificates" | default dict | toYaml | nindent 8 }}
+    backend:
+      applicationHost: {{ globalConfig "fqdn" | quote }}
+```
+
+Als Runtime-Patch-Ziel wird derzeit nur `values.yaml` unterstützt. Behalte die gezeigte Map-Struktur bei, statt einen `|`-Block-String zu verwenden. Nutze keine YAML-Anker oder mehrere YAML-Dokumente. Eine fehlende Datei oder `runtimePatches: {}` ist erlaubt; eine vorhandene leere, nur aus Kommentaren bestehende oder ungültige Datei führt zu einem Fehler.
+
+### Konfiguration lesen und Werte formatieren
+
+- `globalConfig` liest `config.yaml` aus der ConfigMap `global-config` im Namespace des Dogus. `/` trennt Pfadsegmente; Punkte bleiben Teil eines Schlüssels. `certificates/server.crt` liest einen Wert, `certificates` den gesamten Unterbaum.
+- Fehlende Pfade liefern `nil`. Verwende `default` für optionale Werte.
+- `default` ersetzt auch leere Strings, leere Maps/Listen, `false` und die Zahl `0`.
+- `quote` erzeugt einen sicher quotierten YAML-String, auch für mehrzeilige Zertifikate.
+- `toYaml | nindent 8` fügt hier einen Unterbaum mit acht Leerzeichen Einrückung ein. Passe die Zahl bei anderer Verschachtelung an.
+- `fail` bricht die Auswertung mit deiner Fehlermeldung ab. Im Beispiel wird damit eine nicht leere `fqdn` verlangt.
+
+Die [Sprig-Funktionen](https://masterminds.github.io/sprig/) sind verfügbar, außer `env`, `expandenv` und `getHostByName`.
+
+Runtime-Patches sind keine Helm-Templates: `.Values`, `.Release`, `.images`, Helm-Hilfsfunktionen wie `include`, `tpl`, `lookup` und `required` sowie die Image-Hilfsfunktionen sind nicht verfügbar. `globalConfig` steht nur in Runtime-Patches zur Verfügung.
+
+### Overrides und Konfigurationsänderungen
+
+Die Priorität steigt von links nach rechts:
+
+`Chart-Defaults → global.cesConfig → runtimePatches → spec.values → spec.mappedValues`
+
+Bei Änderungen an `global-config` werden die Runtime-Patches erneut ausgewertet. Ob die Anwendung die Konfiguration neu lädt oder einen Neustart benötigt, hängt vom Chart und der Anwendung ab.
+
+**Testen:** Verwende ein vom Operator verwaltetes Dogu in einem CES mit aktivierter V3-Verarbeitung. Ein normales `helm template` oder `helm install` wertet Runtime-Patches nicht aus – auch die Helm-Befehle im weiteren Verlauf dieser Anleitung nicht.
+
 ## Chart in die lokale Registry pushen
 
 Die lokale Registry wurde zusammen mit der Quickstart-Umgebung eingerichtet. Sie ist über `localhost:5001` erreichbar.
