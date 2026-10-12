@@ -145,6 +145,8 @@ upgrades:
 
 A particular challenge for operating the platform are so-called air-gapped environments, which are run in isolation from other environments – in particular the internet. For such environments, both the required Helm charts and container images are mirrored into an internal OCI registry within the isolated environment, which changes the sources from which the images are obtained in the Helm chart. With the help of the `chart-patch-tpl.yaml`, the image references can be resolved and overwritten for the target environment by a mirroring tool.
 
+Place `chart-patch-tpl.yaml` next to `Chart.yaml`. In addition to image-mirroring patches, it can contain runtime patches that the Dogu Operator uses to insert CES global configuration into chart values. See [Inject CES configuration with runtime patches](../getting-started/advanced-guide_en.md#inject-ces-configuration-with-runtime-patches) for an example and prerequisites.
+
 **`chart-patch-tpl.yaml` using the Nexus Dogu as an example**
 
 ```yaml
@@ -188,19 +190,19 @@ An `AuthRegistration` only provisions the server-side integration at the IdP. Th
 
 ### WarpMenuEntry
 
-The Warp menu is used for central navigation on the platform. If a Dogu should be shown in the Warp menu, a [`WarpMenuEntry-CR`](https://github.com/cloudogu/k8s-warp-menu-entry-lib/blob/main/docs/operations/warp_menu_entry_en.md) must be provided for each internal entry point that is visible to users. Depending on the need, a Dogu can define no entries, one entry, or multiple entries.
+The Warp menu is used for central navigation on the platform. If a Dogu should be shown in the Warp menu, a [`WarpMenuEntry-CR`](https://github.com/cloudogu/k8s-warp-menu-entry-lib/blob/develop/docs/operations/warp_menu_entry_en.md) must be provided for each internal entry point that is visible to users. Depending on the need, a Dogu can define no entries, one entry, or multiple entries.
 
 Each entry contains a German and an English display name, a category, and a relative path to the Dogu. The Warp menu does not make the application reachable by itself. The relative path must match an independently functioning HTTP exposition.
 
 ### Exposition
 
-If a Dogu is supposed to be reachable from the outside, one or more [`Exposition-CR`](https://github.com/cloudogu/k8s-exposition-lib/blob/main/docs/operations/exposition_cr_en.md) must be declared for this purpose. The `Exposition` defines how a service is made reachable from outside the platform. It supports HTTP routes (Layer 7) as well as raw TCP and UDP ports (Layer 4). For HTTP routes, path rewrites can additionally be defined. At the Layer 4 level, collisions can occur if two or more `Expositions` request the same port for the same protocol. In this case, none of the affected `Expositions` are applied as long as the conflict persists. The administrator is informed about this in the status of the CR.
+If a Dogu is supposed to be reachable from the outside, one or more [`Exposition-CR`](https://github.com/cloudogu/k8s-exposition-lib/blob/develop/docs/operations/exposition_cr_en.md) must be declared for this purpose. The `Exposition` defines how a service is made reachable from outside the platform. It supports HTTP routes (Layer 7) as well as raw TCP and UDP ports (Layer 4). For HTTP routes, path rewrites can additionally be defined. At the Layer 4 level, collisions can occur if two or more `Expositions` request the same port for the same protocol. In this case, none of the affected `Expositions` are applied as long as the conflict persists. The administrator is informed about this in the status of the CR.
 
 ### ServiceAccountRequest / ServiceAccountProducer
 
 In the CES it is possible for different Dogus/Components to interact with each other. For this, an appropriate ServiceAccount must be created at the target Dogu/Component (Producer) for an accessing Dogu/Component (Consumer). This service-account relationship can therefore be freely chosen and is not limited to Dogus only. This mechanism also allows cyclical dependencies between producers and consumers.
 
-ServiceAccount creation can be controlled declaratively via the CRDs [`ServiceAccountRequest`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/main/docs/operations/serviceaccountrequest_cr_en.md) and [`ServiceAccountProducer`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/main/docs/operations/serviceaccountproducer_cr_en.md).
+ServiceAccount creation can be controlled declaratively via the CRDs [`ServiceAccountRequest`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/develop/docs/operations/serviceaccountrequest_cr_en.md) and [`ServiceAccountProducer`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/develop/docs/operations/serviceaccountproducer_cr_en.md).
 
 **`ServiceAccountProducer`**
 
