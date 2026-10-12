@@ -127,31 +127,24 @@ Dieses Beispiel lässt die Image-Abschnitte aus und verwendet beispielhafte Char
 apiVersion: v1
 runtimePatches:
   values.yaml:
-    {{ if empty (globalConfig "fqdn") }}{{ fail "CES fqdn muss gesetzt sein" }}{{ end }}
     application:
-      host: {{ globalConfig "fqdn" | quote }}
-      proxyHost: {{ globalConfig "proxy/host" | default "" | quote }}
-      certificate: {{ globalConfig "certificates/server.crt" | default "" | quote }}
-      certificates:
-        {{ globalConfig "certificates" | default dict | toYaml | nindent 8 }}
+      host: '{{ globalConfig "fqdn" }}'
+      certificate: '{{ globalConfig "certificates/server.crt" }}'
     backend:
-      applicationHost: {{ globalConfig "fqdn" | quote }}
+      applicationHost: '{{ globalConfig "fqdn" }}'
 ```
 
-Als Runtime-Patch-Ziel wird derzeit nur `values.yaml` unterstützt. Behalte die gezeigte Map-Struktur bei, statt einen `|`-Block-String zu verwenden. Nutze keine YAML-Anker oder mehrere YAML-Dokumente. Eine fehlende Datei oder `runtimePatches: {}` ist erlaubt; eine vorhandene leere, nur aus Kommentaren bestehende oder ungültige Datei führt zu einem Fehler.
+Die gesamte Datei muss schon vor der Auswertung gültiges YAML sein. Setze Template-Ausdrücke deshalb wie im Beispiel in Anführungszeichen. Der Operator wertet nur String-Werte unter `runtimePatches.values.yaml` aus; Schlüssel und die Map-Struktur bleiben unverändert.
 
-### Konfiguration lesen und Werte formatieren
+Als Runtime-Patch-Ziel wird derzeit nur `values.yaml` unterstützt. Behalte die gezeigte Map-Struktur bei und nutze nur ein YAML-Dokument. Eine fehlende Datei, ein fehlender oder auf `null` gesetzter Runtime-Abschnitt oder `runtimePatches: {}` ist erlaubt; eine vorhandene leere, nur aus Kommentaren bestehende oder syntaktisch ungültige Datei führt zu einem Fehler.
 
-- `globalConfig` liest `config.yaml` aus der ConfigMap `global-config` im Namespace des Dogus. `/` trennt Pfadsegmente; Punkte bleiben Teil eines Schlüssels. `certificates/server.crt` liest einen Wert, `certificates` den gesamten Unterbaum.
-- Fehlende Pfade liefern `nil`. Verwende `default` für optionale Werte.
-- `default` ersetzt auch leere Strings, leere Maps/Listen, `false` und die Zahl `0`.
-- `quote` erzeugt einen sicher quotierten YAML-String, auch für mehrzeilige Zertifikate.
-- `toYaml | nindent 8` fügt hier einen Unterbaum mit acht Leerzeichen Einrückung ein. Passe die Zahl bei anderer Verschachtelung an.
-- `fail` bricht die Auswertung mit deiner Fehlermeldung ab. Im Beispiel wird damit eine nicht leere `fqdn` verlangt.
+### Konfiguration lesen
 
-Die [Sprig-Funktionen](https://masterminds.github.io/sprig/) sind verfügbar, außer `env`, `expandenv` und `getHostByName`.
+- `globalConfig` liest `config.yaml` aus der ConfigMap `global-config` im Namespace des Dogus. `/` trennt Pfadsegmente; Punkte bleiben Teil eines Schlüssels. `certificates/server.crt` liest beispielsweise ein einzelnes Zertifikat.
+- Der angefragte Wert muss ein String sein. Fehlende Schlüssel, `null`, Maps, Listen, Zahlen oder boolesche Werte führen zu einem Fehler. Ein vorhandener leerer String ist erlaubt.
+- Eingesetzte Werte bleiben Strings, auch bei Inhalten wie `"false"` oder `"123"`. Anführungszeichen und Zeilenumbrüche, etwa in Zertifikaten, bleiben erhalten. Ganze Config-Unterbäume können nicht eingesetzt werden.
 
-Runtime-Patches sind keine Helm-Templates: `.Values`, `.Release`, `.images`, Helm-Hilfsfunktionen wie `include`, `tpl`, `lookup` und `required` sowie die Image-Hilfsfunktionen sind nicht verfügbar. `globalConfig` steht nur in Runtime-Patches zur Verfügung.
+Runtime-Patches verwenden Go `text/template` mit `globalConfig` als einziger zusätzlicher Funktion.
 
 ### Overrides und Konfigurationsänderungen
 

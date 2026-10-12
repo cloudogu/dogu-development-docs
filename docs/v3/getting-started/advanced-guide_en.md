@@ -127,31 +127,24 @@ This example omits the image sections and uses illustrative chart values. Adapt 
 apiVersion: v1
 runtimePatches:
   values.yaml:
-    {{ if empty (globalConfig "fqdn") }}{{ fail "CES fqdn must be configured" }}{{ end }}
     application:
-      host: {{ globalConfig "fqdn" | quote }}
-      proxyHost: {{ globalConfig "proxy/host" | default "" | quote }}
-      certificate: {{ globalConfig "certificates/server.crt" | default "" | quote }}
-      certificates:
-        {{ globalConfig "certificates" | default dict | toYaml | nindent 8 }}
+      host: '{{ globalConfig "fqdn" }}'
+      certificate: '{{ globalConfig "certificates/server.crt" }}'
     backend:
-      applicationHost: {{ globalConfig "fqdn" | quote }}
+      applicationHost: '{{ globalConfig "fqdn" }}'
 ```
 
-Currently only `values.yaml` is supported as a runtime-patch target. Keep the mapping structure shown above, not a `|` block string. Do not use YAML anchors or multiple YAML documents. An absent file or `runtimePatches: {}` is allowed, but a present empty, comments-only, or invalid file causes an error.
+The entire file must be valid YAML before evaluation. Quote template expressions as shown above. The Operator evaluates only string values under `runtimePatches.values.yaml`; keys and the mapping structure remain unchanged.
 
-### Read configuration and format values
+Currently only `values.yaml` is supported as a runtime-patch target. Keep the mapping structure shown above and use only one YAML document. An absent file, an absent or null runtime section, or `runtimePatches: {}` is allowed, but a present empty, comments-only, or syntactically invalid file causes an error.
 
-- `globalConfig` reads `config.yaml` from the `global-config` ConfigMap in the Dogu's namespace. `/` separates path segments; dots remain part of a key. `certificates/server.crt` reads one value, while `certificates` returns the entire subtree.
-- Missing paths return `nil`. Use `default` for optional values.
-- `default` also replaces empty strings, empty maps/lists, `false`, and numeric `0`.
-- `quote` emits a safely quoted YAML string, including for multiline certificates.
-- `toYaml | nindent 8` inserts a subtree with eight spaces of indentation here; adjust this for different nesting.
-- `fail` stops evaluation with your error message. The example uses it to require a non-empty `fqdn`.
+### Read configuration
 
-The [Sprig functions](https://masterminds.github.io/sprig/) are available except `env`, `expandenv`, and `getHostByName`.
+- `globalConfig` reads `config.yaml` from the `global-config` ConfigMap in the Dogu's namespace. `/` separates path segments; dots remain part of a key. For example, `certificates/server.crt` reads a single certificate.
+- The requested value must be a string. Missing keys, `null`, maps, lists, numbers, and booleans cause an error. An existing empty string is allowed.
+- Inserted values remain strings, including contents such as `"false"` or `"123"`. Quotes and line breaks, such as those in certificates, are preserved. Entire configuration subtrees cannot be inserted.
 
-Runtime patches are not Helm templates: `.Values`, `.Release`, `.images`, Helm helpers such as `include`, `tpl`, `lookup`, and `required`, and the image-mirroring helpers are unavailable. `globalConfig` is available only in runtime patches.
+Runtime patches use Go `text/template` with `globalConfig` as the only additional function.
 
 ### Overrides and configuration changes
 
