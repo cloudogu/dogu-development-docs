@@ -77,10 +77,10 @@ The Auth Registration Operator registers XWiki with CAS. It then writes the clie
 
 ## Prepare images for later mirroring
 
-Because the EcoSystem must also be able to run in air-gapped environments, image references and their use in `values.yaml` must be maintained in `chart-patch-tpl.yaml`. These can then be mirrored, and the image references in `values.yaml` can be adjusted.
+Because the EcoSystem must also be able to run in air-gapped environments, image references and their use in `values.yaml` must be maintained in `mirror-patch-tpl.yaml`. These can then be mirrored, and the image references in `values.yaml` can be adjusted.
 
 The chart uses an XWiki image and a MySQL image.
-Therefore, `chart-patch-tpl.yaml` looks as follows and is placed in the same directory as `Chart.yaml`:
+Therefore, `mirror-patch-tpl.yaml` looks as follows and is placed in the same directory as `Chart.yaml`:
 
 ```yaml
 apiVersion: v1
@@ -117,32 +117,30 @@ The following additional functions are available for processing image references
 
 Runtime patches let the Dogu Operator insert CES global configuration into chart values without changing upstream chart templates.
 
-Add a top-level `runtimePatches` section to `chart-patch-tpl.yaml`, next to `Chart.yaml`. Keep the existing `values` and `patches` sections for image mirroring.
+Create a `runtime-patch-tpl.yaml` next to `Chart.yaml`. It directly contains the desired chart values. Image mirroring is described separately in `mirror-patch-tpl.yaml`; the mirroring tool leaves the runtime file unchanged.
 
 ### Add a runtime patch
 
-This example omits the image sections and uses illustrative chart values. Adapt the target keys to your chart's `values.yaml`. For a dependency, nest the overrides below its chart name or alias (`backend` here).
+Adapt the keys to your chart's `values.yaml`. Place subchart values under its name or alias (`backend` here). Nested maps and lists are supported.
 
 ```yaml
-apiVersion: v1
-runtimePatches:
-  values.yaml:
-    application:
-      host: '{{ globalConfig "fqdn" }}'
-      certificate: '{{ globalConfig "certificates/server.crt" }}'
-    backend:
-      applicationHost: '{{ globalConfig "fqdn" }}'
+application:
+  host: '{{ globalConfig "fqdn" }}'
+  certificate: '{{ globalConfig "certificates/server.crt" }}'
+backend:
+  applicationHosts:
+    - '{{ globalConfig "fqdn" }}'
 ```
 
-The entire file must be valid YAML before evaluation. Quote template expressions as shown above. The Operator evaluates only string values under `runtimePatches.values.yaml`; keys and the mapping structure remain unchanged.
+The file must be valid YAML before evaluation. Quote template expressions as shown above. The Operator evaluates only string values, including those in lists. Keys and structure remain unchanged.
 
-Currently only `values.yaml` is supported as a runtime-patch target. Keep the mapping structure shown above and use only one YAML document. An absent file, an absent or null runtime section, or `runtimePatches: {}` is allowed, but a present empty, comments-only, or syntactically invalid file causes an error.
+Use exactly one YAML document with a map at its root. If no runtime values are needed, omit the file or use `{}`. An empty file or a file containing `null` is not allowed.
 
 ### Read configuration
 
 - `globalConfig` reads `config.yaml` from the `global-config` ConfigMap in the Dogu's namespace. `/` separates path segments; dots remain part of a key. For example, `certificates/server.crt` reads a single certificate.
-- The requested value must be a string. Missing keys, `null`, maps, lists, numbers, and booleans cause an error. An existing empty string is allowed.
-- Inserted values remain strings, including contents such as `"false"` or `"123"`. Quotes and line breaks, such as those in certificates, are preserved. Entire configuration subtrees cannot be inserted.
+- The requested value must be a string; missing keys or other data types cause an error. An empty string is allowed.
+- Inserted values remain strings. Quotes and line breaks, such as those in certificates, are preserved.
 
 Runtime patches use Go `text/template` with `globalConfig` as the only additional function.
 
@@ -150,7 +148,9 @@ Runtime patches use Go `text/template` with `globalConfig` as the only additiona
 
 Precedence increases from left to right:
 
-`Chart defaults → global.cesConfig → runtimePatches → spec.values → spec.mappedValues`
+`Chart defaults → global.cesConfig → runtime values → spec.values → spec.mappedValues`
+
+`globalConfig` always reads the global configuration, not values overridden through `spec.values`.
 
 Changes to `global-config` trigger reevaluation. Whether the application reloads the configuration or needs a restart depends on the chart and application.
 

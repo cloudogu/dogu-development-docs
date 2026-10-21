@@ -9,3 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - [#98] Document runtime patches with quoted globalConfig expressions in German and English.
+
+### Changed
+- [#98] Document separate mirror and runtime patch files in German and English.

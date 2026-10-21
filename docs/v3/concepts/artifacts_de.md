@@ -14,7 +14,8 @@ k8s/
    ├─ templates/
    │  └─ ...
    ├─ Chart.yaml
-   ├─ chart-patch-tpl.yaml
+   ├─ mirror-patch-tpl.yaml
+   ├─ runtime-patch-tpl.yaml
    ├─ dogu-upgrade.yaml
    ├─ dogu-values-metadata.yaml
    ├─ values.yaml
@@ -141,13 +142,13 @@ upgrades:
         dogu.name: nexus
 ```
 
-### `chart-patch-tpl.yaml`
+### `mirror-patch-tpl.yaml`
 
-Eine besondere Herausforderung für den Betrieb der Plattform sind sogenannte Air-Gapped-Umgebungen, die isoliert von anderen Umgebungen – insbesondere dem Internet – betrieben werden. Für solche Umgebungen werden sowohl die benötigten Helm-Charts als auch Container Images in eine interne OCI-Registry innerhalb der isolierten Umgebung gespiegelt, wodurch sich die Bezugsquellen der Images aus dem Helm-Chart ändern. Mit Hilfe der `chart-patch-tpl.yaml` können die Referenzen der Images durch ein Mirroring-Tool für die Zielumgebung aufgelöst und überschrieben werden.
+Eine besondere Herausforderung für den Betrieb der Plattform sind sogenannte Air-Gapped-Umgebungen, die isoliert von anderen Umgebungen – insbesondere dem Internet – betrieben werden. Für solche Umgebungen werden sowohl die benötigten Helm-Charts als auch Container Images in eine interne OCI-Registry innerhalb der isolierten Umgebung gespiegelt, wodurch sich die Bezugsquellen der Images aus dem Helm-Chart ändern. Mit Hilfe der `mirror-patch-tpl.yaml` können die Referenzen der Images durch ein Mirroring-Tool für die Zielumgebung aufgelöst und überschrieben werden.
 
-Lege `chart-patch-tpl.yaml` neben `Chart.yaml` ab. Neben Patches für die Image-Spiegelung kann die Datei Runtime-Patches enthalten, mit denen der Dogu-Operator globale CES-Konfiguration in Chart-Values einsetzt. Ein Beispiel und die Voraussetzungen findest du unter [CES-Konfiguration über Runtime-Patches einbinden](../getting-started/advanced-guide_de.md#ces-konfiguration-über-runtime-patches-einbinden).
+Lege `mirror-patch-tpl.yaml` neben `Chart.yaml` ab. Unter `values.images` stehen die Image-Adressen, unter `patches` deren Zielschlüssel in der `values.yaml`.
 
-**`chart-patch-tpl.yaml` am Beispiel des Nexus-Dogus**
+**`mirror-patch-tpl.yaml` am Beispiel des Nexus-Dogus**
 
 ```yaml
 apiVersion: v1
@@ -175,7 +176,11 @@ patches:
         tag: "{{ tagFrom .images.postgresql }}"
 ```
 
-Die `chart-patch-tpl.yaml` sollte stets Bestandteil des Dogu-Helm-Charts sein, um die im Helm-Chart referenzierten Container Images in eine Air-Gapped-Umgebung spiegeln zu können.
+Die `mirror-patch-tpl.yaml` sollte stets Bestandteil des Dogu-Helm-Charts sein, um die im Helm-Chart referenzierten Container Images in eine Air-Gapped-Umgebung spiegeln zu können.
+
+### `runtime-patch-tpl.yaml`
+
+Diese optionale Datei neben `Chart.yaml` enthält Chart-Values, die der Dogu-Operator mit globaler CES-Konfiguration befüllt. Das Mirroring-Tool lässt sie unverändert. Ein Beispiel und die Auswertungsregeln stehen unter [CES-Konfiguration über Runtime-Patches einbinden](../getting-started/advanced-guide_de.md#ces-konfiguration-über-runtime-patches-einbinden).
 
 
 ## Templates und die Anbindung an die Plattform
@@ -219,7 +224,7 @@ In Dogu V2 wird ein Dogu mithilfe des plattformspezifischen Deskriptorformats `d
 | Feld in `dogu.json`                                                | Behandlung in Dogu V3                                                                  |
 |--------------------------------------------------------------------|----------------------------------------------------------------------------------------|
 | `Name`, `Version`, `DisplayName`, `Description`, `URL`, `Logo`     | Metadaten des `Chart.yaml`                                                             |
-| `Image`                                                            | Container-Image-Referenzen in `chart-patch-tpl.yaml`                                   |
+| `Image`                                                            | Container-Image-Referenzen in `mirror-patch-tpl.yaml`                                   |
 | `Dependencies`                                                     | Zusätzliche Workloads oder exteren Abhängigkeiten via ServiceAccount-CRs               |
 | `ServiceAccounts`                                                  | ServiceAccount-CRs                                                                     |
 | `Volumes`                                                          | Kubernetes-PVCs und Volume-Definitionen                                                |
