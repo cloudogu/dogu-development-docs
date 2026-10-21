@@ -77,10 +77,10 @@ Der Auth-Registration-Operator registriert XWiki bei CAS. Danach schreibt er Cli
 
 ## Images für die spätere Spiegelung vorbereiten
 
-Da das EcoSystem auch in Air-Gapped-Umgebungen lauffähig sein soll, müssen in der `chart-patch-tpl.yaml` Image-Referenzen und deren Nutzung in der `values.yaml` gepflegt werden. Diese können dann gespiegelt, und die Image-Referenzen in der `values.yaml` angepasst werden.
+Da das EcoSystem auch in Air-Gapped-Umgebungen lauffähig sein soll, müssen in der `mirror-patch-tpl.yaml` Image-Referenzen und deren Nutzung in der `values.yaml` gepflegt werden. Diese können dann gespiegelt, und die Image-Referenzen in der `values.yaml` angepasst werden.
 
 Das Chart verwendet ein XWiki-Image und ein MySQL-Image.
-Deswegen sieht die `chart-patch-tpl.yaml` wie folgt aus und wird im selben Verzeichnis wie die `Chart.yaml` abgelegt:
+Deswegen sieht die `mirror-patch-tpl.yaml` wie folgt aus und wird im selben Verzeichnis wie die `Chart.yaml` abgelegt:
 
 ```yaml
 apiVersion: v1
@@ -112,6 +112,49 @@ Dabei werden für das Verarbeiten von Image-Referenzen folgende zusätzliche Fun
 - `registryFrom` liefert die Registry, zum Beispiel `docker.io`.
 - `repositoryFrom` liefert das Repository, zum Beispiel `library/xwiki`.
 - `tagFrom` liefert den Tag, zum Beispiel `18.6.0-mysql-tomcat`.
+
+## CES-Konfiguration über Runtime-Patches einbinden
+
+Mit Runtime-Patches kann der Dogu-Operator globale CES-Konfiguration in Chart-Values einsetzen, ohne die Templates eines Upstream-Charts zu verändern.
+
+Erstelle eine `runtime-patch-tpl.yaml` neben `Chart.yaml`. Sie enthält direkt die gewünschten Chart-Values. Die Image-Spiegelung wird separat in `mirror-patch-tpl.yaml` beschrieben; das Mirroring-Tool lässt die Runtime-Datei unverändert.
+
+### Einen Runtime-Patch ergänzen
+
+Passe die Schlüssel an die `values.yaml` deines Charts an. Werte für ein Subchart stehen unter dessen Namen oder Alias (hier `backend`). Verschachtelte Maps und Listen werden unterstützt.
+
+```yaml
+application:
+  host: '{{ globalConfig "fqdn" }}'
+  certificate: '{{ globalConfig "certificates/server.crt" }}'
+backend:
+  applicationHosts:
+    - '{{ globalConfig "fqdn" }}'
+```
+
+Die Datei muss schon vor der Auswertung gültiges YAML sein. Setze Template-Ausdrücke deshalb in Anführungszeichen. Der Operator wertet nur String-Werte aus, auch innerhalb von Listen. Schlüssel und Struktur bleiben unverändert.
+
+Verwende genau ein YAML-Dokument mit einer Map auf oberster Ebene. Wenn keine Runtime-Values benötigt werden, lasse die Datei weg oder verwende `{}`. Eine leere oder auf `null` gesetzte Datei ist nicht erlaubt.
+
+### Konfiguration lesen
+
+- `globalConfig` liest `config.yaml` aus der ConfigMap `global-config` im Namespace des Dogus. `/` trennt Pfadsegmente; Punkte bleiben Teil eines Schlüssels. `certificates/server.crt` liest beispielsweise ein einzelnes Zertifikat.
+- Der angefragte Wert muss ein String sein; fehlende Schlüssel oder andere Datentypen führen zu einem Fehler. Ein leerer String ist erlaubt.
+- Eingesetzte Werte bleiben Strings. Anführungszeichen und Zeilenumbrüche, etwa in Zertifikaten, bleiben erhalten.
+
+Runtime-Patches verwenden Go `text/template` mit `globalConfig` als einziger zusätzlicher Funktion.
+
+### Overrides und Konfigurationsänderungen
+
+Die Priorität steigt von links nach rechts:
+
+`Chart-Defaults → global.cesConfig → Runtime-Values → spec.values → spec.mappedValues`
+
+`globalConfig` liest immer die globale Konfiguration, nicht die durch `spec.values` überschriebenen Werte.
+
+Bei Änderungen an `global-config` werden die Runtime-Patches erneut ausgewertet. Ob die Anwendung die Konfiguration neu lädt oder einen Neustart benötigt, hängt vom Chart und der Anwendung ab.
+
+**Testen:** Verwende ein vom Operator verwaltetes Dogu in einem CES mit aktivierter V3-Verarbeitung. Ein normales `helm template` oder `helm install` wertet Runtime-Patches nicht aus – auch die Helm-Befehle im weiteren Verlauf dieser Anleitung nicht.
 
 ## Chart in die lokale Registry pushen
 

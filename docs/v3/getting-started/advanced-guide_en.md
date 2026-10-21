@@ -77,10 +77,10 @@ The Auth Registration Operator registers XWiki with CAS. It then writes the clie
 
 ## Prepare images for later mirroring
 
-Because the EcoSystem must also be able to run in air-gapped environments, image references and their use in `values.yaml` must be maintained in `chart-patch-tpl.yaml`. These can then be mirrored, and the image references in `values.yaml` can be adjusted.
+Because the EcoSystem must also be able to run in air-gapped environments, image references and their use in `values.yaml` must be maintained in `mirror-patch-tpl.yaml`. These can then be mirrored, and the image references in `values.yaml` can be adjusted.
 
 The chart uses an XWiki image and a MySQL image.
-Therefore, `chart-patch-tpl.yaml` looks as follows and is placed in the same directory as `Chart.yaml`:
+Therefore, `mirror-patch-tpl.yaml` looks as follows and is placed in the same directory as `Chart.yaml`:
 
 ```yaml
 apiVersion: v1
@@ -112,6 +112,49 @@ The following additional functions are available for processing image references
 - `registryFrom` returns the registry, for example `docker.io`.
 - `repositoryFrom` returns the repository, for example `library/xwiki`.
 - `tagFrom` returns the tag, for example `18.6.0-mysql-tomcat`.
+
+## Inject CES configuration with runtime patches
+
+Runtime patches let the Dogu Operator insert CES global configuration into chart values without changing upstream chart templates.
+
+Create a `runtime-patch-tpl.yaml` next to `Chart.yaml`. It directly contains the desired chart values. Image mirroring is described separately in `mirror-patch-tpl.yaml`; the mirroring tool leaves the runtime file unchanged.
+
+### Add a runtime patch
+
+Adapt the keys to your chart's `values.yaml`. Place subchart values under its name or alias (`backend` here). Nested maps and lists are supported.
+
+```yaml
+application:
+  host: '{{ globalConfig "fqdn" }}'
+  certificate: '{{ globalConfig "certificates/server.crt" }}'
+backend:
+  applicationHosts:
+    - '{{ globalConfig "fqdn" }}'
+```
+
+The file must be valid YAML before evaluation. Quote template expressions as shown above. The Operator evaluates only string values, including those in lists. Keys and structure remain unchanged.
+
+Use exactly one YAML document with a map at its root. If no runtime values are needed, omit the file or use `{}`. An empty file or a file containing `null` is not allowed.
+
+### Read configuration
+
+- `globalConfig` reads `config.yaml` from the `global-config` ConfigMap in the Dogu's namespace. `/` separates path segments; dots remain part of a key. For example, `certificates/server.crt` reads a single certificate.
+- The requested value must be a string; missing keys or other data types cause an error. An empty string is allowed.
+- Inserted values remain strings. Quotes and line breaks, such as those in certificates, are preserved.
+
+Runtime patches use Go `text/template` with `globalConfig` as the only additional function.
+
+### Overrides and configuration changes
+
+Precedence increases from left to right:
+
+`Chart defaults → global.cesConfig → runtime values → spec.values → spec.mappedValues`
+
+`globalConfig` always reads the global configuration, not values overridden through `spec.values`.
+
+Changes to `global-config` trigger reevaluation. Whether the application reloads the configuration or needs a restart depends on the chart and application.
+
+**Testing:** Use an operator-managed Dogu in a CES with V3 processing enabled. Plain `helm template` and `helm install`, including the Helm commands later in this guide, do not evaluate runtime patches.
 
 ## Push the chart to the local registry
 

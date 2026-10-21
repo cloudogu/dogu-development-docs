@@ -12,7 +12,8 @@ Dieses Kompendium gibt einen Überblick über die Artefakte und APIs - den CES-I
 | `values.schema.json` | Validiert die zusammengeführten Values | [Helm-Schemadateien](https://helm.sh/docs/topics/charts/#schema-files) |
 | `dogu-values-metadata.yaml` | Ordnet CES-Konfigurationsschlüssel wie einen globalen Log-Level Chart-Values zu | [dogu-values-metadata.yaml](../concepts/artifacts_de.md#dogu-values-metadatayaml) |
 | `templates/` | Rendert Workloads, Services, PVCs, Probes und optionale CES-Integrationsressourcen | [Helm-Templates](https://helm.sh/docs/chart_template_guide/) und Verträge der Kubernetes-/CRD-Verantwortlichen |
-| `chart-patch-tpl.yaml` | Listet alle vom Chart referenzierten Container-Images auf und löst deren Referenzen über ein Spiegelungswerkzeug für Air-Gapped-Umgebungen auf | [chart-patch-tpl.yaml](../concepts/artifacts_de.md#chart-patch-tplyaml) |
+| `mirror-patch-tpl.yaml` | Beschreibt Image-Patches für die Spiegelung | [mirror-patch-tpl.yaml](../concepts/artifacts_de.md#mirror-patch-tplyaml) |
+| `runtime-patch-tpl.yaml` | Separate Runtime-Values-Map zur Übernahme von CES-Konfiguration in Chart-Values | [runtime-patch-tpl.yaml](../concepts/artifacts_de.md#runtime-patch-tplyaml) und [Runtime-Patches](../getting-started/advanced-guide_de.md#ces-konfiguration-über-runtime-patches-einbinden) |
 | `dogu-upgrade.yaml` | Beschreibt gültige Übergänge zwischen Dogu-Versionen und optionale Parameter zur Upgrade-Koordination | [dogu-upgrade.yaml](../concepts/artifacts_de.md#dogu-upgradeyaml) |
 | Container-Images | Stellen die Anwendung sowie referenzierte Sidecar- und Init-Container bereit | [Kubernetes-Images](https://kubernetes.io/docs/concepts/containers/images/) |
 | `AuthRegistration` | Deklariert bei Teilnahme an CES-Authentifizierung die Registrierung | [AuthRegistration](../concepts/artifacts_de.md#authregistration) |
