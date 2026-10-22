@@ -89,7 +89,7 @@ git push origin "release/chart/<version>"
 
 ## Publish Dogu-specific container images
 
-List every image used by the chart in `chart-patch-tpl.yaml`. This file describes the original image addresses and where they are used in `values.yaml`, so the images can be mirrored for an offline EcoSystem and the addresses can be adjusted. [Prepare images for later mirroring](../getting-started/advanced-guide_en.md#prepare-images-for-later-mirroring) explains the structure of the file.
+List every image used by the chart in `mirror-patch-tpl.yaml`. This file describes the original image addresses and where they are used in `values.yaml`, so the images can be mirrored for an offline EcoSystem and the addresses can be adjusted. [Prepare images for later mirroring](../getting-started/advanced-guide_en.md#prepare-images-for-later-mirroring) explains the structure of the file.
 
 If the chart uses only public images from other registries, you can skip the following push steps.
 

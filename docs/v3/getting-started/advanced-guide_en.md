@@ -77,10 +77,10 @@ The Auth Registration Operator registers XWiki with CAS. It then writes the clie
 
 ## Prepare images for later mirroring
 
-Because the EcoSystem must also be able to run in air-gapped environments, image references and their use in `values.yaml` must be maintained in `chart-patch-tpl.yaml`. These can then be mirrored, and the image references in `values.yaml` can be adjusted.
+Because the EcoSystem must also be able to run in air-gapped environments, image references and their use in `values.yaml` must be maintained in `mirror-patch-tpl.yaml`. These can then be mirrored, and the image references in `values.yaml` can be adjusted.
 
 The chart uses an XWiki image and a MySQL image.
-Therefore, `chart-patch-tpl.yaml` looks as follows and is placed in the same directory as `Chart.yaml`:
+Therefore, `mirror-patch-tpl.yaml` looks as follows and is placed in the same directory as `Chart.yaml`:
 
 ```yaml
 apiVersion: v1
