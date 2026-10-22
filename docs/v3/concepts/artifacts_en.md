@@ -14,7 +14,7 @@ k8s/
    ├─ templates/
    │  └─ ...
    ├─ Chart.yaml
-   ├─ chart-patch-tpl.yaml
+   ├─ mirror-patch-tpl.yaml
    ├─ dogu-upgrade.yaml
    ├─ dogu-values-metadata.yaml
    ├─ values.yaml
@@ -141,11 +141,11 @@ upgrades:
         dogu.name: nexus
 ```
 
-### `chart-patch-tpl.yaml`
+### `mirror-patch-tpl.yaml`
 
-A particular challenge for operating the platform are so-called air-gapped environments, which are run in isolation from other environments – in particular the internet. For such environments, both the required Helm charts and container images are mirrored into an internal OCI registry within the isolated environment, which changes the sources from which the images are obtained in the Helm chart. With the help of the `chart-patch-tpl.yaml`, the image references can be resolved and overwritten for the target environment by a mirroring tool.
+A particular challenge for operating the platform are so-called air-gapped environments, which are run in isolation from other environments – in particular the internet. For such environments, both the required Helm charts and container images are mirrored into an internal OCI registry within the isolated environment, which changes the sources from which the images are obtained in the Helm chart. With the help of the `mirror-patch-tpl.yaml`, the image references can be resolved and overwritten for the target environment by a mirroring tool.
 
-**`chart-patch-tpl.yaml` using the Nexus Dogu as an example**
+**`mirror-patch-tpl.yaml` using the Nexus Dogu as an example**
 
 ```yaml
 apiVersion: v1
@@ -173,7 +173,7 @@ patches:
         tag: "{{ tagFrom .images.postgresql }}"
 ```
 
-The `chart-patch-tpl.yaml` should always be part of the Dogu Helm chart in order to be able to mirror the container images referenced in the Helm chart into an air-gapped environment.
+The `mirror-patch-tpl.yaml` should always be part of the Dogu Helm chart in order to be able to mirror the container images referenced in the Helm chart into an air-gapped environment.
 
 
 ## Templates and the Connection to the Platform
@@ -217,7 +217,7 @@ In Dogu V2, a Dogu is described using the platform-specific descriptor format `d
 | Field in `dogu.json`                                               | Handling in Dogu V3                                                                     |
 |--------------------------------------------------------------------|----------------------------------------------------------------------------------------|
 | `Name`, `Version`, `DisplayName`, `Description`, `URL`, `Logo`     | Metadata of the `Chart.yaml`                                                            |
-| `Image`                                                            | Container image references in `chart-patch-tpl.yaml`                                    |
+| `Image`                                                            | Container image references in `mirror-patch-tpl.yaml`                                    |
 | `Dependencies`                                                     | Additional workloads or external dependencies via ServiceAccount CRs                    |
 | `ServiceAccounts`                                                  | ServiceAccount CRs                                                                      |
 | `Volumes`                                                          | Kubernetes PVCs and volume definitions                                                  |

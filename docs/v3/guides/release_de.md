@@ -89,7 +89,7 @@ git push origin "release/chart/<version>"
 
 ## Dogu-eigene Container-Images veröffentlichen
 
-Alle vom Chart verwendeten Images müssen in der `chart-patch-tpl.yaml` aufgeführt sein. Sie beschreibt die ursprünglichen Image-Adressen und deren Verwendung in der `values.yaml`, damit die Images für ein Offline EcoSystem gespiegelt und die Adressen angepasst werden können. Der Abschnitt [Images für die spätere Spiegelung vorbereiten](../getting-started/advanced-guide_de.md#images-für-die-spätere-spiegelung-vorbereiten) erklärt den Aufbau der Datei.
+Alle vom Chart verwendeten Images müssen in der `mirror-patch-tpl.yaml` aufgeführt sein. Sie beschreibt die ursprünglichen Image-Adressen und deren Verwendung in der `values.yaml`, damit die Images für ein Offline EcoSystem gespiegelt und die Adressen angepasst werden können. Der Abschnitt [Images für die spätere Spiegelung vorbereiten](../getting-started/advanced-guide_de.md#images-für-die-spätere-spiegelung-vorbereiten) erklärt den Aufbau der Datei.
 
 Wenn das Chart ausschließlich öffentliche Images aus anderen Registries verwendet, können die folgenden Push-Schritte übersprungen werden.
 
