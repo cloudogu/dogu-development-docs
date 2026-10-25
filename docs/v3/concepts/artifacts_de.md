@@ -146,7 +146,7 @@ upgrades:
 
 Eine besondere Herausforderung für den Betrieb der Plattform sind sogenannte Air-Gapped-Umgebungen, die isoliert von anderen Umgebungen – insbesondere dem Internet – betrieben werden. Für solche Umgebungen werden sowohl die benötigten Helm-Charts als auch Container Images in eine interne OCI-Registry innerhalb der isolierten Umgebung gespiegelt, wodurch sich die Bezugsquellen der Images aus dem Helm-Chart ändern. Mit Hilfe der `mirror-patch-tpl.yaml` können die Referenzen der Images durch ein Mirroring-Tool für die Zielumgebung aufgelöst und überschrieben werden.
 
-Lege `mirror-patch-tpl.yaml` neben `Chart.yaml` ab. Unter `values.images` stehen die Image-Adressen, unter `patches` deren Zielschlüssel in der `values.yaml`.
+Die `mirror-patch-tpl.yaml` wird neben `Chart.yaml` abgelegt. Unter `values.images` stehen die Image-Adressen, unter `patches` deren Zielschlüssel in der `values.yaml`.
 
 **`mirror-patch-tpl.yaml` am Beispiel des Nexus-Dogus**
 
