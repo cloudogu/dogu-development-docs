@@ -144,6 +144,18 @@ Use exactly one YAML document with a map at its root. If no runtime values are n
 
 Runtime patches use Go `text/template` with `globalConfig` as the only additional function.
 
+### Preserve templates for the application
+
+The Operator evaluates `{{ ... }}` even in multiline strings (`|`). To leave an expression for the application to evaluate, output it as a string:
+
+```yaml
+logConfiguration: |
+  date: {{ "{{ .Date }}" }}
+  line: {{ "{{ .LogLineJSON }}" }}
+```
+
+The application receives `date: {{ .Date }}` and `line: {{ .LogLineJSON }}`. The Operator does not evaluate the result again. Quotes or `|` alone do not prevent template evaluation. Static application templates that need no CES configuration can stay in `values.yaml`.
+
 ### Overrides and configuration changes
 
 Precedence increases from left to right:

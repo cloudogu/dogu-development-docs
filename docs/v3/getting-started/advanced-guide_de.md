@@ -144,6 +144,18 @@ Verwende genau ein YAML-Dokument mit einer Map auf oberster Ebene. Wenn keine Ru
 
 Runtime-Patches verwenden Go `text/template` mit `globalConfig` als einziger zusätzlicher Funktion.
 
+### Templates für die Anwendung erhalten
+
+Auch in mehrzeiligen Strings (`|`) wertet der Operator `{{ ... }}` aus. Soll erst die Anwendung einen Ausdruck auswerten, gib ihn als String aus:
+
+```yaml
+logConfiguration: |
+  date: {{ "{{ .Date }}" }}
+  line: {{ "{{ .LogLineJSON }}" }}
+```
+
+Die Anwendung erhält `date: {{ .Date }}` und `line: {{ .LogLineJSON }}`. Der Operator wertet das Ergebnis nicht erneut aus. Anführungszeichen oder `|` allein verhindern die Template-Auswertung nicht. Statische Anwendungsvorlagen ohne CES-Konfiguration können direkt in `values.yaml` bleiben.
+
 ### Overrides und Konfigurationsänderungen
 
 Die Priorität steigt von links nach rechts:
