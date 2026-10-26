@@ -120,45 +120,13 @@ spec:
       path: /xwiki
 ```
 
-## Zugriff des Gateways erlauben
+## NetworkPolicies
 
-Die CES-Umgebung sperrt eingehenden Verkehr im Namespace `ecosystem` standardmäßig. Deshalb benötigt das Gateway eine Freigabe für den XWiki-Pod.
+Die CES-Umgebung sperrt eingehenden Verkehr im Namespace `ecosystem` standardmäßig über NetworkPolicies.
+Dementsprechend müssen NetworkPolicies hinzugefügt werden, wenn eingehender Verkehr zwischen Pods des Dogus erlaubt werden soll.
+In diesem Beispiel erstellt das mitgelieferte MySQL-Chart bereits eine eigene NetworkPolicy für die Datenbank.
 
-Die Datei `templates/networkpolicy.yaml` erstellen:
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: {{ .Release.Name }}-gateway
-  labels:
-    app.kubernetes.io/name: xwiki
-    app.kubernetes.io/instance: {{ .Release.Name }}
-spec:
-  # NetworkPolicy auf den XWiki-Pod anwenden
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: xwiki
-      app.kubernetes.io/instance: {{ .Release.Name }}
-  # Eingehende Verbindungen regeln
-  policyTypes:
-    - Ingress
-  ingress:
-    # Zugriff durch das CES-Gateway erlauben
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-          podSelector:
-            matchLabels:
-              k8s.cloudogu.com/component.name: k8s-ces-gateway
-      # Internen Port von XWiki freigeben
-      ports:
-        - port: {{ .Values.xwiki.service.internalPort }}
-          protocol: TCP
-```
-
-Das mitgelieferte MySQL-Chart erstellt bereits eine eigene NetworkPolicy für die Datenbank.
+NetworkPolicies für die Exposition / das Gateway müssen nicht hinzugefügt werden, da diese automatisch für jede Exposition erstellt werden.
 
 ## Abhängigkeit laden
 
