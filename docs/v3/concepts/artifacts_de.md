@@ -15,6 +15,7 @@ k8s/
    │  └─ ...
    ├─ Chart.yaml
    ├─ mirror-patch-tpl.yaml
+   ├─ runtime-patch-tpl.yaml
    ├─ dogu-upgrade.yaml
    ├─ dogu-values-metadata.yaml
    ├─ values.yaml
@@ -145,6 +146,8 @@ upgrades:
 
 Eine besondere Herausforderung für den Betrieb der Plattform sind sogenannte Air-Gapped-Umgebungen, die isoliert von anderen Umgebungen – insbesondere dem Internet – betrieben werden. Für solche Umgebungen werden sowohl die benötigten Helm-Charts als auch Container Images in eine interne OCI-Registry innerhalb der isolierten Umgebung gespiegelt, wodurch sich die Bezugsquellen der Images aus dem Helm-Chart ändern. Mit Hilfe der `mirror-patch-tpl.yaml` können die Referenzen der Images durch ein Mirroring-Tool für die Zielumgebung aufgelöst und überschrieben werden.
 
+Die `mirror-patch-tpl.yaml` wird neben `Chart.yaml` abgelegt. Unter `values.images` stehen die Image-Adressen, unter `patches` deren Zielschlüssel in der `values.yaml`.
+
 **`mirror-patch-tpl.yaml` am Beispiel des Nexus-Dogus**
 
 ```yaml
@@ -175,6 +178,10 @@ patches:
 
 Die `mirror-patch-tpl.yaml` sollte stets Bestandteil des Dogu-Helm-Charts sein, um die im Helm-Chart referenzierten Container Images in eine Air-Gapped-Umgebung spiegeln zu können.
 
+### `runtime-patch-tpl.yaml`
+
+Diese optionale Datei neben `Chart.yaml` enthält Chart-Values, die der Dogu-Operator mit globaler CES-Konfiguration befüllt. Das Mirroring-Tool lässt sie unverändert. Ein Beispiel und die Auswertungsregeln stehen unter [CES-Konfiguration über Runtime-Patches einbinden](../getting-started/advanced-guide_de.md#ces-konfiguration-über-runtime-patches-einbinden).
+
 
 ## Templates und die Anbindung an die Plattform
 
@@ -188,19 +195,19 @@ Eine `AuthRegistration` provisioniert nur die serverseitige Integration beim IdP
 
 ### WarpMenuEntry
 
-Für die zentrale Navigation auf der Plattform wird das Warp-Menü verwendet. Wenn ein Dogu im Warp-Menü angezeigt werden soll, muss für jeden internen, für Anwender:innen sichtbaren Einstiegspunkt eine [`WarpMenuEntry-CR`](https://github.com/cloudogu/k8s-warp-menu-entry-lib/blob/main/docs/operations/warp_menu_entry_de.md) bereitgestellt werden. Je nach Bedarf kann ein Dogu keinen, einen oder mehrere Einträge definieren.
+Für die zentrale Navigation auf der Plattform wird das Warp-Menü verwendet. Wenn ein Dogu im Warp-Menü angezeigt werden soll, muss für jeden internen, für Anwender:innen sichtbaren Einstiegspunkt eine [`WarpMenuEntry-CR`](https://github.com/cloudogu/k8s-warp-menu-entry-lib/blob/develop/docs/operations/warp_menu_entry_de.md) bereitgestellt werden. Je nach Bedarf kann ein Dogu keinen, einen oder mehrere Einträge definieren.
 
 Jeder Eintrag enthält einen deutschen und englischen Anzeigenamen, eine Kategorie sowie einen relativen Pfad zum Dogu. Das Warp-Menü macht die Anwendung nicht grundsätzlich erreichbar. Der relative Pfad muss zu einer unabhängig funktionierenden HTTP-Exposition passen.
 
 ### Exposition
 
-Soll ein Dogu von außen erreichbar sein, muss hierfür eine oder mehrere [`Exposition-CR`](https://github.com/cloudogu/k8s-exposition-lib/blob/main/docs/operations/exposition_cr_de.md) deklariert werden. Die `Exposition` definiert, wie ein Service von außerhalb der Plattform erreichbar gemacht wird. Sie unterstützt HTTP-Routen (Layer 7) sowie rohe TCP- und UDP-Ports (Layer 4). Für HTTP-Routen können zusätzlich Path-Rewrites definiert werden. Auf Layer 4 Ebene kann es zu Kollisionen kommen, wenn zwei oder mehrere `Expositions` den gleichen Port für das gleiche Protokoll anfragen. In diesem Fall wird keine der betroffenen `Expositions` angewendet, solang der Konflikt besteht. Der Administrator wird hierüber im Status der CR informiert.  
+Soll ein Dogu von außen erreichbar sein, muss hierfür eine oder mehrere [`Exposition-CR`](https://github.com/cloudogu/k8s-exposition-lib/blob/develop/docs/operations/exposition_cr_de.md) deklariert werden. Die `Exposition` definiert, wie ein Service von außerhalb der Plattform erreichbar gemacht wird. Sie unterstützt HTTP-Routen (Layer 7) sowie rohe TCP- und UDP-Ports (Layer 4). Für HTTP-Routen können zusätzlich Path-Rewrites definiert werden. Auf Layer 4 Ebene kann es zu Kollisionen kommen, wenn zwei oder mehrere `Expositions` den gleichen Port für das gleiche Protokoll anfragen. In diesem Fall wird keine der betroffenen `Expositions` angewendet, solang der Konflikt besteht. Der Administrator wird hierüber im Status der CR informiert.  
 
 ### ServiceAccountRequest / ServiceAccountProducer
 
 Im CES ist es möglich, dass verschiedene Dogus/Components miteinander interagieren. Hierfür muss für ein zugreifendes Dogu/Component (Consumer) ein entsprechender ServiceAccount beim Ziel-Dogu/-Component (Producer) erstellt werden. Diese Service-Account-Beziehung ist also frei wählbar und ist nicht nur auf Dogus unter sich fest gelegt. Dieser Mechanismus erlaubt auch Ringabhängigkeiten zwischen Producer und Consumer.
 
-Die ServiceAccount-Erstellung lässt sich deklarativ über die CRDs [`ServiceAccountRequest`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/main/docs/operations/serviceaccountrequest_cr_de.md) und [`ServiceAccountProducer`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/main/docs/operations/serviceaccountproducer_cr_de.md) steuern.
+Die ServiceAccount-Erstellung lässt sich deklarativ über die CRDs [`ServiceAccountRequest`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/develop/docs/operations/serviceaccountrequest_cr_de.md) und [`ServiceAccountProducer`](https://github.com/cloudogu/k8s-serviceaccount-lib/blob/develop/docs/operations/serviceaccountproducer_cr_de.md) steuern.
 
 **`ServiceAccountProducer`**
 

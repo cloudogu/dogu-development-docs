@@ -13,6 +13,7 @@ This compendium provides an overview of the artifacts and APIs - the CES integra
 | `dogu-values-metadata.yaml` | Maps CES configuration keys, such as a global log level, to chart values | [dogu-values-metadata.yaml](../concepts/artifacts_en.md#dogu-values-metadatayaml) |
 | `templates/` | Renders workloads, Services, PVCs, probes and optional CES integration resources | [Helm templates](https://helm.sh/docs/chart_template_guide/) and owning Kubernetes/CRD contracts |
 | `mirror-patch-tpl.yaml` | Lists every container image referenced by the chart and resolves the references through a mirroring tool for air-gapped environments | [mirror-patch-tpl.yaml](../concepts/artifacts_en.md#mirror-patch-tplyaml) |
+| `runtime-patch-tpl.yaml` | Separate runtime values map that injects CES configuration into chart values | [runtime-patch-tpl.yaml](../concepts/artifacts_en.md#runtime-patch-tplyaml) and [Runtime patches](../getting-started/advanced-guide_en.md#inject-ces-configuration-with-runtime-patches) |
 | `dogu-upgrade.yaml` | Describes valid Dogu-version transitions and optional parameters for upgrade coordination | [dogu-upgrade.yaml](../concepts/artifacts_en.md#dogu-upgradeyaml) |
 | Container images | Provide the application and any sidecar and init containers referenced by the chart | [Kubernetes images](https://kubernetes.io/docs/concepts/containers/images/) |
 | `AuthRegistration` | Declares authentication registration when the Dogu participates in CES authentication | [AuthRegistration](../concepts/artifacts_en.md#authregistration) |

@@ -79,6 +79,8 @@ The Auth Registration Operator registers XWiki with CAS. It then writes the clie
 
 Because the EcoSystem must also be able to run in air-gapped environments, image references and their use in `values.yaml` must be maintained in `mirror-patch-tpl.yaml`. These can then be mirrored, and the image references in `values.yaml` can be adjusted.
 
+Image mirroring happens before installation. An existing `runtime-patch-tpl.yaml` remains unchanged; it is evaluated later by the Dogu Operator.
+
 The chart uses an XWiki image and a MySQL image.
 Therefore, `mirror-patch-tpl.yaml` looks as follows and is placed in the same directory as `Chart.yaml`:
 
@@ -112,6 +114,73 @@ The following additional functions are available for processing image references
 - `registryFrom` returns the registry, for example `docker.io`.
 - `repositoryFrom` returns the repository, for example `library/xwiki`.
 - `tagFrom` returns the tag, for example `18.6.0-mysql-tomcat`.
+
+## Inject CES configuration with runtime patches
+
+In addition to mirror patches for image addresses, runtime patches provide access to CES global configuration.
+
+Runtime patches let the Dogu Operator insert CES global configuration into chart values without changing upstream chart templates.
+
+Processing happens in three steps:
+
+1. The Operator reads CES global configuration, evaluates the runtime patches and merges the value sources.
+2. The values are checked against the chart schema, if present and schema validation is enabled. The chart is then rendered for a preflight check.
+3. If the checks pass, the values are written to a HelmRelease. The Helm Controller uses Helm to install or update the chart in the cluster.
+
+Place `runtime-patch-tpl.yaml` next to `Chart.yaml`. It directly contains the desired chart values.
+
+`globalConfig` is a template function. It reads values from the `global-config` ConfigMap in the Dogu's namespace and inserts them into the runtime values.
+
+### Add a runtime patch
+
+Adapt the keys to your chart's `values.yaml`. Place subchart values under its name or alias (`backend` here). Nested maps and lists are supported.
+
+```yaml
+application:
+  host: '{{ globalConfig "fqdn" }}'
+  certificate: '{{ globalConfig "certificates/server.crt" }}'
+backend:
+  applicationHosts:
+    - '{{ globalConfig "fqdn" }}'
+```
+
+The file must be valid YAML before the Operator evaluates it. Quote template expressions as shown above. The Operator evaluates only string values, including those in lists. Keys and structure remain unchanged.
+
+The file must contain exactly one YAML document with a map at its root. If no runtime values are needed, omit the file. A file containing `{}` is also valid and represents an empty map. An empty file, a whitespace-only file or a file containing `null` is not allowed.
+
+### Read configuration
+
+- `/` separates path segments; dots remain part of a key. For example, `certificates/server.crt` reads the certificate at that path.
+- The requested value must be a string; missing keys or other data types cause an error. An empty string is allowed.
+- Inserted values remain strings. Quotes and line breaks, such as those in certificates, are preserved.
+
+`globalConfig` is the only additional template function provided.
+
+### Preserve templates for the application
+
+The Operator evaluates `{{ ... }}` even in multiline strings (`|`). To leave an expression for the application to evaluate, output it as a string:
+
+```yaml
+logConfiguration: |
+  date: {{ "{{ .Date }}" }}
+  line: {{ "{{ .LogLineJSON }}" }}
+```
+
+The application receives `date: {{ .Date }}` and `line: {{ .LogLineJSON }}`. The Operator does not evaluate the result again. Quotes or `|` alone do not prevent template evaluation. Static application templates that need no CES configuration can stay in `values.yaml`.
+
+### Overrides and configuration changes
+
+Precedence increases from left to right:
+
+`Chart defaults → global.cesConfig → runtime values → spec.values → spec.mappedValues`
+
+`globalConfig` always reads the global configuration, not values overridden through `spec.values`.
+
+Changes to `global-config` trigger reconciliation of the V3 Dogus. Runtime patches are re-evaluated, and the HelmRelease values are updated if the checks pass. Reconciliation alone does not restart Pods.
+
+Whether the application reloads changed configuration or needs a Pod rollout depends on the chart and application. For changed ConfigMaps and Secrets, an enabled Reloader can trigger the rollout when the workload is annotated, for example with `k8s.cloudogu.com/reload-auto: "true"`.
+
+**Testing:** Use an operator-managed Dogu in a CES with V3 processing enabled. Plain `helm template` and `helm install`, including the Helm commands later in this guide, do not evaluate runtime patches.
 
 ## Push the chart to the local registry
 

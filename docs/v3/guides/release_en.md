@@ -91,6 +91,8 @@ git push origin "release/chart/<version>"
 
 List every image used by the chart in `mirror-patch-tpl.yaml`. This file describes the original image addresses and where they are used in `values.yaml`, so the images can be mirrored for an offline EcoSystem and the addresses can be adjusted. [Prepare images for later mirroring](../getting-started/advanced-guide_en.md#prepare-images-for-later-mirroring) explains the structure of the file.
 
+Ship [runtime patches](../getting-started/advanced-guide_en.md#inject-ces-configuration-with-runtime-patches) in a separate `runtime-patch-tpl.yaml` next to `Chart.yaml`, if needed. Test them through the Dogu Operator; Helm alone does not evaluate them.
+
 If the chart uses only public images from other registries, you can skip the following push steps.
 
 Publish all Dogu-specific container images before the chart. Use the assigned namespace and the image path for Dogu V3:

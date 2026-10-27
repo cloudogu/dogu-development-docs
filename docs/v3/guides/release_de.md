@@ -91,6 +91,8 @@ git push origin "release/chart/<version>"
 
 Alle vom Chart verwendeten Images müssen in der `mirror-patch-tpl.yaml` aufgeführt sein. Sie beschreibt die ursprünglichen Image-Adressen und deren Verwendung in der `values.yaml`, damit die Images für ein Offline EcoSystem gespiegelt und die Adressen angepasst werden können. Der Abschnitt [Images für die spätere Spiegelung vorbereiten](../getting-started/advanced-guide_de.md#images-für-die-spätere-spiegelung-vorbereiten) erklärt den Aufbau der Datei.
 
+[Runtime-Patches](../getting-started/advanced-guide_de.md#ces-konfiguration-über-runtime-patches-einbinden) werden bei Bedarf separat in `runtime-patch-tpl.yaml` neben `Chart.yaml` ausgeliefert. Sie werden über den Dogu-Operator getestet; Helm allein wertet sie nicht aus.
+
 Wenn das Chart ausschließlich öffentliche Images aus anderen Registries verwendet, können die folgenden Push-Schritte übersprungen werden.
 
 Alle Dogu-eigenen Container-Images müssen vor dem Chart veröffentlicht werden. Dafür werden der zugewiesene Namespace und der Image-Pfad für Dogu V3 verwendet:
