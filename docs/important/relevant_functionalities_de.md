@@ -1328,6 +1328,8 @@ Anschließend führt man ein Backup und ein Restore des Systems durch. Dazu kön
 
 Sind alle Dogus wieder hochgefahren, testet man, ob das eigene Dogu normal läuft und alle Testdaten weiterhin vorhanden sind.
 
+Im Multinode-EcoSystem wird Backup & Restore über den Backup-Operator durchgeführt. Dabei muss jede Dogu-CR das Label `k8s.cloudogu.com/dogu.name` tragen. Wie das Label gesetzt wird und wie der Test abläuft, beschreibt [Backup & Restore eines Dogus testen](../v3/guides/backup-restore_de.md).
+
 ### Änderbarkeit der Admin-Gruppe
 
 Bei der Installation des Cloudogu EcoSystems wird eine globale Admin-Gruppe eingestellt. Alle Mitglieder dieser Gruppe sollen in allen Dogus Admin-Rechte bekommen. Dies muss bei der Entwicklung des Dogus sichergestellt werden. Der Name der global definierten Admin-Gruppe lässt sich aus dem Dogu heraus mit `doguctl` abfragen: `doguctl config --global 'admin_group'`

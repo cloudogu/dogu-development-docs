@@ -26,6 +26,7 @@ Die Dokumentation wird Entwickler:innen von einem minimalen lauffähigen Dogu zu
   - [Erweiterter Guide](getting-started/advanced-guide_de.md)
 - Guides:
   - [Ein Dogu V3 releasen](guides/release_de.md)
+  - [Backup & Restore eines Dogus testen](guides/backup-restore_de.md)
 
 ## Verfügbare Referenz
 

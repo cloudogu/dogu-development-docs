@@ -114,6 +114,8 @@ apiVersion: k8s.cloudogu.com/v1
 kind: Dogu
 metadata:
   name: my-dogu
+  labels:
+    k8s.cloudogu.com/dogu.name: my-dogu
 spec:
   name: official/my-dogu
   version: 1.2.3-4
