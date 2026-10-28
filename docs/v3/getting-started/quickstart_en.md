@@ -120,45 +120,13 @@ spec:
       path: /xwiki
 ```
 
-## Allow access from the gateway
+## NetworkPolicies
 
-The CES environment blocks incoming traffic in the `ecosystem` namespace by default. The gateway therefore needs permission to reach the XWiki pod.
+By default, the CES environment blocks incoming traffic in the `ecosystem` namespace with NetworkPolicies.
+So, add NetworkPolicies where needed to allow incoming traffic between pods of the Dogu.
+In this example, the bundled MySQL chart already creates its own NetworkPolicy for the database.
 
-Create `templates/networkpolicy.yaml`:
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: {{ .Release.Name }}-gateway
-  labels:
-    app.kubernetes.io/name: xwiki
-    app.kubernetes.io/instance: {{ .Release.Name }}
-spec:
-  # Apply the NetworkPolicy to the XWiki pod
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: xwiki
-      app.kubernetes.io/instance: {{ .Release.Name }}
-  # Control incoming connections
-  policyTypes:
-    - Ingress
-  ingress:
-    # Allow access from the CES gateway
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-          podSelector:
-            matchLabels:
-              k8s.cloudogu.com/component.name: k8s-ces-gateway
-      # Allow the internal XWiki port
-      ports:
-        - port: {{ .Values.xwiki.service.internalPort }}
-          protocol: TCP
-```
-
-The bundled MySQL chart already creates its own NetworkPolicy for the database.
+NetworkPolicies for the Exposition/Gateway are not necessary, since these are generated automatically for each Exposition.
 
 ## Download the dependency
 
