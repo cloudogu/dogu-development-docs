@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- [#103] Document the required label `k8s.cloudogu.com/dogu.name` on Dogu CRs and how to test backup & restore of a Dogu.
 - [#98] Document runtime patches with quoted globalConfig expressions in German and English.
 
 ### Changed

@@ -25,6 +25,7 @@ The documentation will guide developers from a minimal working Dogu to more deta
   - [Advanced guide](getting-started/advanced-guide_en.md)
 - Guides:
   - [Release a Dogu V3](guides/release_en.md)
+  - [Test backup & restore of a Dogu](guides/backup-restore_en.md)
 
 ## Content boundaries
 

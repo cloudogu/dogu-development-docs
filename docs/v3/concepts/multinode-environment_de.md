@@ -19,6 +19,7 @@ Die Dogu-CRD beschreibt eine einzelne Anwendung innerhalb des CES (wie z. B. SCM
 - **Verwaltung durch**: Den [Dogu-Operator](https://github.com/cloudogu/k8s-dogu-operator/blob/main/docs/operations/overview_de.md).
 - **Funktionsweise**: Wenn ein Dogu-Objekt im Cluster angelegt oder verändert wird, kümmert sich der Operator darum, das dem Dogu zugehörige Helm-Chart im Cluster auszuliefern.
 Das Chart stellt die Workloads bereit und lässt sich über CRDs gezielt an die Plattform anbinden, z.B. Anbindung an SSO oder Integration ins zentrale Warp-Menü.
+- **Pflichtlabel**: Jede Dogu-CR muss das Label `k8s.cloudogu.com/dogu.name` mit dem Namen des Dogus ohne Dogu-Namespace tragen. Der Dogu-Operator prüft dies mit einer ValidatingAdmissionPolicy. Bei Installation über einen Blueprint wird das Label automatisch gesetzt, siehe [Backup & Restore eines Dogus testen](../guides/backup-restore_de.md#label-k8scloudogucomdoguname-an-der-dogu-cr).
 
 ### Component-CRD
 

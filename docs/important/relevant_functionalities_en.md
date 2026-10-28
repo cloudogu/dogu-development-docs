@@ -1336,6 +1336,8 @@ After that, one performs a backup and a restore of the system. The commands [ces
 
 Once all Dogus have been restarted, test whether your own Dogu is running normally and all test data is still available.
 
+In the Multinode EcoSystem, backup & restore is performed via the backup operator. Every Dogu CR must carry the label `k8s.cloudogu.com/dogu.name`. How to set the label and how to run the test is described in [Test backup & restore of a Dogu](../v3/guides/backup-restore_en.md).
+
 ### Changeability of the admin group
 
 When installing the Cloudogu EcoSystem, a global admin group is set. All members of this group should be given admin rights in all Dogus. This must be ensured during the development of the Dogus. The name of the globally defined admin group can be queried from within the Dogu using `doguctl`: `doguctl config --global 'admin_group'`.
