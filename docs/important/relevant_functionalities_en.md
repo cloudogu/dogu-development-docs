@@ -870,7 +870,9 @@ In order for a dogu to act as a service account producer, it must provide two ex
 
 The terms `service-account-create` and `service-account-remove` are protected properties and are used by clients interpreting `dogu.json` as commands to create and delete service accounts.
 
-The following two sections discuss the creation and deletion of service accounts. More information about exposed commands can be found in the [ExposedCommands](../core/compendium_en.md#exposedcommands) section of the compendium.
+Optionally, a producer can also provide `service-account-rotate`. A client uses it to renew the credentials of existing service accounts, see [Rotating the credentials of a service account](#rotating-the-credentials-of-a-service-account). This term is a protected property as well.
+
+The following sections discuss the creation, deletion and rotation of service accounts. More information about exposed commands can be found in the [ExposedCommands](../core/compendium_en.md#exposedcommands) section of the compendium.
 
 #### Create Service Account
 
@@ -955,6 +957,86 @@ fi
 In step 1, the name of the consumer dogu is read (e.g. "redmine") to identify the service account of the dogu.
 
 In step 2 the account is deleted from the producer's database including access data.
+
+#### Rotating the credentials of a service account
+
+The optional `service-account-rotate` script replaces the credentials of an existing service account, e.g. its password. The account itself stays unchanged, for example its database, owner and permissions. This way, a password can be replaced without the consumer losing any data.
+
+```json
+{
+  "Name": "service-account-rotate",
+  "Description": "Rotates the credentials of a service account",
+  "Command": "/rotate-sa.sh"
+}
+```
+
+A client like `cesapp` executes the script during the upgrade of the producer dogu:
+
+- after the `post-upgrade`, when the producer runs in the new version and is `healthy`,
+- while the consumer dogus are stopped, so that they pick up the new credentials when they are started afterwards,
+- once for every consumer whose service account has not been rotated yet.
+
+The client checks the _new_ version of the producer for this `ExposedCommand`. The rotation therefore happens during the first upgrade to a version which contains the script. No consumer dogu has to be changed for this.
+
+**Call:** The script receives its arguments in this order:
+
+1. the custom `Params` of the service account from the `dogu.json` of the consumer, as for `service-account-create`,
+2. the username of the existing account, which the client reads from `/config/<consumer>/sa-<producer>/username`, or an empty argument if the service account has no username (e.g. an OAuth client),
+3. the name of the consumer dogu as the last argument.
+
+The username is therefore always the second to last argument. Each argument is quoted and may contain spaces. The script should check that the username really belongs to the consumer before using it.
+
+**Success:** The script prints nothing but the new credentials in the format `<registrykey>: <registryvalue>`, usually only `password`. The client encrypts the values, replaces the previous entries below `/config/<consumer>/sa-<producer>/` with them and finally sets the marker `/config/<consumer>/sa_password_rotated/<producer>` to `true`. A service account with this marker is not rotated again.
+
+The client executes the command in a terminal, so stdout and stderr end up in the same output. Therefore, on success the script must print nothing but the credentials, neither on stdout nor on stderr.
+
+**Failure:** The script exits with a non-zero exit code and prints no credentials. The old credentials must stay valid. The client shows the output of the script as error message, still rotates the other consumers, starts all consumers again and reports the error at the end of the upgrade. Because the marker is missing, the rotation is repeated during the next upgrade.
+
+**Protecting secrets:** New credentials must neither show up in the process list nor in logs. The script should therefore not pass them as command line argument to other programs, but e.g. via stdin.
+
+A `service-account-rotate` script consists of three steps:
+
+1. check the username
+2. create new credentials and set them on the existing account
+3. return the new credentials
+
+An example of the `service-account-rotate` script could look like this:
+
+`rotate-sa.sh`
+
+```bash
+#!/bin/bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+if [ $# -lt 2 ]; then
+  echo "usage rotate-sa.sh [params...] username servicename" >&2
+  exit 1
+fi
+USERNAME="${*: -2:1}"
+SERVICE="${*: -1}"
+
+#1) Check the username, it must belong to the consumer
+# ... Implement the dogu specific check here, e.g. by pattern and existence check
+
+{
+  #2) Create new credentials and set them on the existing account
+  PASSWORD=$(doguctl random)
+  # ... Implement the dogu specific logic here, pass the password via stdin, not as argument
+} >/dev/null 2>&1 # suppress other output, because only credentials are expected
+
+#3) Return the new credentials. The client takes care of storage and encryption.
+echo "password: ${PASSWORD}"
+```
+
+Step 1 prevents a wrong or manipulated username from hitting the account of another dogu. If the account does not exist, the script exits with an error.
+
+In step 2, only the password of the existing account is replaced. No new account must be created here, otherwise the consumer would point to nothing.
+
+In step 3, the new credentials are printed in the same format as for `service-account-create`.
+
+The PostgreSQL dogu contains a complete implementation for a database in `resources/rotate-sa.sh`.
 
 ### Consuming service accounts
 
