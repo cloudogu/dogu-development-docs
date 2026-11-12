@@ -977,7 +977,7 @@ Der Benutzername ist damit immer das vorletzte Argument. Jedes Argument wird geq
 
 **Erfolg:** Das Skript gibt ausschließlich die neuen Zugangsdaten im Format `<registrykey>: <registryvalue>` aus, in der Regel nur `password`. Der Client verschlüsselt die Werte, ersetzt damit die bisherigen Einträge unter `/config/<konsument>/sa-<produzent>/` und setzt zuletzt die Markierung `/config/<konsument>/sa_password_rotated/<produzent>` auf `true`. Ein Service Account mit dieser Markierung wird nicht erneut rotiert.
 
-Der Client führt den Befehl in einem Terminal aus, dabei landen stdout und stderr in derselben Ausgabe. Das Skript darf im Erfolgsfall deshalb nichts anderes ausgeben, auch nicht auf stderr.
+Der Client führt den Befehl in einem Terminal aus, dabei landen stdout und stderr in derselben Ausgabe. Im Erfolgsfall darf das Skript deshalb nichts außer den Zugangsdaten ausgeben, weder auf stdout noch auf stderr.
 
 **Fehler:** Das Skript endet mit einem Exit-Code ungleich 0 und gibt keine Zugangsdaten aus. Die alten Zugangsdaten müssen gültig bleiben. Der Client zeigt die Ausgabe des Skripts als Fehlermeldung an, rotiert die übrigen Konsumenten trotzdem, startet alle Konsumenten wieder und meldet den Fehler am Ende des Upgrades. Weil die Markierung fehlt, wird die Rotation beim nächsten Upgrade wiederholt.
 

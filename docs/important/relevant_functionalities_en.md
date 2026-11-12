@@ -988,7 +988,7 @@ The username is therefore always the second to last argument. Each argument is q
 
 **Success:** The script prints nothing but the new credentials in the format `<registrykey>: <registryvalue>`, usually only `password`. The client encrypts the values, replaces the previous entries below `/config/<consumer>/sa-<producer>/` with them and finally sets the marker `/config/<consumer>/sa_password_rotated/<producer>` to `true`. A service account with this marker is not rotated again.
 
-The client executes the command in a terminal, so stdout and stderr end up in the same output. Therefore, the script must not print anything else on success, not even on stderr.
+The client executes the command in a terminal, so stdout and stderr end up in the same output. Therefore, on success the script must print nothing but the credentials, neither on stdout nor on stderr.
 
 **Failure:** The script exits with a non-zero exit code and prints no credentials. The old credentials must stay valid. The client shows the output of the script as error message, still rotates the other consumers, starts all consumers again and reports the error at the end of the upgrade. Because the marker is missing, the rotation is repeated during the next upgrade.
 
