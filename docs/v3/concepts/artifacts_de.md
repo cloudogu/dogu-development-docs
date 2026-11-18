@@ -90,44 +90,52 @@ metavalues:
     keys:
       # ohne Mapping wird der Konfigurationswert ohne Änderung an die values.yaml durchgereicht 
       - path: controllerManager.env.loglevel
-      # mit Mapping wird erst der Konfigurationswert abgebildet (z. B. panic -> error) und dann weitergereicht
+      # mit Mapping wird erst der Konfigurationswert abgebildet (z. B. warn -> error) und dann weitergereicht
       # Pfad zum Wert in der values.yaml für Hauptanwendung
       - path: app.env.loglevel
         mapping:
-          DEBUG: debug
-          INFO: info
-          WARN: error
-          ERROR: error
+          debug: debug
+          info: info
+          warn: error
+          error: error
       # Pfad zum Wert in der values.yaml für zweite Anwendung
       - path: loglevel
         mapping:
-          DEBUG: 1
-          INFO: 2
-          WARN: 3
-          ERROR: 4      
+          debug: 1
+          info: 2
+          warn: 3
+          error: 4      
 ```
 
 **Dogu-CR, die den Konfigurationswert setzt:**
 
 ```yaml
-apiVersion: k8s.cloudogu.com/v1
+apiVersion: k8s.cloudogu.com/v3beta1
 kind: Dogu
 metadata:
   name: my-dogu
   labels:
     k8s.cloudogu.com/dogu.name: my-dogu
 spec:
-  name: official/my-dogu
+  name: my-dogu
+  doguNamespace: official
   version: 1.2.3-4
+  doguApiVersion: v3
   mappedValues:
-    mainLogLevel: ERROR
+    mainLogLevel: error
 ```
+
+Welche Schlüssel es gibt und wie `spec.mappedValues` mit den übrigen Values zusammenwirkt, beschreibt [v3-Dogus konfigurieren](https://github.com/cloudogu/k8s-dogu-operator/blob/develop/docs/operations/v3/configuring_v3_dogus_de.md#specmappedvalues).
 
 Um plattformspezifische Konfigurationen treffen zu können, sollte ein Dogu-Helm-Chart die `dogu-values-metadata.yaml` stets mit ausliefern. Für konfigurationslose Dogus ist diese Datei optional. 
 
 ### `dogu-upgrade.yaml`
 
-Ein wesentlicher Bestandteil des CES ist die Ausführung von Dogu-Upgrades, die unter normalen Umständen manuelle Aktionen des Administrators benötigen. Im CES sollen die Upgrade-Prozesse automatisiert durch den Dogu-Operator ausgeführt werden. Ein wichtiger Bestandteil hierfür sind Migrationspfade zwischen einzelnen Dogu-Versionen. Diese werden in der `dogu-upgrade.yaml` abgebildet und während eines Upgrades durch den Dogu-Operator validiert. In der `dogu-upgrade.yaml` werden grundsätzlich erlaubte Versionssprünge definiert:
+Ein wesentlicher Bestandteil des CES ist die Ausführung von Dogu-Upgrades, die unter normalen Umständen manuelle Aktionen des Administrators benötigen. Im CES sollen die Upgrade-Prozesse automatisiert durch den Dogu-Operator ausgeführt werden. Ein wichtiger Bestandteil hierfür sind Migrationspfade zwischen einzelnen Dogu-Versionen. Diese werden in der `dogu-upgrade.yaml` abgebildet, in der grundsätzlich erlaubte Versionssprünge definiert werden.
+
+> **Geplant:** Der Dogu-Operator wertet die `dogu-upgrade.yaml` derzeit noch nicht aus. Format und Felder können sich bis dahin ändern.
+
+Beispiel:
 
 ```yaml
 upgrades:
@@ -191,7 +199,7 @@ In den Templates des Helm-Charts werden alle Kubernetes-Ressourcen zur Verfügun
 
 ### AuthRegistration
 
-Das CES bietet seinen Nutzer die Möglichkeit des Single Sign-On (SSO). Damit ein Dogu den SSO nutzen kann, muss es sich mithilfe der [`AuthRegistration-CR`](https://github.com/cloudogu/k8s-auth-registration-lib/blob/main/docs/operations/auth_registration_de.md) beim Identity-Provider (IdP) der Plattform registrieren. Aktuell werden die Authentifizierungsprotokolle `CAS`, `OAUTH` und `OIDC` unterstützt. Mit der Registration beim IdP werden zugleich Credentials in einem Secret bereitgestellt, die von dem Dogu für Anfragen gegen den IdP genutzt werden können. 
+Das CES bietet seinen Nutzer die Möglichkeit des Single Sign-On (SSO). Damit ein Dogu den SSO nutzen kann, muss es sich mithilfe der [`AuthRegistration-CR`](https://github.com/cloudogu/k8s-auth-registration-lib/blob/develop/docs/operations/auth_registration_de.md) beim Identity-Provider (IdP) der Plattform registrieren. Aktuell werden die Authentifizierungsprotokolle `CAS`, `OAUTH` und `OIDC` unterstützt. Mit der Registration beim IdP werden zugleich Credentials in einem Secret bereitgestellt, die von dem Dogu für Anfragen gegen den IdP genutzt werden können. 
 
 Eine `AuthRegistration` provisioniert nur die serverseitige Integration beim IdP. Die Anwendung muss das ausgewählte Authentifizierungsprotokoll weiterhin selbst implementieren.
 

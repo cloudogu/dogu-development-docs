@@ -90,44 +90,52 @@ metavalues:
     keys:
       # without a mapping the configuration value is passed through to the values.yaml unchanged
       - path: controllerManager.env.loglevel
-      # with a mapping the configuration value is first translated (e.g. panic -> error) and then passed on
+      # with a mapping the configuration value is first translated (e.g. warn -> error) and then passed on
       # path to the value in the values.yaml for the main application
       - path: app.env.loglevel
         mapping:
-          DEBUG: debug
-          INFO: info
-          WARN: error
-          ERROR: error
+          debug: debug
+          info: info
+          warn: error
+          error: error
       # path to the value in the values.yaml for the second application
       - path: loglevel
         mapping:
-          DEBUG: 1
-          INFO: 2
-          WARN: 3
-          ERROR: 4      
+          debug: 1
+          info: 2
+          warn: 3
+          error: 4      
 ```
 
 **Dogu CR that sets the configuration value:**
 
 ```yaml
-apiVersion: k8s.cloudogu.com/v1
+apiVersion: k8s.cloudogu.com/v3beta1
 kind: Dogu
 metadata:
   name: my-dogu
   labels:
     k8s.cloudogu.com/dogu.name: my-dogu
 spec:
-  name: official/my-dogu
+  name: my-dogu
+  doguNamespace: official
   version: 1.2.3-4
+  doguApiVersion: v3
   mappedValues:
-    mainLogLevel: ERROR
+    mainLogLevel: error
 ```
+
+Which keys exist and how `spec.mappedValues` interacts with the other values is described in [Configuring v3 dogus](https://github.com/cloudogu/k8s-dogu-operator/blob/develop/docs/operations/v3/configuring_v3_dogus_en.md#specmappedvalues).
 
 To be able to make platform-specific configurations, a Dogu Helm chart should always ship the `dogu-values-metadata.yaml`. For Dogus without configuration this file is optional.
 
 ### `dogu-upgrade.yaml`
 
-An essential part of the CES is the execution of Dogu upgrades, which under normal circumstances require manual actions by the administrator. In the CES, upgrade processes are to be executed automatically by the Dogu operator. An important part for this are migration paths between individual Dogu versions. These are represented in the `dogu-upgrade.yaml` and validated by the Dogu operator during an upgrade. In the `dogu-upgrade.yaml`, the fundamentally permitted version jumps are defined:
+An essential part of the CES is the execution of Dogu upgrades, which under normal circumstances require manual actions by the administrator. In the CES, upgrade processes are to be executed automatically by the Dogu operator. An important part for this are migration paths between individual Dogu versions. These are represented in the `dogu-upgrade.yaml`, which defines the fundamentally permitted version jumps.
+
+> **Planned:** The Dogu operator does not evaluate `dogu-upgrade.yaml` yet. Format and fields may change until then.
+
+Example:
 
 ```yaml
 upgrades:
@@ -191,7 +199,7 @@ The Helm chart's templates provide all Kubernetes resources required to make the
 
 ### AuthRegistration
 
-The CES offers its users the option of Single Sign-On (SSO). For a Dogu to be able to use SSO, it must register at the platform's identity provider (IdP) using the [`AuthRegistration-CR`](https://github.com/cloudogu/k8s-auth-registration-lib/blob/main/docs/operations/auth_registration_en.md). Currently the authentication protocols `CAS`, `OAUTH` and `OIDC` are supported. Registration with the IdP simultaneously provides credentials in a Secret that can be used by the Dogu for requests against the IdP.
+The CES offers its users the option of Single Sign-On (SSO). For a Dogu to be able to use SSO, it must register at the platform's identity provider (IdP) using the [`AuthRegistration-CR`](https://github.com/cloudogu/k8s-auth-registration-lib/blob/develop/docs/operations/auth_registration_en.md). Currently the authentication protocols `CAS`, `OAUTH` and `OIDC` are supported. Registration with the IdP simultaneously provides credentials in a Secret that can be used by the Dogu for requests against the IdP.
 
 An `AuthRegistration` only provisions the server-side integration at the IdP. The application must still implement the selected authentication protocol itself.
 
