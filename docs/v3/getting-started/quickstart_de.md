@@ -98,7 +98,7 @@ xwiki:
 
 Das XWiki-Chart aktiviert MySQL bereits als Standarddatenbank. Benutzer und Datenbank heißen weiterhin `xwiki`. Wenn die beiden Passwortfelder leer sind, erzeugt das eingebundene MySQL-Chart beim ersten Installieren zufällige Passwörter. Es speichert sie im Kubernetes-Secret `xwiki-mysql`. XWiki liest das Benutzerpasswort aus demselben Secret.
 
-Bei einem erneuten `cldk dogu dev-push` bleibt das vorhandene Passwort erhalten.
+Bei einem Update des Dogus (Helm-Charts) bleibt das vorhandene Passwort erhalten.
 
 ## Exposition hinzufügen
 

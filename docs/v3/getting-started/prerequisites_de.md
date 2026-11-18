@@ -16,7 +16,7 @@ Der Cluster ist nur für Entwicklung und Tests gedacht. Er besteht aus einem Kno
 - [Helm](https://helm.sh/docs/intro/install/)
 - jq
 - [mikefarah/yq](https://github.com/mikefarah/yq) ab Version 4
-- [`cldk`](https://github.com/cloudogu/cldk/blob/develop/README.md#installation)
+- [cldk](https://github.com/cloudogu/cldk/blob/develop/README.md#installation)
 
 Partner erhalten die Zugangsdaten von ihrer zuständigen Kontaktperson bei Cloudogu. Die Installation lädt geschützte CES-Komponenten. Deshalb reichen die öffentlichen Repositories allein nicht aus.
 

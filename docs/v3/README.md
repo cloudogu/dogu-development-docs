@@ -1,6 +1,6 @@
 # Dogu V3 Documentation
 
-This area guides Dogu developers through developing and operating Dogu V3 applications.
+This area describes developing and operating Dogu V3 applications.
 
 ## Learning path
 

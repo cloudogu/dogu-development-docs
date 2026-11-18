@@ -1,6 +1,6 @@
 # Dogu-V3-Dokumentation
 
-Dieser Bereich führt Dogu-Entwickler:innen durch die Entwicklung und den Betrieb von Dogu-V3-Anwendungen.
+Dieser Bereich beschreibt die Entwicklung und den Betrieb von Dogu-V3-Anwendungen.
 
 ## Lernpfad
 

@@ -98,7 +98,7 @@ xwiki:
 
 The XWiki chart already enables MySQL as its default database. The user and database are still named `xwiki`. When both password fields are empty, the included MySQL chart generates random passwords during the first installation. It stores them in the `xwiki-mysql` Kubernetes Secret. XWiki reads the user password from the same Secret.
 
-The existing password is retained when `cldk dogu dev-push` is run again.
+The existing password is retained when the Dogu gets updated again.
 
 ## Add an Exposition
 

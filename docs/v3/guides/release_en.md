@@ -1,13 +1,13 @@
 # Release a Dogu V3
 
-This guide publishes a Dogu with `cldk dogu release` to the Cloudogu OCI registry `registry.cloudogu.com`. The Helm chart is the release artifact; pushing it is the release.
+This guide publishes a Dogu with `cldk dogu release` to the Cloudogu OCI registry `registry.cloudogu.com`. The Helm chart is the release artifact: as soon it is pushed to the registry, the dogu will be released.
 
 ## Prerequisites
 
-- a Dogu repository with a Helm chart and a `cldk.yaml` that has been tested in the Multinode EcoSystem, e.g. with `cldk dogu dev-push` in the [local EcoSystem](../getting-started/quickstart_en.md);
-- [`cldk`](https://github.com/cloudogu/cldk/blob/develop/README.md);
-- Docker or another Docker-compatible builder if the Dogu builds its own container images; and
-- registry access from Cloudogu.
+- a Dogu repository with a Helm chart and a `cldk.yaml` that has been tested in the Multinode EcoSystem, e.g. with `cldk dogu dev-push` in the [local EcoSystem](../getting-started/quickstart_en.md)
+- [`cldk`](https://github.com/cloudogu/cldk/blob/develop/README.md)
+- Docker or another Docker-compatible builder if the Dogu builds its own container images
+- registry access from Cloudogu
 
 ## Steps
 
@@ -18,9 +18,9 @@ There is currently no self-service for partner registry accounts. Access is requ
 - company and technical contact person;
 - name of the Dogu.
 
-Cloudogu then provides a Harbor robot account for `registry.cloudogu.com`, the assigned Dogu namespace, and permission to pull and push charts and images in this namespace.
+Cloudogu then provides a registry account for `registry.cloudogu.com`, the assigned Dogu namespace, and permission to pull and push charts and images in this namespace.
 
-When the access is no longer needed, ask the Cloudogu contact person to deactivate the robot account. The request contains the account name, namespace, and desired deletion date. An expired account is only renewed if another release is planned.
+When the access is no longer needed, the registry account should be deactivated. The request for it should contain the account name, namespace, and desired deletion date. An expired account is only renewed if another release is planned.
 
 ### 2. Prepare the release
 

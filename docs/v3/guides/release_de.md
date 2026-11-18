@@ -1,13 +1,12 @@
 # Ein Dogu V3 releasen
 
-Diese Anleitung veröffentlicht ein Dogu mit `cldk dogu release` in der Cloudogu-OCI-Registry `registry.cloudogu.com`. Das Helm-Chart ist das Release-Artefakt, sein Push ist das Release.
-
+Diese Anleitung veröffentlicht ein Dogu mit `cldk dogu release` in der Cloudogu-OCI-Registry `registry.cloudogu.com`. Das Helm-Chart ist das Release-Artefakt: Sobald es in die Registry gepusht ist, wird das Dogu veröffentlicht.
 ## Voraussetzungen
 
-- ein Dogu-Repository mit Helm-Chart und `cldk.yaml`, das im Multinode EcoSystem getestet wurde, z. B. mit `cldk dogu dev-push` im [lokalen EcoSystem](../getting-started/quickstart_de.md),
-- [`cldk`](https://github.com/cloudogu/cldk/blob/develop/README.md),
-- Docker oder ein anderer Docker-kompatibler Builder, wenn das Dogu eigene Container-Images baut, und
-- ein Registry-Zugang von Cloudogu.
+- ein Dogu-Repository mit Helm-Chart und `cldk.yaml`, das im Multinode EcoSystem getestet wurde, z. B. mit `cldk dogu dev-push` im [lokalen EcoSystem](../getting-started/quickstart_de.md)
+- [`cldk`](https://github.com/cloudogu/cldk/blob/develop/README.md)
+- Docker oder ein anderer Docker-kompatibler Builder, wenn das Dogu eigene Container-Images baut
+- ein Registry-Zugang von Cloudogu
 
 ## Schritte
 
@@ -18,9 +17,9 @@ Aktuell gibt es keine Selbstverwaltung für Registry-Accounts von Partnern. Der 
 - Unternehmen und technische Kontaktperson,
 - Name des Dogus.
 
-Cloudogu stellt dann einen Harbor-Robot-Account für `registry.cloudogu.com` bereit, den zugewiesenen Dogu-Namespace und die Berechtigung, in diesem Namespace Charts und Images zu pullen und zu pushen.
+Cloudogu stellt dann einen Registry-Account für `registry.cloudogu.com` bereit, den zugewiesenen Dogu-Namespace und die Berechtigung, in diesem Namespace Charts und Images zu pullen und zu pushen.
 
-Wird der Zugang nicht mehr benötigt, wird die Cloudogu-Kontaktperson gebeten, den Robot-Account zu deaktivieren. Die Anfrage enthält Accountname, Namespace und gewünschtes Löschdatum. Ein abgelaufener Account wird nur verlängert, wenn ein weiteres Release geplant ist.
+Wird der Zugang nicht mehr benötigt, sollte der Registry-Account deaktiviert werden. Die Anfrage sollte den Accountname, den Namespace sowie das gewünschtes Löschdatum enthalten. Ein abgelaufener Account wird nur verlängert, wenn ein weiteres Release geplant ist.
 
 ### 2. Release vorbereiten
 

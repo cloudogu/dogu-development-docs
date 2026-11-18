@@ -171,7 +171,7 @@ The application receives `date: {{ .Date }}` and `line: {{ .LogLineJSON }}`. The
 
 ### Precedence and configuration changes
 
-Runtime values override the chart defaults and `global.cesConfig`. They are in turn overridden by `spec.values` and `spec.mappedValues` of the Dogu CR. `globalConfig` always reads the global configuration, not values overridden through `spec.values`.
+Runtime values override the chart defaults and `global.cesConfig`. They are in turn overridden by `spec.values` and `spec.mappedValues` of the Dogu CR.
 
 When `global-config` changes, the operator re-evaluates the runtime patches and rolls out the new values without restarting Pods. If a workload should restart on changed ConfigMaps or Secrets, it can be annotated, for example with `k8s.cloudogu.com/reload-auto: "true"`.
 
@@ -188,4 +188,4 @@ helm get values xwiki --namespace ecosystem
 
 ## Next step
 
-The chart is now ready for distribution. [Release a Dogu V3](../guides/release_en.md) explains how to request registry access, publish the Dogu with `cldk dogu release`, and verify the release.
+The chart is now ready for deployment. [Release a Dogu V3](../guides/release_en.md) explains how to request registry access, publish the Dogu with `cldk dogu release`, and verify the release.

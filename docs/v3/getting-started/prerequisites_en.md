@@ -16,7 +16,7 @@ The cluster is intended only for development and testing. It has one node and us
 - [Helm](https://helm.sh/docs/intro/install/)
 - jq
 - [mikefarah/yq](https://github.com/mikefarah/yq) version 4 or newer
-- [`cldk`](https://github.com/cloudogu/cldk/blob/develop/README.md#installation)
+- [cldk](https://github.com/cloudogu/cldk/blob/develop/README.md#installation)
 
 Partners receive the credentials from their Cloudogu contact. The installation downloads protected CES components, so the public repositories alone are not enough.
 
