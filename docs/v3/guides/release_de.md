@@ -1,78 +1,74 @@
 # Ein Dogu V3 releasen
 
-Diese Anleitung erklärt, wie ein Dogu V3 in der Cloudogu-OCI-Registry veröffentlicht wird. Das Helm-Chart ist das Release-Artefakt. Der Push des Charts startet die Übernahme in die Dogu-Registry.
+Diese Anleitung veröffentlicht ein Dogu mit `cldk dogu release` in der Cloudogu-OCI-Registry `registry.cloudogu.com`. Das Helm-Chart ist das Release-Artefakt, sein Push ist das Release.
 
 ## Voraussetzungen
 
-Benötigt werden:
-
-- ein Dogu-V3-Helm-Chart, das in einem Multinode EcoSystem lauffähig ist,
-- Helm 3.8 oder neuer,
-- Docker, wenn nicht öffentliche Container-Images veröffentlicht werden, und
+- ein Dogu-Repository mit Helm-Chart und `cldk.yaml`, das im Multinode EcoSystem getestet wurde, z. B. mit `cldk dogu dev-push` im [lokalen EcoSystem](../getting-started/quickstart_de.md),
+- [`cldk`](https://github.com/cloudogu/cldk/blob/develop/README.md),
+- Docker oder ein anderer Docker-kompatibler Builder, wenn das Dogu eigene Container-Images baut, und
 - ein Registry-Zugang von Cloudogu.
 
-Cloudogu stellt folgende Zugangsdaten bereit:
+## Schritte
 
-- einen Harbor-Robot-Account,
-- den zugewiesenen Dogu-Namespace und
-- die Berechtigung, Charts und bei Bedarf Images in diesem Namespace zu pullen und zu pushen.
+### 1. Registry-Zugang beantragen
 
-Der Robot-Account ist ein technischer Account für `registry.cloudogu.com`.
-
-## Registry-Zugang beantragen und verwalten
-
-Aktuell gibt es keine Selbstverwaltung für Registry-Accounts von Partnern. Der Zugang wird über die zuständige Kontaktperson bei Cloudogu beantragt und geändert.
-
-### Zugang beantragen
-
-Die Anfrage sollte folgende Informationen enthalten:
+Aktuell gibt es keine Selbstverwaltung für Registry-Accounts von Partnern. Der Zugang wird über die zuständige Kontaktperson bei Cloudogu beantragt und geändert. Die Anfrage sollte enthalten:
 
 - Unternehmen und technische Kontaktperson,
 - Name des Dogus.
 
-### Zugang entfernen
+Cloudogu stellt dann einen Harbor-Robot-Account für `registry.cloudogu.com` bereit, den zugewiesenen Dogu-Namespace und die Berechtigung, in diesem Namespace Charts und Images zu pullen und zu pushen.
 
-Wenn der Zugang nicht mehr benötigt wird, muss die Cloudogu-Kontaktperson gebeten werden, den Robot-Account zu deaktivieren. Die Anfrage sollte Accountname, Namespace und gewünschtes Löschdatum enthalten. Ein abgelaufener Account sollte nur verlängert werden, wenn ein weiteres Release geplant ist.
+Wird der Zugang nicht mehr benötigt, wird die Cloudogu-Kontaktperson gebeten, den Robot-Account zu deaktivieren. Die Anfrage enthält Accountname, Namespace und gewünschtes Löschdatum. Ein abgelaufener Account wird nur verlängert, wenn ein weiteres Release geplant ist.
 
-## Anmelden
+### 2. Release vorbereiten
 
-Mit dem Robot-Account anmelden. Helm fragt Benutzername und Passwort ab:
+In der `Chart.yaml`:
+
+- `version` ist die Dogu-Version und folgt der semantischen Versionierung. Eine bereits veröffentlichte Version darf nicht erneut verwendet werden.
+- `appVersion` ist die Version der enthaltenen Anwendung. Sie ist unabhängig von `version`.
+- `annotations.dogu.cloudogu.com/api-version` ist `v3`.
+
+In der `cldk.yaml` den zugewiesenen Dogu-Namespace und die Release-Tags der Images setzen, siehe [Release-Tags in der `cldk.yaml`](https://github.com/cloudogu/cldk/blob/develop/docs/operations/releasing_a_dogu_de.md#release-tags-in-der-cldkyaml).
+
+Alle vom Chart verwendeten Images stehen in der `mirror-patch-tpl.yaml`, damit sie für ein Offline EcoSystem gespiegelt werden können. Der Abschnitt [Images für die spätere Spiegelung vorbereiten](../getting-started/advanced-guide_de.md#images-für-die-spätere-spiegelung-vorbereiten) erklärt den Aufbau.
+
+Abhängigkeiten des Charts laden, falls die `Chart.yaml` welche deklariert. Die Chart-Repositories der Abhängigkeiten müssen dafür mit `helm repo add` eingetragen sein:
 
 ```shell
-helm registry login registry.cloudogu.com
+helm dependency build <chart-verzeichnis>
 ```
 
-Wenn auch Images veröffentlicht werden, zusätzlich mit Docker anmelden:
+### 3. Anmelden
+
+Mit dem Robot-Account anmelden:
 
 ```shell
 docker login registry.cloudogu.com
 ```
 
-Das Passwort darf nicht im Chart, Quellcode-Repository oder in einem Shell-Skript gespeichert werden. Für automatische Releases muss die Zugangsdatenverwaltung des CI-Systems verwendet werden.
+`cldk` und der Builder verwenden diese Anmeldung. Das Passwort gehört nicht in das Chart, das Quellcode-Repository oder ein Shell-Skript. Für automatische Releases wird die Zugangsdatenverwaltung des CI-Systems verwendet.
 
-## Release vorbereiten
+### 4. Release prüfen und veröffentlichen
 
-Vor jedem Release muss die `Chart.yaml` aktualisiert werden:
-
-- `version` ist die Dogu-Version und muss der semantischen Versionierung folgen,
-- `appVersion` ist die Version der enthaltenen Anwendung und
-- `annotations.dogu.cloudogu.com/api-version` muss `v3` sein.
-
-`version` und `appVersion` sind zwei voneinander unabhängige Versionen und können daher unterschiedlich sein.
-
-Chartname und Version identifizieren das veröffentlichte Artefakt. Eine bereits veröffentlichte Version darf nicht erneut verwendet werden.
-
-Abhängigkeiten laden, Chart prüfen und Paket erstellen:
+Im Wurzelverzeichnis des Dogu-Repositorys zuerst einen Probelauf starten. Er prüft `cldk.yaml`, Chart, Release-Tags und Ziele und zeigt, was veröffentlicht werden würde:
 
 ```shell
-helm dependency build .
-helm lint .
-
-mkdir -p dist
-helm package . --destination dist
+cldk dogu release --dry-run
 ```
 
-Vor der Veröffentlichung sollte das Chart außerdem im unterstützten Multinode EcoSystem installiert und getestet werden. Die [Dogu-V3-Release-Checkliste](../concepts/multinode-environment_de.md#checkliste-vor-einem-release) nennt die wichtigen Tests.
+Danach veröffentlichen:
+
+```shell
+cldk dogu release
+```
+
+Der DCC übernimmt das Chart automatisch und liest die Metadaten aus der `Chart.yaml` und den weiteren Dateien im Chart. Eine `dogu.json` oder ein separater Aufruf des DCC ist nicht nötig.
+
+Alle Optionen, das Release eines bereits gepackten Charts und Releases mit Images aus anderen Registries beschreibt [Ein Dogu mit `cldk dogu release` veröffentlichen](https://github.com/cloudogu/cldk/blob/develop/docs/operations/releasing_a_dogu_de.md).
+
+### 5. Release-Commit taggen
 
 Bei einem öffentlichen Quellcode-Repository empfiehlt es sich, den Commit des Releases zu taggen:
 
@@ -87,40 +83,7 @@ this is a Dogu API v3 release"
 git push origin "release/chart/<version>"
 ```
 
-## Dogu-eigene Container-Images veröffentlichen
-
-Alle vom Chart verwendeten Images müssen in der `mirror-patch-tpl.yaml` aufgeführt sein. Sie beschreibt die ursprünglichen Image-Adressen und deren Verwendung in der `values.yaml`, damit die Images für ein Offline EcoSystem gespiegelt und die Adressen angepasst werden können. Der Abschnitt [Images für die spätere Spiegelung vorbereiten](../getting-started/advanced-guide_de.md#images-für-die-spätere-spiegelung-vorbereiten) erklärt den Aufbau der Datei.
-
-[Runtime-Patches](../getting-started/advanced-guide_de.md#ces-konfiguration-über-runtime-patches-einbinden) werden bei Bedarf separat in `runtime-patch-tpl.yaml` neben `Chart.yaml` ausgeliefert. Sie werden über den Dogu-Operator getestet; Helm allein wertet sie nicht aus.
-
-Wenn das Chart ausschließlich öffentliche Images aus anderen Registries verwendet, können die folgenden Push-Schritte übersprungen werden.
-
-Alle Dogu-eigenen Container-Images müssen vor dem Chart veröffentlicht werden. Dafür werden der zugewiesene Namespace und der Image-Pfad für Dogu V3 verwendet:
-
-```shell
-docker tag "<lokales-image>:<tag>" \
-  "registry.cloudogu.com/<namespace>/dogu/v3/images/<image>:<tag>"
-
-docker push \
-  "registry.cloudogu.com/<namespace>/dogu/v3/images/<image>:<tag>"
-```
-
-Die Image-Referenz im Chart muss dieselbe Adresse und denselben Tag verwenden.
-
-## Chart veröffentlichen
-
-Das Chart darf erst gepusht werden, wenn alle benötigten Images verfügbar sind:
-
-```shell
-helm push "dist/<dogu>-<version>.tgz" \
-  "oci://registry.cloudogu.com/<namespace>/dogu/v3/charts"
-```
-
-Dieser Push ist das Dogu-V3-Release. Der DCC übernimmt das Chart automatisch und liest die Metadaten aus der `Chart.yaml` und den weiteren Dateien im Chart. Ein zusätzlicher Upload einer `dogu.json` oder ein separater Aufruf des DCC ist nicht erforderlich.
-
-## Release prüfen
-
-Das Chart aus der OCI-Registry lesen:
+## Ergebnis prüfen
 
 ```shell
 helm show chart \
@@ -128,8 +91,18 @@ helm show chart \
   --version "<version>"
 ```
 
-## Mögliche Fehler
+Die Ausgabe zeigt die `Chart.yaml` des veröffentlichten Charts mit der erwarteten `version`.
 
-- `401 Unauthorized`: Benutzername oder Passwort sind falsch,
-- `403 Forbidden`: Der Account besitzt nicht die erforderliche Berechtigung für den gewählten Namespace, und
-- eine vorhandene Version kann nicht ersetzt werden: Es muss eine neue Chart-Version gewählt werden.
+## Häufige Fehler
+
+| Symptom | Ursache und Lösung |
+| --- | --- |
+| `401 Unauthorized` | Benutzername oder Passwort sind falsch. Erneut mit `docker login registry.cloudogu.com` anmelden. |
+| `403 Forbidden` | Der Account darf nicht in den gewählten Namespace pushen. `namespace` in der `cldk.yaml` prüfen. |
+
+Weitere Fehlerbilder beschreibt die [Fehlersuche von `cldk dogu release`](https://github.com/cloudogu/cldk/blob/develop/docs/operations/releasing_a_dogu_de.md#fehlersuche).
+
+## Weiterführende Informationen
+
+- [Dogu-V3-Artefakte verstehen](../concepts/artifacts_de.md)
+- [README von `cldk`](https://github.com/cloudogu/cldk/blob/develop/README.md#dogu-release)
