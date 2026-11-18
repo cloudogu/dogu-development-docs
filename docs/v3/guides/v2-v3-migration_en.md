@@ -38,10 +38,10 @@ The subsequent migration requires a Dogu managed by the Dogu operator. The Dogu 
 - **No automatic rollback to V2:** If migration fails, the application remains stopped. Any required recovery uses a backup.
 - **One-time transition:** V3-to-V3 upgrades are a separate process. Note that migration support should remain in the chart as long as V2 installations still need to be migrated.
 
-**Example: Nexus**
-
-Nexus needs both the files in its own volume and the data in the previously shared PostgreSQL instance.
-Both data sets must be considered when preparing the chart.
+> **Example: Nexus**
+> 
+> Nexus needs both the files in its own volume and the data in the previously shared PostgreSQL instance.
+> Both data sets must be considered when preparing the chart.
 
 ## Prepare the V3 chart
 
@@ -65,10 +65,10 @@ The complete [mapping of dogu.json fields to V3 artifacts](../concepts/artifacts
 The configuration files are described in the [next section](#provide-configuration).
 For your own Dogu, decide which previously shared services will become part of the chart and which external integrations will remain.
 
-**Example: Nexus**
-
-Nexus uses a StatefulSet and bundles its own PostgreSQL instance.
-The [Nexus Chart.yaml][nexus-chart] contains the metadata and V3 annotation; the templates define the workloads and their PVCs.
+> **Example: Nexus**
+> 
+> Nexus uses a StatefulSet and bundles its own PostgreSQL instance.
+> The [Nexus Chart.yaml][nexus-chart] contains the metadata and V3 annotation; the templates define the workloads and their PVCs.
 
 ### CES integrations
 
@@ -84,11 +84,11 @@ The required integrations are declared as resources in the chart templates:
 
 The documentation for these APIs is linked under [Templates and platform integration](../concepts/artifacts_en.md#templates-and-the-connection-to-the-platform).
 
-**Example: Nexus**
-
-Nexus registers its CAS integration through an `AuthRegistration`.
-A `ServiceAccountProducer` describes the accounts Nexus provides to other applications.
-En `Exposition` makes the service accessible from outside the platform, the `WarpMenuEntry` defines how the dogu is included in the warp menu.
+> **Example: Nexus**
+> 
+> Nexus registers its CAS integration through an `AuthRegistration`.
+> A `ServiceAccountProducer` describes the accounts Nexus provides to other applications.
+> En `Exposition` makes the service accessible from outside the platform, the `WarpMenuEntry` defines how the dogu is included in the warp menu.
 
 ### Service accounts still needed after migration
 
@@ -113,11 +113,11 @@ spec:
 The producer must exist. The producer defines which additional parameters are required.
 The Dogu uses the credentials from `example-external-credentials`; see the [ServiceAccountRequest reference][sar] for details.
 
-**Example: Nexus**
-
-The Nexus chart contains no `ServiceAccountRequest`; its bundled database does not require an external account.
-Temporary access to the old PostgreSQL instance uses the [migration Secret](#source-resources).
-Nexus itself provides accounts through a `ServiceAccountProducer`, which represents the opposite side of a request.
+> **Example: Nexus**
+> 
+> The Nexus chart contains no `ServiceAccountRequest`; its bundled database does not require an external account.
+> Temporary access to the old PostgreSQL instance uses the [migration Secret](#source-resources).
+> Nexus itself provides accounts through a `ServiceAccountProducer`, which represents the opposite side of a request.
 
 ## Provide configuration
 
@@ -131,28 +131,28 @@ The templates generate the application configuration from the merged values.
 | `values.schema.json` | Types, required values and allowed values for validation. |
 | `dogu-values-metadata.yaml` | Mapping of platform-specific configuration values to chart values. |
 
-The existing V2 Dogu configuration is not automatically transferred into these values.
-The desired settings must be supplied through the new configuration interface.
-Values, schema and their use in the workload must match.
+> [!Note]
+> The existing V2 Dogu configuration is not automatically transferred into these values.
+> The desired settings must be supplied through the new configuration interface.
+> Values, schema and their use in the workload must match.
 
-**Example: Nexus**
+> **Example: Nexus**
+> 
+> For example, Nexus maps `logging/root` in its [values.yaml][nexus-values] as follows:
+> 
+> ```yaml
+> nexus:
+>   configuration:
+>     normal:
+>       logging:
+>         root: "WARN"
+> ```
+> 
+> The [ConfigMap template][nexus-config] renders `nexus.configuration.normal` as configuration for the application.
 
-For example, Nexus maps `logging/root` in its [values.yaml][nexus-values] as follows:
+### Persistent Data
 
-```yaml
-nexus:
-  configuration:
-    normal:
-      logging:
-        root: "WARN"
-```
-
-The [ConfigMap template][nexus-config] renders `nexus.configuration.normal` as configuration for the application.
-
-### Configuration and persistent data
-
-The Dogu configuration described in `dogu.json` is not migrated automatically. The desired settings must be supplied through Helm values.
-Persistent configuration in the Dogu PVC is transferred along with the other persistent data.
+Other than the Dogu configuration from `dogu.json`, the persistent configuration in the Dogu PVC is transferred along with the other persistent data.
 
 | Area | Handling |
 | --- | --- |
@@ -163,12 +163,12 @@ Persistent configuration in the Dogu PVC is transferred along with the other per
 For your own Dogu, identify the required files and their target directories.
 Data in shared services must also be considered; it resides outside the Dogu's own PV.
 
-**Example: Nexus**
-
-Nexus stores persistent local configuration in `localConfig`, including whether initial configuration has already completed.
-The PVC migration job transfers this directory along with `data`.
-It does not translate the Dogu configuration described in `dogu.json` into Helm values.
-The log level `logging/root` is supplied through values. A separate job transfers the database from the previous PostgreSQL Dogu.
+> **Example: Nexus**
+> 
+> Nexus stores persistent local configuration in `localConfig`, including whether initial configuration has already completed.
+> The PVC migration job transfers this directory along with `data`.
+> It does not translate the Dogu configuration described in `dogu.json` into Helm values.
+> The log level `logging/root` is supplied through values. A separate job transfers the database from the previous PostgreSQL Dogu.
 
 ## Create migration jobs
 
@@ -178,16 +178,16 @@ The jobs are not implemented as Helm hooks.
 The number and tasks of the jobs depend on the data to be transferred.
 Even a Dogu without a database may need a job to transfer files.
 
-**Example: Nexus**
-
-Nexus needs two jobs:
-
-| Job | Purpose |
-| --- | --- |
-| [PVC migration job][nexus-pvc] | Copies `data` and `localConfig` from the existing volume into the target PVC. |
-| [PostgreSQL migration job][nexus-db-job] | Transfers the database from the shared PostgreSQL instance into the bundled instance. |
-
-The complete templates are linked in the table.
+> **Example: Nexus**
+> 
+> Nexus needs two jobs:
+> 
+> | Job | Purpose |
+> | --- | --- |
+> | [PVC migration job][nexus-pvc] | Copies `data` and `localConfig` from the existing volume into the target PVC. |
+> | [PostgreSQL migration job][nexus-db-job] | Transfers the database from the shared PostgreSQL instance into the bundled instance. |
+> 
+> The complete templates are linked in the table.
 
 ### Activation
 
@@ -203,10 +203,10 @@ For migration the operator sets it to `true`; after successful completion it res
 The job templates are rendered only when the flag is enabled.
 The chart itself defines images, commands, mounts and resource requirements. No additional generic `migration` schema is required for this.
 
-**Example: Nexus**
-
-The Nexus values contain `migrationJob.enabled: false`.
-Both the PVC job and the database job are wrapped in `{{- if .Values.migrationJob.enabled }}` in their respective templates.
+> **Example: Nexus**
+> 
+> The Nexus values contain `migrationJob.enabled: false`.
+> Both the PVC job and the database job are wrapped in `{{- if .Values.migrationJob.enabled }}` in their respective templates.
 
 ### Labels
 
@@ -225,31 +225,31 @@ This label belongs only on pods that need access to that service.
 The operator detects jobs using both the migration label and the Dogu label.
 Completed jobs must remain observable until the migration finishes. A TTL or other early cleanup must not remove them beforehand.
 
-**Example: Nexus**
-
-The [Nexus database job][nexus-db-job] needs access to the shared PostgreSQL service.
-Its pods therefore carry `migration-postgresql` and the Dogu label with the value `nexus`:
-
-```yaml
-{{- if .Values.migrationJob.enabled }}
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: {{ include "nexus.fullname" . }}-postgres-migration
-  labels:
-    k8s.cloudogu.com/migration-job: "true"
-spec:
-  backoffLimit: 3
-  template:
-    metadata:
-      labels:
-        k8s.cloudogu.com/migration-postgresql: "true"
-        k8s.cloudogu.com/dogu.name: nexus
-    # See the complete template for the remaining pod settings.
-{{- end }}
-```
-
-The Nexus PVC copy job does not need a PostgreSQL access label.
+> **Example: Nexus**
+> 
+> The [Nexus database job][nexus-db-job] needs access to the shared PostgreSQL service.
+> Its pods therefore carry `migration-postgresql` and the Dogu label with the value `nexus`:
+> 
+> ```yaml
+> {{- if .Values.migrationJob.enabled }}
+> apiVersion: batch/v1
+> kind: Job
+> metadata:
+>   name: {{ include "nexus.fullname" . }}-postgres-migration
+>   labels:
+>     k8s.cloudogu.com/migration-job: "true"
+> spec:
+>   backoffLimit: 3
+>   template:
+>     metadata:
+>       labels:
+>         k8s.cloudogu.com/migration-postgresql: "true"
+>         k8s.cloudogu.com/dogu.name: nexus
+>     # See the complete template for the remaining pod settings.
+> {{- end }}
+> ```
+> 
+> The Nexus PVC copy job does not need a PostgreSQL access label.
 
 ### Source resources
 
@@ -264,10 +264,10 @@ The chart references these resources and creates its own target PVCs and target 
 The operator creates the source resources and removes them after successful migration.
 Secret and PVC can have the same name because they are different resource kinds.
 
-**Example: Nexus**
-
-The PVC `nexus-migration` contains the Dogu's existing files.
-The Secret of the same name contains, among other things, the credentials for the previous PostgreSQL database.
+> **Example: Nexus**
+> 
+> The PVC `nexus-migration` contains the Dogu's existing files.
+> The Secret of the same name contains, among other things, the credentials for the previous PostgreSQL database.
 
 ### Transfer files
 
@@ -278,32 +278,32 @@ These must remain available after migration is disabled.
 
 The name `<dogu>-migration` is the fixed interface to the source and is not derived from an arbitrary, different Helm fullname.
 
-**Example: Nexus**
-
-The Nexus copy job mounts the source PVC at `/source` and the target PVC at `/target`.
-It copies the directories `data` and `localConfig` into the target volume.
-
-The target name is defined in the [template][nexus-pvc] to match the PVC later used by the StatefulSet:
-
-```gotemplate
-{{- $pvcName := printf "%s-%s-0" "nexus-data" (include "nexus.fullname" .) }}
-```
-
-The job pod's volumes reference source and target:
-
-```yaml
-volumes:
-  - name: source-data
-    persistentVolumeClaim:
-      claimName: nexus-migration
-  - name: target-data
-    persistentVolumeClaim:
-      claimName: {{ $pvcName }}
-```
-
-The target PVC is named `nexus-data-<StatefulSet-Name>-0`.
-The template creates it beforehand with `helm.sh/resource-policy: keep`, so it is retained when the migration template is disabled.
-The Nexus StatefulSet then uses this PVC for its application data.
+> **Example: Nexus**
+> 
+> The Nexus copy job mounts the source PVC at `/source` and the target PVC at `/target`.
+> It copies the directories `data` and `localConfig` into the target volume.
+> 
+> The target name is defined in the [template][nexus-pvc] to match the PVC later used by the StatefulSet:
+> 
+> ```gotemplate
+> {{- $pvcName := printf "%s-%s-0" "nexus-data" (include "nexus.fullname" .) }}
+> ```
+> 
+> The job pod's volumes reference source and target:
+> 
+> ```yaml
+> volumes:
+>   - name: source-data
+>     persistentVolumeClaim:
+>       claimName: nexus-migration
+>   - name: target-data
+>     persistentVolumeClaim:
+>       claimName: {{ $pvcName }}
+> ```
+> 
+> The target PVC is named `nexus-data-<StatefulSet-Name>-0`.
+> The template creates it beforehand with `helm.sh/resource-policy: keep`, so it is retained when the migration template is disabled.
+> The Nexus StatefulSet then uses this PVC for its application data.
 
 ### Transfer data from shared services
 
@@ -312,32 +312,32 @@ The source address and Secret keys must match the requirements of that service.
 The chart itself defines the target instance and its credentials.
 The Dogu implements the transfer of the required data into this target instance.
 
-**Example: Nexus**
-
-The Nexus database job reads its source credentials from `nexus-migration`.
-The keys for PostgreSQL are `postgresql_database`, `postgresql_username` and `postgresql_password`:
-
-```yaml
-env:
-  - name: SOURCE_POSTGRESQL_DATABASE
-    valueFrom:
-      secretKeyRef:
-        name: nexus-migration
-        key: postgresql_database
-  - name: SOURCE_POSTGRESQL_USERNAME
-    valueFrom:
-      secretKeyRef:
-        name: nexus-migration
-        key: postgresql_username
-  - name: SOURCE_POSTGRESQL_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: nexus-migration
-        key: postgresql_password
-```
-
-The source is `postgresql.<Namespace>.svc.cluster.local`; the target is the bundled PostgreSQL instance.
-The [complete job template][nexus-db-job] and the [Nexus migration script][nexus-db-script] show the existing implementation.
+> **Example: Nexus**
+> 
+> The Nexus database job reads its source credentials from `nexus-migration`.
+> The keys for PostgreSQL are `postgresql_database`, `postgresql_username` and `postgresql_password`:
+> 
+> ```yaml
+> env:
+>   - name: SOURCE_POSTGRESQL_DATABASE
+>     valueFrom:
+>       secretKeyRef:
+>         name: nexus-migration
+>         key: postgresql_database
+>   - name: SOURCE_POSTGRESQL_USERNAME
+>     valueFrom:
+>       secretKeyRef:
+>         name: nexus-migration
+>         key: postgresql_username
+>   - name: SOURCE_POSTGRESQL_PASSWORD
+>     valueFrom:
+>       secretKeyRef:
+>         name: nexus-migration
+>         key: postgresql_password
+> ```
+> 
+> The source is `postgresql.<Namespace>.svc.cluster.local`; the target is the bundled PostgreSQL instance.
+> The [complete job template][nexus-db-job] and the [Nexus migration script][nexus-db-script] show the existing implementation.
 
 ### Stop the application during migration
 
@@ -345,15 +345,15 @@ The application must not start until its data has been transferred.
 Its workload must therefore be set to zero replicas while `migrationJob.enabled` is enabled.
 Target services required for the transfer must remain available during this time.
 
-**Example: Nexus**
-
-The [Nexus StatefulSet][nexus-statefulset] sets its replicas to zero during migration:
-
-```yaml
-replicas: {{ if .Values.migrationJob.enabled }} 0 {{ else }} {{ .Values.nexus.replicas | default 1 }} {{ end }}
-```
-
-The bundled PostgreSQL instance remains available so the job can import data.
+> **Example: Nexus**
+> 
+> The [Nexus StatefulSet][nexus-statefulset] sets its replicas to zero during migration:
+> 
+> ```yaml
+> replicas: {{ if .Values.migrationJob.enabled }} 0 {{ else }} {{ .Values.nexus.replicas | default 1 }} {{ end }}
+> ```
+> 
+> The bundled PostgreSQL instance remains available so the job can import data.
 
 ### Job requirements
 
@@ -367,10 +367,10 @@ The bundled PostgreSQL instance remains available so the job can import data.
 
 For more information on names and references, see [Take care when renaming Kubernetes resources](../best-practices/helm-chart_en.md#take-care-when-renaming-kubernetes-resources).
 
-**Example: Nexus**
-
-Nexus uses the stable job names `<fullname>-pvc-migration` and `<fullname>-postgres-migration`.
-For its database migration, the source PostgreSQL, the export/import tools and the bundled target version must be compatible.
+> **Example: Nexus**
+> 
+> Nexus uses the stable job names `<fullname>-pvc-migration` and `<fullname>-postgres-migration`.
+> For its database migration, the source PostgreSQL, the export/import tools and the bundled target version must be compatible.
 
 ## Check the chart
 
@@ -388,17 +388,17 @@ Check the results for the following properties:
 Local rendering does not perform a migration or add labels supplied by the operator.
 The managed job resources must later carry both the migration label and the Dogu label.
 
-**Example: Nexus**
-
-In the Nexus repository, the chart is located under `k8s/helm`:
-
-```shell
-helm template nexus ./k8s/helm --set migrationJob.enabled=false
-helm template nexus ./k8s/helm --set migrationJob.enabled=true
-```
-
-With the flag enabled, the PVC and PostgreSQL migration jobs are rendered.
-The Nexus StatefulSet then has zero replicas, while the target PostgreSQL remains available.
+> **Example: Nexus**
+> 
+> In the Nexus repository, the chart is located under `k8s/helm`:
+> 
+> ```shell
+> helm template nexus ./k8s/helm --set migrationJob.enabled=false
+> helm template nexus ./k8s/helm --set migrationJob.enabled=true
+> ```
+> 
+> With the flag enabled, the PVC and PostgreSQL migration jobs are rendered.
+> The Nexus StatefulSet then has zero replicas, while the target PostgreSQL remains available.
 
 ## Troubleshooting
 
@@ -413,19 +413,19 @@ The reason identifies the state, the message describes the current step or error
 
 `MigrationPending` and `MigrationFailed` are reasons of `Ready`, not separate condition types.
 
-**Example: Nexus**
-
-The following commands read the state of the Nexus migration in the `ecosystem` namespace:
-
-```shell
-# Ready condition
-kubectl -n ecosystem get dogus.v3beta1.k8s.cloudogu.com nexus \
-  -o jsonpath='{range .status.conditions[?(@.type=="Ready")]}{.status}: {.reason}: {.message}{"\n"}{end}'
-
-# Events
-kubectl -n ecosystem get events \
-  --field-selector involvedObject.kind=Dogu,involvedObject.name=nexus
-```
+> **Example: Nexus**
+> 
+> The following commands read the state of the Nexus migration in the `ecosystem` namespace:
+> 
+> ```shell
+> # Ready condition
+> kubectl -n ecosystem get dogus.v3beta1.k8s.cloudogu.com nexus \
+>   -o jsonpath='{range .status.conditions[?(@.type=="Ready")]}{.status}: {.reason}: {.message}{"\n"}{end}'
+> 
+> # Events
+> kubectl -n ecosystem get events \
+>   --field-selector involvedObject.kind=Dogu,involvedObject.name=nexus
+> ```
 
 ### Common errors
 
@@ -439,11 +439,11 @@ kubectl -n ecosystem get events \
 
 The [operations guide][operations] describes how to resume and what to do after a failed migration.
 
-**Example: Nexus**
-
-If the database job cannot reach the previous PostgreSQL instance, first check the source address and pod labels.
-The pod must carry `k8s.cloudogu.com/migration-postgresql: "true"` and `k8s.cloudogu.com/dogu.name: nexus`.
-The Dogu resource's message and the job logs help narrow down the error.
+> **Example: Nexus**
+> 
+> If the database job cannot reach the previous PostgreSQL instance, first check the source address and pod labels.
+> The pod must carry `k8s.cloudogu.com/migration-postgresql: "true"` and `k8s.cloudogu.com/dogu.name: nexus`.
+> The Dogu resource's message and the job logs help narrow down the error.
 
 ## References
 
