@@ -451,11 +451,11 @@ Die Message der Dogu-Ressource und die Job-Logs helfen, den Fehler einzugrenzen.
 * Beispieldateien aus dem Nexus-Dogu:
   * [Helm-Chart][nexus-chart]
   * [Values.yaml][nexus-values]
-  * [ConfigMap][nexus-config]
-  * [PVC][nexus-pvc]
-  * [Job][nexus-db-job]
-  * [Skript][nexus-db-script]
-  * [Nexus-StatefulSet][nexus-statefulset]
+  * [ConfigMap][nexus-config] (Befüllt aus der `values.yaml`)
+  * [PVC-Migrations-Job][nexus-pvc]
+  * [Datenbank-Migrations-Job][nexus-db-job]
+  * [Datenbank-Migrations-Skript][nexus-db-script]
+  * [Nexus-StatefulSet][nexus-statefulset] (wird während der Migration herunterskaliert)
 
 [nexus-chart]: https://github.com/cloudogu/nexus/blob/ad48f2a6b7688067c15b07b2ac3704b08a4d6c2e/k8s/helm/Chart.yaml
 [nexus-values]: https://github.com/cloudogu/nexus/blob/ad48f2a6b7688067c15b07b2ac3704b08a4d6c2e/k8s/helm/values.yaml

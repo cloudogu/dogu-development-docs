@@ -450,13 +450,13 @@ The Dogu resource's message and the job logs help narrow down the error.
 * [Operations documentation for the migration][operations]
 * [Custom Resource ServiceAccountRequest][sar] 
 * Beispieldateien aus dem Nexus-Dogu:
-  * [Helm Chart][nexus-chart]
+  * [Helm chart][nexus-chart]
   * [Values.yaml][nexus-values]
-  * [ConfigMap][nexus-config]
-  * [PVC][nexus-pvc]
-  * [Job][nexus-db-job]
-  * [Skript][nexus-db-script]
-  * [Nexus StatefulSet][nexus-statefulset]
+  * [ConfigMap][nexus-config] (based on `values.yaml`)
+  * [PVC migration job][nexus-pvc]
+  * [Database migration job][nexus-db-job]
+  * [Database migration script][nexus-db-script]
+  * [Nexus StatefulSet][nexus-statefulset] (is scaled down during migration)
 
 [nexus-chart]: https://github.com/cloudogu/nexus/blob/ad48f2a6b7688067c15b07b2ac3704b08a4d6c2e/k8s/helm/Chart.yaml
 [nexus-values]: https://github.com/cloudogu/nexus/blob/ad48f2a6b7688067c15b07b2ac3704b08a4d6c2e/k8s/helm/values.yaml
