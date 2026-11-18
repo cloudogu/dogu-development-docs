@@ -1,6 +1,21 @@
 skipPreconditionValidation: false
+# The Dogu operator installs Dogu V3 charts via Flux
+flux:
+  enabled: true
 components:
+  k8s-dogu-operator:
+    # Dogu V3 and dev charts (cldk dogu dev-push) need k8s-dogu-operator 3.37.0 or newer, but ecosystem-core 4.10.0
+    # ships 3.29.0. The quick start was tested with 3.39.0. Remove the pin once ecosystem-core ships a suitable version.
+    version: 3.39.0
+    valuesObject:
+      controllerManager:
+        env:
+          doguV3Enabled: true
+          doguV3DevChartsEnabled: true
   k8s-service-discovery:
+    # Network policies for expositions of Dogu V3 need k8s-service-discovery 6.1.4, but ecosystem-core 4.10.0 ships 6.1.1.
+    # Remove the pin once ecosystem-core ships a suitable version.
+    version: 6.1.4
     valuesObject:
       exposition:
         exposePorts: true

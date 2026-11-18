@@ -1,0 +1,4 @@
+# Dogu namespace in the registry
+namespace: quickstart
+# The chart is in the same directory
+chart: .
