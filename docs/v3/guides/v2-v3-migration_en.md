@@ -29,14 +29,14 @@ The [Dogu operator's operations guide][operations] describes how administrators 
 - You are familiar with Helm chart structure and templates; see [From a Helm chart to a Dogu V3](../getting-started/quickstart_en.md).
 - The Dogu's persistent data is known: files in its own volume and data in shared services such as PostgreSQL.
 
-The subsequent migration requires a Dogu managed by the Dogu operator. A direct Helm installation does not perform it.
+The subsequent migration requires a Dogu managed by the Dogu operator. The Dogu should be cleanly installed and healthy.
 
 ### Limitations
 
 - **Downtime:** The application remains stopped while data is transferred.
 - **Storage requirements:** Source and target volumes require storage at the same time during migration.
 - **No automatic rollback to V2:** If migration fails, the application remains stopped. Any required recovery uses a backup.
-- **One-time transition:** V3-to-V3 upgrades are a separate process. Migration support remains in the chart as long as V2 installations still need to be migrated.
+- **One-time transition:** V3-to-V3 upgrades are a separate process. Note that migration support should remain in the chart as long as V2 installations still need to be migrated.
 
 **Example: Nexus**
 
@@ -58,8 +58,10 @@ The complete [mapping of dogu.json fields to V3 artifacts](../concepts/artifacts
 | PVCs and volume definitions | Persistent storage and how it is mounted in containers. |
 | `mirror-patch-tpl.yaml` | Image references and their target keys in the values for mirroring to other registries. |
 
-In `Chart.yaml`, `version` denotes the chart version and `appVersion` the application version.
-Its `apiVersion: v2` denotes the Helm chart format; the Dogu API version is specified in the annotation.
+> [!Note]
+> In `Chart.yaml`, `version` denotes the chart version and `appVersion` the application version.
+> Its `apiVersion: v2` denotes the Helm chart format; the Dogu API version is specified in the annotation.
+
 The configuration files are described in the [next section](#provide-configuration).
 For your own Dogu, decide which previously shared services will become part of the chart and which external integrations will remain.
 
@@ -86,6 +88,7 @@ The documentation for these APIs is linked under [Templates and platform integra
 
 Nexus registers its CAS integration through an `AuthRegistration`.
 A `ServiceAccountProducer` describes the accounts Nexus provides to other applications.
+En `Exposition` makes the service accessible from outside the platform, the `WarpMenuEntry` defines how the dogu is included in the warp menu.
 
 ### Service accounts still needed after migration
 
@@ -357,7 +360,7 @@ The bundled PostgreSQL instance remains available so the job can import data.
 | Requirement | Meaning |
 | --- | --- |
 | Idempotence | Retrying after an interruption must not create inconsistent or duplicate data. A retry limit alone does not ensure this. |
-| Version compatibility | Source version, migration tools and target version must be compatible. |
+| Version compatibility | Source version, migration tools and target version must be compatible. The migration of a v2 dogu to v3 should always be performed with the same application version. | 
 | Completeness | All required files and data from shared services must arrive at the target used later. |
 | Observable completion | A successful job exits successfully; errors are reported as failures. |
 | Stable resource names | Job names, target PVCs and references remain the same when rendered again. Random values or version numbers must not change them. |
@@ -443,6 +446,17 @@ The pod must carry `k8s.cloudogu.com/migration-postgresql: "true"` and `k8s.clou
 The Dogu resource's message and the job logs help narrow down the error.
 
 ## References
+
+* [Operations documentation for the migration][operations]
+* [Custom Resource ServiceAccountRequest][sar] 
+* Beispieldateien aus dem Nexus-Dogu:
+  * [Helm Chart][nexus-chart]
+  * [Values.yaml][nexus-values]
+  * [ConfigMap][nexus-config]
+  * [PVC][nexus-pvc]
+  * [Job][nexus-db-job]
+  * [Skript][nexus-db-script]
+  * [Nexus StatefulSet][nexus-statefulset]
 
 [nexus-chart]: https://github.com/cloudogu/nexus/blob/ad48f2a6b7688067c15b07b2ac3704b08a4d6c2e/k8s/helm/Chart.yaml
 [nexus-values]: https://github.com/cloudogu/nexus/blob/ad48f2a6b7688067c15b07b2ac3704b08a4d6c2e/k8s/helm/values.yaml

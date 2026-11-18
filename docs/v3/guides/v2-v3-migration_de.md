@@ -29,14 +29,14 @@ Die Durchführung einer Migration durch Betreiber beschreibt die [Betriebsanleit
 - Aufbau und Templates eines Helm-Charts sind bekannt, siehe [Vom Helm-Chart zum Dogu V3](../getting-started/quickstart_de.md).
 - Die persistenten Daten des Dogus sind bekannt: Dateien im eigenen Volume sowie Daten in geteilten Services, etwa PostgreSQL.
 
-Die spätere Migration setzt ein vom Dogu-Operator verwaltetes Dogu voraus. Eine direkte Helm-Installation führt sie nicht aus.
+Die spätere Migration setzt ein vom Dogu-Operator verwaltetes Dogu voraus. Das Dogu sollte sauber installiert und healthy sein.
 
 ### Einschränkungen
 
 - **Downtime:** Die Anwendung bleibt während der Datenübernahme gestoppt.
 - **Speicherbedarf:** Quell- und Zielvolumes benötigen während der Migration gleichzeitig Speicher.
 - **Kein automatisierter Rollback auf V2:** Bei fehlgeschlagener Migration bleibt die Anwendung gestoppt. Eine erforderliche Wiederherstellung erfolgt über ein Backup.
-- **Einmaliger Übergang:** V3→V3-Upgrades sind ein eigener Prozess. Die Migrationsunterstützung bleibt im Chart erhalten, solange noch V2-Installationen migriert werden müssen.
+- **Einmaliger Übergang:** V3→V3-Upgrades sind ein eigener Prozess. Allerdings muss die Migrationsunterstützung im Chart so lange erhalten bleiben, wie noch V2-Installationen migriert werden sollen.
 
 **Beispiel: Nexus**
 
@@ -58,14 +58,16 @@ Die vollständige [Zuordnung der dogu.json-Felder zu V3-Artefakten](../concepts/
 | PVCs und Volume-Definitionen | Persistenter Speicher und seine Einbindung in die Container. |
 | `mirror-patch-tpl.yaml` | Image-Referenzen und ihre Zielschlüssel in den Values für das Spiegeln in andere Registries. |
 
-In `Chart.yaml` bezeichnet `version` die Chart-Version und `appVersion` die Anwendungsversion.
-Die dortige `apiVersion: v2` bezeichnet das Helm-Chart-Format; die Dogu-API-Version steht in der Annotation.
+> [!Note]
+> In `Chart.yaml` bezeichnet `version` die Chart-Version und `appVersion` die Anwendungsversion.
+> Die dortige `apiVersion: v2` bezeichnet das Helm-Chart-Format; die Dogu-API-Version steht in der Annotation.
+
 Die Dateien für die Konfiguration sind im [folgenden Abschnitt](#konfiguration-bereitstellen) beschrieben.
 Für das eigene Dogu ist festzulegen, welche bisher geteilten Services künftig zum Chart gehören und welche externen Integrationen bestehen bleiben.
 
 **Beispiel: Nexus**
 
-Nexus verwendet einen StatefulSet und bringt eine eigene PostgreSQL-Instanz mit.
+Nexus verwendet ein StatefulSet und bringt eine eigene PostgreSQL-Instanz mit.
 Die [Nexus-Chart.yaml][nexus-chart] enthält die Metadaten und die V3-Kennzeichnung; die Templates definieren die Workloads und ihre PVCs.
 
 ### CES-Integrationen
@@ -85,7 +87,8 @@ Die Dokumentation der jeweiligen APIs steht unter [Templates und Plattformanbind
 **Beispiel: Nexus**
 
 Nexus registriert seine CAS-Anbindung über eine `AuthRegistration`.
-Ein `ServiceAccountProducer` beschreibt die Accounts, die Nexus anderen Anwendungen bereitstellt.
+Ein `ServiceAccountProducer` beschreibt die Accounts, die Nexus anderen Anwendungen bereitstellt. 
+Eine `Exposition` macht den Service von außen erreichbar, der `WarpMenuEntry` sorgt für den Eintrag im Warp-Menü.
 
 ### Weiterhin benötigte Service-Accounts
 
@@ -344,7 +347,7 @@ Die für die Übernahme benötigten Zielservices müssen währenddessen verfügb
 
 **Beispiel: Nexus**
 
-Der [Nexus-StatefulSet][nexus-statefulset] setzt dafür während der Migration die Replikate auf null:
+Das [Nexus-StatefulSet][nexus-statefulset] setzt dafür während der Migration die Replikate auf null:
 
 ```yaml
 replicas: {{ if .Values.migrationJob.enabled }} 0 {{ else }} {{ .Values.nexus.replicas | default 1 }} {{ end }}
@@ -357,7 +360,7 @@ Die chart-eigene PostgreSQL-Instanz bleibt verfügbar, damit der Job Daten impor
 | Anforderung | Bedeutung |
 | --- | --- |
 | Idempotenz | Ein erneuter Versuch nach einem Abbruch darf keine inkonsistenten oder doppelt angelegten Daten erzeugen. Ein Retry-Limit allein stellt dies nicht sicher. |
-| Versionskompatibilität | Quellversion, Migrationswerkzeuge und Zielversion müssen zueinander passen. |
+| Versionskompatibilität | Quellversion, Migrationswerkzeuge und Zielversion müssen zueinander passen. Die Migration eines v2-Dogus nach v3 soll immer mit der selben Version der Anwendung erfolgen. |
 | Vollständigkeit | Alle benötigten Dateien und Daten aus geteilten Services müssen am später verwendeten Ziel ankommen. |
 | Erkennbarer Abschluss | Ein erfolgreicher Job endet erfolgreich; Fehler werden als Fehlschlag gemeldet. |
 | Stabile Ressourcennamen | Jobnamen, Ziel-PVCs und Referenzen bleiben bei erneutem Rendern gleich. Zufallswerte oder Versionsnummern dürfen sie nicht verändern. |
@@ -371,8 +374,7 @@ Bei seiner Datenbankmigration müssen Quell-PostgreSQL, die verwendeten Export-/
 
 ## Chart prüfen
 
-Das Chart wird mit deaktivierter und mit aktivierter Migration gerendert.
-Die Ergebnisse werden auf folgende Eigenschaften geprüft:
+Das Chart sollte mit deaktivierter und mit aktivierter Migration gerendert werden. Dabei sollten die Ergebnisse auf folgende Eigenschaften geprüft werden:
 
 | Prüfung | Erwartetes Ergebnis |
 | --- | --- |
@@ -429,7 +431,7 @@ kubectl -n ecosystem get events \
 | Symptom | Prüfung im Chart |
 | --- | --- |
 | Kein Job wird innerhalb des Timeouts erkannt; `MigrationFailed`. | Wird der Job bei aktiviertem Schalter gerendert? Steht das Migrationslabel am Job und ist das Dogu-Label an der verwalteten Ressource vorhanden? |
-| Job-Pod startet wegen fehlendem Secret oder Secret-Key nicht. | `<dogu>-migration` und die erwarteten Keys prüfen. Fehlt die Quellressource selbst, die zugehörigen Events an der Dogu-Ressource beachten. |
+| Job-Pod startet wegen fehlendem Secret oder Secret-Key nicht. | `<dogu>-migration` und die erwarteten Keys prüfen. Fehlt die Quellressource selbst, können ggf. Events an der Dogu-Ressource Hinweise geben. |
 | Datenbankjob erreicht den geteilten Quellservice nicht. | Quelladresse, `migration-<name>` und Dogu-Label auf dem Pod prüfen; Pod-Events und Logs ergänzend heranziehen. |
 | Kopierjob wartet auf einen PVC oder die Anwendung findet später keine übernommenen Dateien. | Claim-Namen, Mounts und Verzeichnisse mit dem späteren Anwendungsworkload vergleichen. |
 | Job schlägt endgültig fehl; `MigrationFailed`. | Job-Logs auf Kopier- oder Importfehler, Rechte, Speicherbedarf und Versionskompatibilität prüfen. |
@@ -443,6 +445,17 @@ Am Pod müssen `k8s.cloudogu.com/migration-postgresql: "true"` und `k8s.cloudogu
 Die Message der Dogu-Ressource und die Job-Logs helfen, den Fehler einzugrenzen.
 
 ## Referenzen 
+
+* [Operations-Anleitung zur Migration][operations]
+* [Custom Resource ServiceAccountRequest][sar] 
+* Beispieldateien aus dem Nexus-Dogu:
+  * [Helm-Chart][nexus-chart]
+  * [Values.yaml][nexus-values]
+  * [ConfigMap][nexus-config]
+  * [PVC][nexus-pvc]
+  * [Job][nexus-db-job]
+  * [Skript][nexus-db-script]
+  * [Nexus-StatefulSet][nexus-statefulset]
 
 [nexus-chart]: https://github.com/cloudogu/nexus/blob/ad48f2a6b7688067c15b07b2ac3704b08a4d6c2e/k8s/helm/Chart.yaml
 [nexus-values]: https://github.com/cloudogu/nexus/blob/ad48f2a6b7688067c15b07b2ac3704b08a4d6c2e/k8s/helm/values.yaml
