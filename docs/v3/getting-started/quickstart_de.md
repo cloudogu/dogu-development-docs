@@ -10,7 +10,7 @@ Das Ergebnis dieses Guides (inklusive des [Advanced-Guides](advanced-guide_de.md
 
 ## Voraussetzungen
 
-Zuerst die [lokale Entwicklungsumgebung](prerequisites_de.md) einrichten. Danach die Kubeconfig setzen:
+Zuerst die [lokale Entwicklungsumgebung](prerequisites_de.md) einschließlich `cldk` einrichten. Danach die Kubeconfig setzen:
 
 ```shell
 export KUBECONFIG="${HOME}/.kube/quickstart.k3ces.localdomain"
@@ -98,7 +98,7 @@ xwiki:
 
 Das XWiki-Chart aktiviert MySQL bereits als Standarddatenbank. Benutzer und Datenbank heißen weiterhin `xwiki`. Wenn die beiden Passwortfelder leer sind, erzeugt das eingebundene MySQL-Chart beim ersten Installieren zufällige Passwörter. Es speichert sie im Kubernetes-Secret `xwiki-mysql`. XWiki liest das Benutzerpasswort aus demselben Secret.
 
-Bei einem erneuten `helm upgrade --install` bleibt das vorhandene Passwort erhalten.
+Bei einem erneuten `cldk dogu dev-push` bleibt das vorhandene Passwort erhalten.
 
 ## Exposition hinzufügen
 
@@ -131,29 +131,74 @@ NetworkPolicies für die Exposition / das Gateway müssen nicht hinzugefügt wer
 ## Abhängigkeit laden
 
 ```shell
-helm dependency build .
+helm dependency update .
 ```
 
 Helm lädt das XWiki-Chart in das Verzeichnis `charts/`. Dessen MySQL-Abhängigkeit ist bereits im Paket enthalten. Die erzeugte Datei `Chart.lock` hält die gewählte XWiki-Chart-Version fest.
 
-## Chart prüfen und installieren
+## `cldk` einrichten
 
-```shell
-helm lint .
+`cldk dogu dev-push` bringt den Arbeitsstand des Charts als Dogu in den Cluster. Es pusht das Chart unter einer neuen Dev-Version in die lokale Registry und legt die Dogu-CR an. Der Dogu-Operator installiert das Dogu dann aus diesem Chart.
 
-helm upgrade --install xwiki . \
-  --namespace ecosystem \
-  --wait \
-  --timeout 15m
+Die Datei `cldk.yaml` erstellen:
+
+```yaml
+# Dogu-Namespace in der Registry
+namespace: quickstart
+# Das Chart liegt im selben Verzeichnis
+chart: .
 ```
 
-`helm upgrade --install` installiert das Release beim ersten Aufruf. Bei weiteren Aufrufen aktualisiert Helm die vorhandene Installation. Der erste Start kann mehrere Minuten dauern.
+Die Einstellungen der lokalen Umgebung kommen in die Datei `.env`:
+
+```shell
+cat > .env <<EOF
+KUBECONFIG=${HOME}/.kube/quickstart.k3ces.localdomain
+CLDK_DEV_KUBE_NAMESPACE=ecosystem
+CLDK_DEV_REG=localhost:5001
+CLDK_DEV_CLUSTER_REG=k3d-registry-proxy.localhost:5000
+CLDK_DEV_PLAIN_HTTP=true
+EOF
+```
+
+`cldk` pusht nach `localhost:5001`, der Cluster lädt das Chart über `k3d-registry-proxy.localhost:5000`. Beide Adressen gehören zur [lokalen Registry](prerequisites_de.md#lokale-registry).
+
+Damit `cldk.yaml` und `.env` nicht im Chart landen, die Datei `.helmignore` erstellen:
+
+```text
+cldk.yaml
+.env
+```
+
+Alle weiteren Optionen beschreibt die Dokumentation [Ein Dogu mit `cldk dogu dev-push` in einen Cluster bringen](https://github.com/cloudogu/cldk/blob/develop/docs/operations/deploying_a_dogu_with_dev_push_de.md).
+
+## Dogu installieren
+
+Zuerst prüfen, was `cldk` ausführen würde. Der Probelauf zeigt Zielcluster, Chart-Adresse und Dogu-CR, ohne etwas zu ändern:
+
+```shell
+cldk dogu dev-push --dry-run
+```
+
+Danach pushen und installieren:
+
+```shell
+cldk dogu dev-push
+```
+
+Jeder Aufruf erzeugt eine neue Dev-Version, z. B. `1.7.1-1-dev.20261117103428`. Nach Änderungen am Chart wird `cldk dogu dev-push` erneut ausgeführt.
 
 ## Installation prüfen
 
-```shell
-helm status xwiki --namespace ecosystem
+`cldk` wartet nicht auf die Installation. Warten, bis das Dogu in der Spalte `READY` den Wert `True` zeigt:
 
+```shell
+kubectl get dogu xwiki --namespace ecosystem --watch
+```
+
+Der erste Start kann mehrere Minuten dauern. Danach die Ressourcen prüfen:
+
+```shell
 kubectl get statefulset,pod,service,exposition,networkpolicy \
   --namespace ecosystem \
   --selector app.kubernetes.io/instance=xwiki
@@ -174,13 +219,13 @@ https://quickstart.k3ces.localdomain/xwiki/
 
 Die Zertifikatswarnung ist bei der lokalen, selbst signierten Umgebung normal. Danach erscheint der Einrichtungsassistent von XWiki.
 
-## Chart wieder entfernen
+## Dogu wieder entfernen
 
 ```shell
-helm uninstall xwiki --namespace ecosystem
+kubectl delete dogu xwiki --namespace ecosystem
 ```
 
-Helm entfernt die Anwendung, aber die PVCs mit den Daten bleiben erhalten. Für einen vollständigen Neustart ohne alte Daten können sie zusätzlich gelöscht werden:
+Der Dogu-Operator entfernt die Anwendung, aber die PVCs mit den Daten bleiben erhalten. Für einen vollständigen Neustart ohne alte Daten können sie zusätzlich gelöscht werden:
 
 ```shell
 kubectl delete persistentvolumeclaim \
