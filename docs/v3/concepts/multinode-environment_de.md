@@ -16,21 +16,21 @@ In CES-MN werden grundsätzlich drei zentralen Top-Tier CRDs genutzt, die das He
 Die Dogu-CRD beschreibt eine einzelne Anwendung innerhalb des CES (wie z. B. SCM-Manager, Jenkins, Redmine oder SonarQube).
 
 - **Aufgabe**: Sie dient als Deklaration für die Installation, Konfiguration und den Lebenszyklus eines einzelnen Dogus im Kubernetes-Cluster.
-- **Verwaltung durch**: Den [Dogu-Operator](https://github.com/cloudogu/k8s-dogu-operator/blob/main/docs/operations/overview_de.md).
+- **Verwaltung durch**: Den [Dogu-Operator](https://github.com/cloudogu/k8s-dogu-operator/blob/develop/docs/operations/v3/overview_de.md).
 - **Funktionsweise**: Wenn ein Dogu-Objekt im Cluster angelegt oder verändert wird, kümmert sich der Operator darum, das dem Dogu zugehörige Helm-Chart im Cluster auszuliefern.
 Das Chart stellt die Workloads bereit und lässt sich über CRDs gezielt an die Plattform anbinden, z.B. Anbindung an SSO oder Integration ins zentrale Warp-Menü.
-- **Pflichtlabel**: Jede Dogu-CR muss das Label `k8s.cloudogu.com/dogu.name` mit dem Namen des Dogus ohne Dogu-Namespace tragen. Der Dogu-Operator prüft dies mit einer ValidatingAdmissionPolicy. Bei Installation über einen Blueprint wird das Label automatisch gesetzt, siehe [Backup & Restore eines Dogus testen](../guides/backup-restore_de.md#label-k8scloudogucomdoguname-an-der-dogu-cr).
+- **Pflichtlabel**: Jede Dogu-CR muss das Label `k8s.cloudogu.com/dogu.name` mit dem Namen des Dogus ohne Dogu-Namespace tragen. Ist die Helm-Value `admissionPolicy.validateDoguLabels` des Dogu-Operators aktiviert, prüft eine ValidatingAdmissionPolicy das Label. Bei Installation über einen Blueprint wird das Label automatisch gesetzt, siehe [Backup & Restore eines Dogus testen](../guides/backup-restore_de.md#1-label-k8scloudogucomdoguname-an-der-dogu-cr-setzen).
 
 ### Component-CRD
 
 Während ein Dogu eine Benutzer-Anwendung darstellt, repräsentiert eine Component einen System- oder Infrastruktur-Baustein, der für den Betrieb der Plattform selbst erforderlich ist.
 
 - **Aufgabe**: Verwaltung von Kern-Diensten wie dem Identity Provider, Monitoring oder Cloudogu internen Operatoren für die Plattformanbindung.
-- **Verwaltung durch**: Den [Component-Operator](https://github.com/cloudogu/k8s-component-operator/blob/main/docs/operations/managing_components_de.md).
+- **Verwaltung durch**: Den [Component-Operator](https://github.com/cloudogu/k8s-component-operator/blob/develop/docs/operations/managing_components_de.md).
 - **Unterschied zum Dogu**: Komponenten sind tiefer im Cluster integriert und bilden das Fundament, auf dem die Dogus überhaupt erst laufen können. 
 Sie kapseln Helm-Charts, um Basisfunktionalitäten konsistent bereitzustellen.
 
-Component-CRs werden in der Regel nicht durch den Endanwender installiert, sondern werden über den [Ecosytem-Core](https://github.com/cloudogu/ecosystem-core/blob/main/docs/operations/configuration_de.md)
+Component-CRs werden in der Regel nicht durch den Endanwender installiert, sondern werden über den [Ecosytem-Core](https://github.com/cloudogu/ecosystem-core/blob/develop/docs/operations/configuration_de.md)
 verwaltet. Ecosystem-Core ist ein Helm-Chart, das die Kernkomponenten installiert, die für die Ausführung des CES-MN erforderlich sind.
 
 ### Blueprint-CRD
@@ -38,7 +38,7 @@ verwaltet. Ecosystem-Core ist ein Helm-Chart, das die Kernkomponenten installier
 Die Blueprint-CRD steht hierarchisch über den einzelnen Dogus und bildet die komplette Dogu-Landschaft eines Mandanten ab.
 
 - **Aufgabe**: Sie definiert das gewünschte Gesamtsystem (einen „Bauplan“ / Blueprint), also welche Kombinationen aus dogus in welchen Versionen und Konfigurationen installiert sein sollen.
-- **Verwaltung durch**: Den [Blueprint-Operator](https://github.com/cloudogu/k8s-blueprint-operator/blob/main/docs/operations/explanation/introduction_de.md).
+- **Verwaltung durch**: Den [Blueprint-Operator](https://github.com/cloudogu/k8s-blueprint-operator/blob/develop/docs/operations/explanation/introduction_de.md).
 - **Funktionsweise**: Ein Blueprint ermöglicht die automatisierte, reproduzierbare Bereitstellung kompletter Umgebungen. 
 
 Wenn die Blueprint-CR verarbeitet wird, erzeugt der Operator die Dogu-Ressourcen im Cluster und stellt sicher, dass die gesamte Plattform im gewünschten Zielzustand aufgebaut wird.
@@ -107,7 +107,7 @@ in eine interne OCI-Registry innerhalb der isolierten Umgebung gespiegelt werden
 
 Die folgenden Systemdiagramme veranschaulichen das Zusammenspiel einzelne CRs im Cluster: Der Admin installiert `ecosystem-core`, wodurch der Component-Operator
 über Component-CRs die plattformseitigen Operatoren (inkl. Dogu-Operator) ausbringt. Parallel dazu erstellt der Admin eine
-Dogu-CR, die vom Dogu-Operator reconciled wird. Dieser bezieht das zugehörige Helm-Chart aus der OCI-Registry. Das Chart enthält neben den Workloads auch die Plattform-API in Form von CRs, die jeweils vom zuständigen Operator reconciled werden.
+Dogu-CR, die vom Dogu-Operator reconciled wird. Dieser lässt das zugehörige Helm-Chart über Flux aus der OCI-Registry laden und installieren. Das Chart enthält neben den Workloads auch die Plattform-API in Form von CRs, die jeweils vom zuständigen Operator reconciled werden.
 
 ```mermaid
 ---

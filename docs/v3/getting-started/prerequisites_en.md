@@ -16,16 +16,21 @@ The cluster is intended only for development and testing. It has one node and us
 - [Helm](https://helm.sh/docs/intro/install/)
 - jq
 - [mikefarah/yq](https://github.com/mikefarah/yq) version 4 or newer
+- [cldk](https://github.com/cloudogu/cldk/blob/develop/README.md#installation)
 
 Partners receive the credentials from their Cloudogu contact. The installation downloads protected CES components, so the public repositories alone are not enough.
 
 ## Create the EcoSystem
 
+Run in the `getting-started` directory:
+
 ```shell
 ./prerequisites/init_ecosystem
 ```
 
-The installation can take several minutes. The name `quickstart` is fixed because it must match the address in the two configuration files.
+The script asks for the credentials on its first run and must therefore run in an interactive terminal. The installation can take several minutes. The name `quickstart` is fixed because it must match the address in the two configuration files.
+
+The file `prerequisites/.ecosystem-core-values-patch.yaml` enables Flux and Dogu V3 processing in the Dogu operator for this environment, including the dev mode for `cldk dogu dev-push`. The dev mode is meant for development and test clusters only.
 
 ## Use the cluster
 
@@ -60,6 +65,8 @@ Your browser shows a warning on the first request because the local certificate 
 https://quickstart.k3ces.localdomain
 ```
 
+The initial login is performed using the username `admin` and the password `adminpw`. Upon first login, the password must be changed in accordance with the password policy.
+
 ## Local registry
 
 The local registry has two addresses:
@@ -71,7 +78,7 @@ Do not use `localhost:5001` in a Helm chart. Inside a pod, `localhost` refers to
 
 ## Stop or remove the environment
 
-Run these commands in the `k8s-ecosystem` directory:
+Run these commands in the `getting-started` directory:
 
 ```shell
 # stop and start the cluster

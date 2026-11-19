@@ -16,10 +16,10 @@ CES-MN primarily uses three key top-tier CRDs, which form the core of the archit
 The Dogu CRD describes a single application within the CES (such as SCM-Manager, Jenkins, Redmine, or SonarQube).
 
 - **Purpose**: It serves as the declaration for the installation, configuration, and lifecycle of a single Dogu in the Kubernetes cluster.
-- **Managed by**: The [Dogu Operator](https://github.com/cloudogu/k8s-dogu-operator/blob/main/docs/operations/overview_en.md).
+- **Managed by**: The [Dogu Operator](https://github.com/cloudogu/k8s-dogu-operator/blob/develop/docs/operations/v3/overview_en.md).
 - **How it works**: When a Dogu object is created or modified in the cluster, the operator takes care of deploying the Helm chart associated with the Dogu into the cluster.
 The chart provides the workloads and can be integrated to the platform via CRDs, e.g. connection to SSO or integration into the central Warp menu.
-- **Required label**: Every Dogu CR must carry the label `k8s.cloudogu.com/dogu.name` with the name of the Dogu without the Dogu namespace. The Dogu operator checks this with a ValidatingAdmissionPolicy. When installing via a blueprint, the label is set automatically, see [Test backup & restore of a Dogu](../guides/backup-restore_en.md#label-k8scloudogucomdoguname-on-the-dogu-cr).
+- **Required label**: Every Dogu CR must carry the label `k8s.cloudogu.com/dogu.name` with the name of the Dogu without the Dogu namespace. If the Helm value `admissionPolicy.validateDoguLabels` of the Dogu operator is enabled, a ValidatingAdmissionPolicy checks the label. When installing via a blueprint, the label is set automatically, see [Test backup & restore of a Dogu](../guides/backup-restore_en.md#1-set-the-label-k8scloudogucomdoguname-on-the-dogu-cr).
 
 ### Component CRD
 
@@ -30,7 +30,7 @@ While a Dogu represents a user application, a Component represents a system and 
 - **Difference from a Dogu**: Components are integrated more deeply into the cluster and form the foundation on which the Dogus can run in the first place.
 They encapsulate Helm charts in order to provide base functionality consistently.
 
-Component CRs are usually not installed by the end user, but are managed via the [Ecosystem Core](https://github.com/cloudogu/ecosystem-core/blob/main/docs/operations/configuration_en.md).
+Component CRs are usually not installed by the end user, but are managed via the [Ecosystem Core](https://github.com/cloudogu/ecosystem-core/blob/develop/docs/operations/configuration_en.md).
 Ecosystem Core is a Helm chart that installs the core components required to run the CES-MN.
 
 ### Blueprint CRD
@@ -38,7 +38,7 @@ Ecosystem Core is a Helm chart that installs the core components required to run
 The Blueprint CRD sits hierarchically above the individual Dogus and represents the complete Dogu landscape of a tenant.
 
 - **Purpose**: It defines the desired overall system (a "blueprint"), i.e. which combinations of Dogus should be installed in which versions and configurations.
-- **Managed by**: The [Blueprint Operator](https://github.com/cloudogu/k8s-blueprint-operator/blob/main/docs/operations/explanation/introduction_en.md).
+- **Managed by**: The [Blueprint Operator](https://github.com/cloudogu/k8s-blueprint-operator/blob/develop/docs/operations/explanation/introduction_en.md).
 - **How it works**: A blueprint enables the automated, reproducible provisioning of complete environments.
 
 When the Blueprint CR is processed, the operator creates the Dogu resources in the cluster and ensures that the entire platform is built up to the desired target state.
@@ -107,7 +107,7 @@ can be mirrored into an internal OCI registry within the isolated environment.
 
 ## System Diagram
 
-The following system diagrams illustrate the interplay between CRs in the cluster: The admin installs `ecosystem-core`, which deploys the Component Operator that installs the platform-side operators (including the Dogu Operator) via Component CRs. In parallel, the admin creates a Dogu CR that is reconciled by the Dogu Operator. The latter retrieves the associated Helm chart from the OCI registry. In addition to the workloads, the chart also contains the platform integration CRs, which are each reconciled by the responsible operator.
+The following system diagrams illustrate the interplay between CRs in the cluster: The admin installs `ecosystem-core`, which deploys the Component Operator that installs the platform-side operators (including the Dogu Operator) via Component CRs. In parallel, the admin creates a Dogu CR that is reconciled by the Dogu Operator. The latter has Flux load the associated Helm chart from the OCI registry and install it. In addition to the workloads, the chart also contains the platform integration CRs, which are each reconciled by the responsible operator.
 
 ```mermaid
 ---

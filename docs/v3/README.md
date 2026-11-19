@@ -1,32 +1,49 @@
 # Dogu V3 Documentation
 
-This area will guide Dogu developers through developing and operating Dogu V3 applications.
+This area describes developing and operating Dogu V3 applications.
 
-## Planned learning path
+## Learning path
 
-The documentation will guide developers from a minimal working Dogu to more detailed, task-oriented information:
+The documentation guides developers from a minimal working Dogu to more detailed, task-oriented information:
 
 1. prepare the local development environment;
 2. deploy a minimal Dogu V3 with a quick start;
 3. understand the artifacts and lifecycle;
 4. understand the relevant Multinode environment;
 5. add CES integrations in focused guides; and
-6. consult release, migration, or troubleshooting information when needed.
+6. consult release, migration, upgrade, or troubleshooting information when needed.
 
-## Available concepts
+## Concepts
 
+- [Understand Dogu V3 artifacts](concepts/artifacts_en.md)
 - [Understand the Multinode runtime environment](concepts/multinode-environment_en.md)
 
-## Available guides
+## Getting started
 
-- Getting started:
-  - [Prerequisites for Dogu development](getting-started/prerequisites_en.md)
-  - [From a Helm chart to a Dogu V3](getting-started/quickstart_en.md)
-  - [Advanced guide](getting-started/advanced-guide_en.md)
-- Guides:
-  - [Release a Dogu V3](guides/release_en.md)
-  - [Prepare a V2 Dogu as a V3 chart that supports migration](guides/v2-v3-migration_en.md)
-  - [Test backup & restore of a Dogu](guides/backup-restore_en.md)
+- [Prerequisites for Dogu development](getting-started/prerequisites_en.md)
+- [From a Helm chart to a Dogu V3](getting-started/quickstart_en.md)
+- [Integrate XWiki into the CES](getting-started/advanced-guide_en.md)
+
+## Guides
+
+- [Release a Dogu V3](guides/release_en.md)
+- [Prepare a V2 Dogu as a V3 chart that supports migration](guides/v2-v3-migration_en.md)
+- [Test backup & restore of a Dogu](guides/backup-restore_en.md)
+- Upgrade a Dogu V3 (planned)
+
+New guides follow the [guide template](guides/_template_en.md).
+
+## Best practices
+
+- [Best practices for Dogu Helm charts](best-practices/helm-chart_en.md) (being extended)
+
+## Troubleshooting
+
+- Troubleshooting Dogu V3 (planned)
+
+## Reference
+
+- [Compendium of Dogu V3 artifacts](reference/compendium_en.md)
 
 ## Content boundaries
 
@@ -34,8 +51,10 @@ The documentation will guide developers from a minimal working Dogu to more deta
 - **Concepts** explain the mental model and relationships without duplicating technical references.
 - **Guides** explain how to complete a specific Dogu development task.
 - **Reference** provides compact lookup information and links to the owning repositories for complete API contracts.
-- **Best practices** contain only Cloudogu- and CES-specific guidance. General Helm, Kubernetes, OCI, and container documentation is linked instead of rewritten.
+- **Best practices** contain only Cloudogu- and CES-specific guidance.
 - **Troubleshooting** starts from observable symptoms and links to component-specific diagnostics where appropriate.
+
+Whatever another repository already documents is linked instead of repeated. This applies to tools such as [`cldk`](https://github.com/cloudogu/cldk/blob/develop/README.md), to the documentation of the Cloudogu operators and CRDs, and to general Helm, Kubernetes, OCI, and container documentation. Links into Cloudogu repositories point to the `develop` branch.
 
 ## Boundary to Dogu V2
 

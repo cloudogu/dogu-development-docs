@@ -22,13 +22,10 @@ spec:
   path: /xwiki
 ```
 
-Update the chart:
+Update the Dogu:
 
 ```shell
-helm upgrade --install xwiki . \
-  --namespace ecosystem \
-  --wait \
-  --timeout 15m
+cldk dogu dev-push
 ```
 
 Wait for the entry and check the result:
@@ -81,7 +78,7 @@ Because the EcoSystem must also be able to run in air-gapped environments, image
 
 Image mirroring happens before installation. An existing `runtime-patch-tpl.yaml` remains unchanged; it is evaluated later by the Dogu Operator.
 
-The chart uses an XWiki image and a MySQL image.
+The chart uses an XWiki image and a MySQL image. The MySQL image also runs in the XWiki init container that waits for the database. The XWiki chart builds its address without a registry, so the patch sets the full address.
 Therefore, `mirror-patch-tpl.yaml` looks as follows and is placed in the same directory as `Chart.yaml`:
 
 ```yaml
@@ -106,6 +103,10 @@ patches:
           registry: "{{ registryFrom .images.mysql }}"
           repository: "{{ repositoryFrom .images.mysql }}"
           tag: "{{ tagFrom .images.mysql }}"
+      initContainers:
+        database:
+          # Full address for the init container that waits for the database
+          image: "{{ .images.mysql }}"
 ```
 
 The patches to the `values.yaml` are specified as Go templates.
@@ -138,7 +139,7 @@ Adapt the keys to your chart's `values.yaml`. Place subchart values under its na
 ```yaml
 application:
   host: '{{ globalConfig "fqdn" }}'
-  certificate: '{{ globalConfig "certificates/server.crt" }}'
+  certificate: '{{ globalConfig "certificate/server.crt" }}'
 backend:
   applicationHosts:
     - '{{ globalConfig "fqdn" }}'
@@ -150,7 +151,7 @@ The file must contain exactly one YAML document with a map at its root. If no ru
 
 ### Read configuration
 
-- `/` separates path segments; dots remain part of a key. For example, `certificates/server.crt` reads the certificate at that path.
+- `/` separates path segments; dots remain part of a key. For example, `certificate/server.crt` reads the certificate at that path.
 - The requested value must be a string; missing keys or other data types cause an error. An empty string is allowed.
 - Inserted values remain strings. Quotes and line breaks, such as those in certificates, are preserved.
 
@@ -168,54 +169,23 @@ logConfiguration: |
 
 The application receives `date: {{ .Date }}` and `line: {{ .LogLineJSON }}`. The Operator does not evaluate the result again. Quotes or `|` alone do not prevent template evaluation. Static application templates that need no CES configuration can stay in `values.yaml`.
 
-### Overrides and configuration changes
+### Precedence and configuration changes
 
-Precedence increases from left to right:
+Runtime values override the chart defaults and `global.cesConfig`. They are in turn overridden by `spec.values` and `spec.mappedValues` of the Dogu CR.
 
-`Chart defaults → global.cesConfig → runtime values → spec.values → spec.mappedValues`
+When `global-config` changes, the operator re-evaluates the runtime patches and rolls out the new values without restarting Pods. If a workload should restart on changed ConfigMaps or Secrets, it can be annotated, for example with `k8s.cloudogu.com/reload-auto: "true"`.
 
-`globalConfig` always reads the global configuration, not values overridden through `spec.values`.
+The complete precedence, the merging of values, and the behavior on configuration changes are described in [Configuring v3 dogus](https://github.com/cloudogu/k8s-dogu-operator/blob/develop/docs/operations/v3/configuring_v3_dogus_en.md).
 
-Changes to `global-config` trigger reconciliation of the V3 Dogus. Runtime patches are re-evaluated, and the HelmRelease values are updated if the checks pass. Reconciliation alone does not restart Pods.
+### Test runtime patches
 
-Whether the application reloads changed configuration or needs a Pod rollout depends on the chart and application. For changed ConfigMaps and Secrets, an enabled Reloader can trigger the rollout when the workload is annotated, for example with `k8s.cloudogu.com/reload-auto: "true"`.
-
-**Testing:** Use an operator-managed Dogu in a CES with V3 processing enabled. Plain `helm template` and `helm install`, including the Helm commands later in this guide, do not evaluate runtime patches.
-
-## Push the chart to the local registry
-
-The local registry was set up together with the quickstart environment. It is available at `localhost:5001`.
-
-First, download the dependencies and package the chart:
+Only the Dogu Operator evaluates runtime patches; `helm template` and `helm install` do not. To test them, deploy the Dogu to the local environment with `cldk dogu dev-push` and check the values the operator wrote into the HelmRelease:
 
 ```shell
-helm dependency build .
-helm lint .
-
-mkdir -p dist
-helm package . --destination dist
-```
-
-Push the generated package to the local OCI registry:
-
-```shell
-helm push dist/xwiki-1.7.1-1.tgz \
-  oci://localhost:5001/quickstart/charts \
-  --plain-http
-```
-
-The chart can now also be installed directly from the local registry:
-
-```shell
-helm upgrade --install xwiki \
-  oci://localhost:5001/quickstart/charts/xwiki \
-  --version 1.7.1-1 \
-  --plain-http \
-  --namespace ecosystem \
-  --wait \
-  --timeout 15m
+cldk dogu dev-push
+helm get values xwiki --namespace ecosystem
 ```
 
 ## Next step
 
-The chart is now ready for distribution. [Release a Dogu V3](../guides/release_en.md) explains how to request registry access, publish the chart and verify the release.
+The chart is now ready for deployment. [Release a Dogu V3](../guides/release_en.md) explains how to request registry access, publish the Dogu with `cldk dogu release`, and verify the release.

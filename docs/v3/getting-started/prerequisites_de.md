@@ -16,16 +16,21 @@ Der Cluster ist nur für Entwicklung und Tests gedacht. Er besteht aus einem Kno
 - [Helm](https://helm.sh/docs/intro/install/)
 - jq
 - [mikefarah/yq](https://github.com/mikefarah/yq) ab Version 4
+- [cldk](https://github.com/cloudogu/cldk/blob/develop/README.md#installation)
 
 Partner erhalten die Zugangsdaten von ihrer zuständigen Kontaktperson bei Cloudogu. Die Installation lädt geschützte CES-Komponenten. Deshalb reichen die öffentlichen Repositories allein nicht aus.
 
 ## Cloudogu EcoSystem erstellen
 
+Im Verzeichnis `getting-started` ausführen:
+
 ```shell
 ./prerequisites/init_ecosystem
 ```
 
-Die Installation kann einige Minuten dauern. Der Name `quickstart` ist fest, weil er zur Adresse in den beiden Konfigurationsdateien passen muss.
+Das Skript fragt beim ersten Aufruf die Zugangsdaten ab und muss deshalb in einem interaktiven Terminal laufen. Die Installation kann einige Minuten dauern. Der Name `quickstart` ist fest, weil er zur Adresse in den beiden Konfigurationsdateien passen muss.
+
+Die Datei `prerequisites/.ecosystem-core-values-patch.yaml` aktiviert für diese Umgebung Flux und die Dogu-V3-Verarbeitung im Dogu-Operator, einschließlich des Dev-Modus für `cldk dogu dev-push`. Der Dev-Modus ist nur für Entwicklungs- und Testcluster gedacht.
 
 ## Cluster verwenden
 
@@ -60,6 +65,8 @@ Beim ersten Aufruf im Browser erscheint eine Warnung, weil das lokale Zertifikat
 https://quickstart.k3ces.localdomain
 ```
 
+Die initiale Anmeldung erfolgt mit dem Benutzernamen `admin` und dem Passwort `adminpw`. Beim ersten Login muss das Passwort gemäß der Passwortrichtlinie geändert werden.
+
 ## Lokale Registry
 
 Die lokale Registry hat zwei Adressen:
@@ -71,7 +78,7 @@ Verwende in einem Helm-Chart nicht `localhost:5001`. Innerhalb eines Pods bezeic
 
 ## Umgebung anhalten oder entfernen
 
-Die Befehle werden im Verzeichnis `k8s-ecosystem` ausgeführt:
+Die Befehle werden im Verzeichnis `getting-started` ausgeführt:
 
 ```shell
 # Cluster anhalten und starten

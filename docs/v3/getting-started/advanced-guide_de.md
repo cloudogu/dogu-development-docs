@@ -22,13 +22,10 @@ spec:
   path: /xwiki
 ```
 
-Das Chart aktualisieren:
+Das Dogu aktualisieren:
 
 ```shell
-helm upgrade --install xwiki . \
-  --namespace ecosystem \
-  --wait \
-  --timeout 15m
+cldk dogu dev-push
 ```
 
 Auf den fertigen Eintrag warten und das Ergebnis prüfen:
@@ -81,7 +78,7 @@ Da das EcoSystem auch in Air-Gapped-Umgebungen lauffähig sein soll, müssen in 
 
 Die Image-Spiegelung erfolgt vor der Installation. Eine vorhandene `runtime-patch-tpl.yaml` bleibt dabei unverändert; sie wird erst vom Dogu-Operator ausgewertet.
 
-Das Chart verwendet ein XWiki-Image und ein MySQL-Image.
+Das Chart verwendet ein XWiki-Image und ein MySQL-Image. Das MySQL-Image läuft auch im Init-Container von XWiki, der auf die Datenbank wartet. Das XWiki-Chart setzt dessen Adresse ohne Registry zusammen, deshalb wird sie im Patch vollständig gesetzt.
 Deswegen sieht die `mirror-patch-tpl.yaml` wie folgt aus und wird im selben Verzeichnis wie die `Chart.yaml` abgelegt:
 
 ```yaml
@@ -106,6 +103,10 @@ patches:
           registry: "{{ registryFrom .images.mysql }}"
           repository: "{{ repositoryFrom .images.mysql }}"
           tag: "{{ tagFrom .images.mysql }}"
+      initContainers:
+        database:
+          # Vollständige Adresse für den Init-Container, der auf die Datenbank wartet
+          image: "{{ .images.mysql }}"
 ```
 
 Die Patches für die `values.yaml` werden dabei als Go-Templates angegeben.
@@ -138,7 +139,7 @@ Die Schlüssel müssen zur `values.yaml` des Charts passen. Werte für ein Subch
 ```yaml
 application:
   host: '{{ globalConfig "fqdn" }}'
-  certificate: '{{ globalConfig "certificates/server.crt" }}'
+  certificate: '{{ globalConfig "certificate/server.crt" }}'
 backend:
   applicationHosts:
     - '{{ globalConfig "fqdn" }}'
@@ -150,7 +151,7 @@ Die Datei muss genau ein YAML-Dokument mit einer Map auf oberster Ebene enthalte
 
 ### Konfiguration lesen
 
-- `/` trennt Pfadsegmente; Punkte bleiben Teil eines Schlüssels. `certificates/server.crt` liest beispielsweise das Zertifikat unter diesem Pfad.
+- `/` trennt Pfadsegmente; Punkte bleiben Teil eines Schlüssels. `certificate/server.crt` liest beispielsweise das Zertifikat unter diesem Pfad.
 - Der angefragte Wert muss ein String sein; fehlende Schlüssel oder andere Datentypen führen zu einem Fehler. Ein leerer String ist erlaubt.
 - Eingesetzte Werte bleiben Strings. Anführungszeichen und Zeilenumbrüche, etwa in Zertifikaten, bleiben erhalten.
 
@@ -168,54 +169,23 @@ logConfiguration: |
 
 Die Anwendung erhält `date: {{ .Date }}` und `line: {{ .LogLineJSON }}`. Der Operator wertet das Ergebnis nicht erneut aus. Anführungszeichen oder `|` allein verhindern die Template-Auswertung nicht. Statische Anwendungsvorlagen ohne CES-Konfiguration können direkt in `values.yaml` bleiben.
 
-### Overrides und Konfigurationsänderungen
+### Priorität und Konfigurationsänderungen
 
-Die Priorität steigt von links nach rechts:
+Runtime-Values überschreiben die Chart-Defaults und `global.cesConfig`. Sie werden ihrerseits von `spec.values` und `spec.mappedValues` der Dogu-CR überschrieben.
 
-`Chart-Defaults → global.cesConfig → Runtime-Values → spec.values → spec.mappedValues`
+Ändert sich `global-config`, wertet der Operator die Runtime-Patches erneut aus und rollt die neuen Values aus, ohne Pods neu zu starten. Soll ein Workload bei geänderten ConfigMaps oder Secrets neu starten, kann er z. B. mit `k8s.cloudogu.com/reload-auto: "true"` annotiert werden.
 
-`globalConfig` liest immer die globale Konfiguration, nicht die durch `spec.values` überschriebenen Werte.
+Die vollständige Priorisierung, das Zusammenführen der Values und das Verhalten bei Konfigurationsänderungen beschreibt [v3-Dogus konfigurieren](https://github.com/cloudogu/k8s-dogu-operator/blob/develop/docs/operations/v3/configuring_v3_dogus_de.md).
 
-Änderungen an `global-config` lösen einen erneuten Abgleich der V3-Dogus aus. Dabei werden die Runtime-Patches erneut ausgewertet und bei erfolgreicher Prüfung die HelmRelease-Values aktualisiert. Der Abgleich allein startet keine Pods neu.
+### Runtime-Patches testen
 
-Ob die Anwendung geänderte Konfiguration neu lädt oder ein Pod-Rollout nötig ist, hängt vom Chart und der Anwendung ab. Für geänderte ConfigMaps und Secrets kann ein aktivierter Reloader den Rollout auslösen, wenn der Workload beispielsweise mit `k8s.cloudogu.com/reload-auto: "true"` annotiert ist.
-
-**Testen:** Dafür wird ein vom Operator verwaltetes Dogu in einem CES mit aktivierter V3-Verarbeitung benötigt. Ein normales `helm template` oder `helm install` wertet Runtime-Patches nicht aus – auch die Helm-Befehle im weiteren Verlauf dieser Anleitung nicht.
-
-## Chart in die lokale Registry pushen
-
-Die lokale Registry wurde zusammen mit der Quickstart-Umgebung eingerichtet. Sie ist über `localhost:5001` erreichbar.
-
-Zuerst die Abhängigkeiten laden und das Chart paketieren:
+Runtime-Patches wertet nur der Dogu-Operator aus, `helm template` oder `helm install` dagegen nicht. Zum Testen das Dogu mit `cldk dogu dev-push` in die lokale Umgebung bringen und die Values prüfen, die der Operator in das HelmRelease geschrieben hat:
 
 ```shell
-helm dependency build .
-helm lint .
-
-mkdir -p dist
-helm package . --destination dist
-```
-
-Das erzeugte Paket in die lokale OCI-Registry pushen:
-
-```shell
-helm push dist/xwiki-1.7.1-1.tgz \
-  oci://localhost:5001/quickstart/charts \
-  --plain-http
-```
-
-Das Chart kann nun auch direkt aus der lokalen Registry installiert werden:
-
-```shell
-helm upgrade --install xwiki \
-  oci://localhost:5001/quickstart/charts/xwiki \
-  --version 1.7.1-1 \
-  --plain-http \
-  --namespace ecosystem \
-  --wait \
-  --timeout 15m
+cldk dogu dev-push
+helm get values xwiki --namespace ecosystem
 ```
 
 ## Nächster Schritt
 
-Das Chart kann jetzt weitergegeben werden. [Ein Dogu V3 releasen](../guides/release_de.md) erklärt, wie der Registry-Zugang beantragt, das Chart veröffentlicht und das Release geprüft wird.
+Das Chart kann jetzt veröffentlicht werden. [Ein Dogu V3 releasen](../guides/release_de.md) erklärt, wie der Registry-Zugang beantragt, das Dogu mit `cldk dogu release` veröffentlicht und das Release geprüft wird.
