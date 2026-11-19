@@ -65,6 +65,8 @@ Your browser shows a warning on the first request because the local certificate 
 https://quickstart.k3ces.localdomain
 ```
 
+The initial login is performed using the username `admin` and the password `adminpw`. Upon first login, the password must be changed in accordance with the password policy.
+
 ## Local registry
 
 The local registry has two addresses:

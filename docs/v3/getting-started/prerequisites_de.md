@@ -65,6 +65,8 @@ Beim ersten Aufruf im Browser erscheint eine Warnung, weil das lokale Zertifikat
 https://quickstart.k3ces.localdomain
 ```
 
+Die initiale Anmeldung erfolgt mit dem Benutzernamen `admin` und dem Passwort `adminpw`. Beim ersten Login muss das Passwort gemäß der Passwortrichtlinie geändert werden.
+
 ## Lokale Registry
 
 Die lokale Registry hat zwei Adressen:
