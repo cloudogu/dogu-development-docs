@@ -20,7 +20,7 @@ Aktuell gibt es keine Selbstverwaltung für Registry-Accounts von Partnern. Der 
 
 Cloudogu stellt dann einen Registry-Account für `registry.cloudogu.com` bereit, den zugewiesenen Dogu-Namespace und die Berechtigung, in diesem Namespace Charts und Images zu pullen und zu pushen.
 
-Wird der Zugang nicht mehr benötigt, sollte der Registry-Account deaktiviert werden. Die Anfrage sollte den Accountname, den Namespace sowie das gewünschtes Löschdatum enthalten. Ein abgelaufener Account wird nur verlängert, wenn ein weiteres Release geplant ist.
+Wird der Zugang nicht mehr benötigt, sollte der Registry-Account deaktiviert werden. Die Anfrage sollte den Accountnamen, den Namespace sowie das gewünschte Löschdatum enthalten. Ein abgelaufener Account wird nur verlängert, wenn ein weiteres Release geplant ist.
 
 ### 2. Release vorbereiten
 
