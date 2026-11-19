@@ -1,6 +1,6 @@
 # Release a Dogu V3
 
-This guide publishes a Dogu with `cldk dogu release` to the Cloudogu OCI registry `registry.cloudogu.com`. The Helm chart is the release artifact: as soon it is pushed to the registry, the dogu will be released.
+This guide publishes a Dogu with `cldk dogu release` to the Cloudogu OCI registry `registry.cloudogu.com`. The Helm chart is the release artifact: as soon as it is pushed to the registry, the dogu will be released.
 
 ## Prerequisites
 
