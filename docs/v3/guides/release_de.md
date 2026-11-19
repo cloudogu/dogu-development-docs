@@ -1,6 +1,7 @@
 # Ein Dogu V3 releasen
 
 Diese Anleitung veröffentlicht ein Dogu mit `cldk dogu release` in der Cloudogu-OCI-Registry `registry.cloudogu.com`. Das Helm-Chart ist das Release-Artefakt: Sobald es in die Registry gepusht ist, wird das Dogu veröffentlicht.
+
 ## Voraussetzungen
 
 - ein Dogu-Repository mit Helm-Chart und `cldk.yaml`, das im Multinode EcoSystem getestet wurde, z. B. mit `cldk dogu dev-push` im [lokalen EcoSystem](../getting-started/quickstart_de.md)
