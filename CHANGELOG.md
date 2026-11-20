@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#107] Add German and English guides for preparing V2 Dogus as migratable V3 charts, using Nexus examples for migration jobs, resource conventions and troubleshooting.
 - [#103] Document the required label `k8s.cloudogu.com/dogu.name` on Dogu CRs and how to test backup & restore of a Dogu.
 - [#98] Document runtime patches with quoted globalConfig expressions in German and English.
+- [#105] Document the exposed command `service-account-rotate` and its contract in German and English.
 
 ### Changed
 - [#109] Revise the Dogu V3 docs against the current Dogu CR and Dogu operator: deploy with `cldk dogu dev-push` in the quick start and advanced guide, release with `cldk dogu release`

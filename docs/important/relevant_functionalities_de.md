@@ -858,7 +858,9 @@ Damit ein Dogu als Service-Account-Produzent auftreten kann, muss es in seiner `
 
 Die Begriffe `service-account-create` und `service-account-remove` sind geschützte Eigenschaften und werden von Clients, die die `dogu.json` interpretieren, als Befehle zum Erstellen und Löschen von Service Accounts benutzt.
 
-In den beiden folgenden Abschnitten wird auf die Erzeugung und Löschung von Service Accounts eingegangen. Weitere Information über ExposedCommands befinden sich im [ExposedCommands](../core/compendium_de.md#exposedcommands)-Abschnitt des Kompendiums.
+Optional kann ein Produzent zusätzlich `service-account-rotate` anbieten. Damit erneuert ein Client die Zugangsdaten bestehender Service Accounts, siehe [Zugangsdaten eines Service Accounts rotieren](#zugangsdaten-eines-service-accounts-rotieren). Auch dieser Begriff ist eine geschützte Eigenschaft.
+
+In den folgenden Abschnitten wird auf die Erzeugung, Löschung und Rotation von Service Accounts eingegangen. Weitere Information über ExposedCommands befinden sich im [ExposedCommands](../core/compendium_de.md#exposedcommands)-Abschnitt des Kompendiums.
 
 #### Service Account anlegen
 
@@ -944,6 +946,86 @@ fi
 In Schritt 1 wird der Name des Konsumenten-Dogus ausgelesen (z. B. "redmine"), um den Service Account des Dogus zu identifizieren.
 
 In Schritt 2 wird der Account aus der Datenbasis des Produzenten inkl. Zugangsdaten gelöscht.
+
+#### Zugangsdaten eines Service Accounts rotieren
+
+Das optionale `service-account-rotate`-Skript ersetzt die Zugangsdaten eines bestehenden Service Accounts, z. B. dessen Passwort. Das Konto selbst bleibt unverändert, also etwa Datenbank, Eigentümer und Rechte. So lässt sich ein Passwort austauschen, ohne dass der Konsument Daten verliert.
+
+```json
+{
+  "Name": "service-account-rotate",
+  "Description": "Rotates the credentials of a service account",
+  "Command": "/rotate-sa.sh"
+}
+```
+
+Ein Client wie `cesapp` führt das Skript beim Upgrade des Produzenten-Dogus aus:
+
+- nach dem `post-upgrade`, wenn der Produzent in der neuen Version läuft und `healthy` ist,
+- solange die Konsumenten-Dogus gestoppt sind, sodass sie die neuen Zugangsdaten bei ihrem anschließenden Start übernehmen,
+- einmal je Konsument, dessen Service Account noch nicht rotiert wurde.
+
+Der Client prüft die _neue_ Version des Produzenten auf diesen `ExposedCommand`. Die Rotation findet also beim ersten Upgrade auf eine Version statt, die das Skript mitbringt. Am Konsumenten-Dogu muss dafür nichts geändert werden.
+
+**Aufruf:** Das Skript erhält die Argumente in dieser Reihenfolge:
+
+1. die benutzerdefinierten `Params` des Service Accounts aus der `dogu.json` des Konsumenten, wie bei `service-account-create`,
+2. den Benutzernamen des bestehenden Kontos, den der Client aus `/config/<konsument>/sa-<produzent>/username` liest, oder ein leeres Argument, wenn der Service Account keinen Benutzernamen hat (z. B. ein OAuth-Client),
+3. als letztes Argument den Namen des Konsumenten-Dogus.
+
+Der Benutzername ist damit immer das vorletzte Argument. Jedes Argument wird gequotet und darf Leerzeichen enthalten. Das Skript sollte prüfen, dass der Benutzername tatsächlich zum Konsumenten gehört, bevor es ihn verwendet.
+
+**Erfolg:** Das Skript gibt ausschließlich die neuen Zugangsdaten im Format `<registrykey>: <registryvalue>` aus, in der Regel nur `password`. Der Client verschlüsselt die Werte, ersetzt damit die bisherigen Einträge unter `/config/<konsument>/sa-<produzent>/` und setzt zuletzt die Markierung `/config/<konsument>/sa_password_rotated/<produzent>` auf `true`. Ein Service Account mit dieser Markierung wird nicht erneut rotiert.
+
+Der Client führt den Befehl in einem Terminal aus, dabei landen stdout und stderr in derselben Ausgabe. Im Erfolgsfall darf das Skript deshalb nichts außer den Zugangsdaten ausgeben, weder auf stdout noch auf stderr.
+
+**Fehler:** Das Skript endet mit einem Exit-Code ungleich 0 und gibt keine Zugangsdaten aus. Die alten Zugangsdaten müssen gültig bleiben. Der Client zeigt die Ausgabe des Skripts als Fehlermeldung an, rotiert die übrigen Konsumenten trotzdem, startet alle Konsumenten wieder und meldet den Fehler am Ende des Upgrades. Weil die Markierung fehlt, wird die Rotation beim nächsten Upgrade wiederholt.
+
+**Geheimnisse schützen:** Neue Zugangsdaten dürfen weder in der Prozessliste noch in Logs erscheinen. Das Skript sollte sie deshalb nicht als Kommandozeilenargument an andere Programme übergeben, sondern z. B. per stdin.
+
+Ein `service-account-rotate`-Skript besteht aus drei Schritten:
+
+1. Den Benutzernamen prüfen
+2. Neue Zugangsdaten erzeugen und am bestehenden Konto setzen
+3. Die neuen Zugangsdaten zurückgeben
+
+Ein Beispiel für das `service-account-rotate`-Skript könnte folgendermaßen aussehen:
+
+`rotate-sa.sh`
+
+```bash
+#!/bin/bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+if [ $# -lt 2 ]; then
+  echo "usage rotate-sa.sh [params...] username servicename" >&2
+  exit 1
+fi
+USERNAME="${*: -2:1}"
+SERVICE="${*: -1}"
+
+#1) Benutzernamen prüfen, er muss zum Konsumenten gehören
+# ... Implementiere die Dogu-spezifische Prüfung hier, z. B. per Muster und Existenzprüfung
+
+{
+  #2) Neue Zugangsdaten erzeugen und am bestehenden Konto setzen
+  PASSWORD=$(doguctl random)
+  # ... Implementiere die Dogu-spezifische Logik hier, das Passwort per stdin übergeben, nicht als Argument
+} >/dev/null 2>&1 # unterdrücke sonstige Ausgaben, da nur Zugangsdaten erwartet werden
+
+#3) Neue Zugangsdaten zurückgeben. Der Client kümmert sich um die Speicherung und Verschlüsselung.
+echo "password: ${PASSWORD}"
+```
+
+In Schritt 1 wird verhindert, dass ein falscher oder manipulierter Benutzername das Konto eines anderen Dogus trifft. Gibt es das Konto nicht, endet das Skript mit einem Fehler.
+
+In Schritt 2 wird ausschließlich das Passwort des bestehenden Kontos ersetzt. Ein neues Konto darf hier nicht entstehen, sonst zeigt der Konsument ins Leere.
+
+In Schritt 3 werden die neuen Zugangsdaten im selben Format wie bei `service-account-create` ausgegeben.
+
+Eine vollständige Umsetzung für eine Datenbank enthält das PostgreSQL-Dogu in `resources/rotate-sa.sh`.
 
 ### Service Accounts konsumieren
 
