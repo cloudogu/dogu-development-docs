@@ -84,7 +84,7 @@ Für generierte Werte gilt deshalb:
 
 | Ressource                                                                             | Verhalten                                                                                                                                                  |
 |---------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `global-config`                                                                       | Nicht Teil der Dogu-Unit. Sie wird in der eigenen Unit `global-config` gesichert. Bei einem Restore nur des Dogus verwendet es die aktuelle global-config. |
+| `global-config`                                                                       | Nicht Teil der Dogu-Unit. Sie wird in der eigenen Unit `global-config` gesichert. Wird ausschließlich das Dogu wiederhergestellt, verwendet es die aktuelle global-config. |
 | Secrets und ConfigMaps, die nicht aus dem Chart stammen (z. B. über `existingSecret`) | Werden nicht gesichert. Ihre Erstellung und Sicherung liegt beim Betreiber. Das Label `k8s.cloudogu.com/backup-scope` ist für Dogus wirkungslos.           |
 | `ServiceAccountRequest`-CRs                                                           | Werden nicht gesichert und bei einem Restore nicht gelöscht, siehe [Service-Accounts](#service-accounts).                                                  |
 | Secrets von Service-Accounts                                                          | Werden vom Service-Account-Operator erstellt, tragen das Dogu-Label nicht und werden daher nicht gesichert.                                                |
@@ -97,7 +97,7 @@ Service-Accounts eines Dogus V3 werden über `ServiceAccountRequest`-CRs im Char
 Weder die CRs noch ihre Secrets werden gesichert. Bei einem Restore bleiben sie erhalten, sodass Account und Secret
 weiterhin zueinander passen.
 
-Wird der Producer wiederhergestellt, z. B. ein Dogu aus einem älteren Backup, passen Account und Secret nicht mehr
+Wird der Producer wiederhergestellt, z. B. ein Dogu aus einem älteren Backup, passen Account und Secret eventuell nicht mehr
 zueinander. Der Service-Account-Operator rotiert dann die Credentials aller zugehörigen Accounts.
 
 Daraus folgt für Dogus:
