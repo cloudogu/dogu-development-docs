@@ -7,8 +7,8 @@ vorbereitet wird und wie das Backup getestet wird.
 
 Benötigt werden:
 
-- ein Multinode EcoSystem mit
-  installiertem [Backup-Operator](https://github.com/cloudogu/k8s-backup-operator/blob/main/docs/operations/getting_started_de.md)
+- ein Multinode EcoSystem mit installiertem
+  [Backup-Operator](https://github.com/cloudogu/k8s-backup-operator/blob/main/docs/operations/getting_started_de.md)
   und Velero,
 - ein Storage-Provisioner mit Unterstützung für CSI-Volume-Snapshots, z.
   B. [Longhorn](https://github.com/cloudogu/k8s-backup-operator/blob/main/docs/operations/use_longhorn_storage_provisioner_de.md),
@@ -253,9 +253,9 @@ Der Status muss `state: Succeeded` und eine `providerRef` enthalten:
 }
 ```
 
-`Succeeded=True` bedeutet nur, dass alle Units abgeschlossen sind. Ein Backup mit fehlgeschlagenen Units gilt trotzdem
-als erfolgreich. Deshalb immer den `state` der Unit prüfen. Bei `Failed` oder `Missing` stehen Details in `reason` und
-`message`.
+`Succeeded=True` bedeutet, dass alle Units ohne Fehler abgeschlossen sind.
+Bei fehlgeschlagenen Units kann ebenfalls der `state` der Unit geprüft werden.
+Details stehen in diesem Fall in `reason` und `message`.
 
 ### 5. Inhalt des Velero-Backups prüfen
 
